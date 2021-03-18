@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Layout from '../components/Layout'
 
 import useSWR from 'swr'
+
+// @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)
     .then((res: Response) => res.text())
     .then((text: string) => JSON.parse(text.slice(9, text.length - 2)))
