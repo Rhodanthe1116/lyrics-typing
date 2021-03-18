@@ -8,6 +8,8 @@ import useTypingGame from "react-typing-game-hook";
 import TypingInput from "../components/TypingInput";
 
 import useSWR from 'swr'
+
+// @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)
     .then((res: Response) => res.text())
     .then((text: string) => JSON.parse(text.slice(9, text.length - 2)))
