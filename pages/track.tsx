@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Layout from '../components/Layout'
 
-import useTypingGame from "react-typing-game-hook";
 import TypingInput from "../components/TypingInput";
 
 import useSWR from 'swr'
@@ -23,32 +22,6 @@ const TrackPage = () => {
 
     const { data, error } = useSWR(`https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id=${track_id}&apikey=${apiKey}`, fetcher)
     const lyrics_body: string = data?.message?.body?.lyrics?.lyrics_body || ''
-    const text: string = data?.message?.body?.lyrics?.lyrics_body || ''
-
-    const {
-        states: {
-            charsState,
-            length,
-            currIndex,
-            currChar,
-            correctChar,
-            errorChar,
-            phase,
-            startTime,
-            endTime
-        },
-        actions: { insertTyping, resetTyping, deleteTyping }
-    } = useTypingGame(lyrics_body);
-
-    const handleKey = (key: any) => {
-        if (key === "Escape") {
-            resetTyping();
-        } else if (key === "Backspace") {
-            deleteTyping(false);
-        } else if (key.length === 1) {
-            insertTyping(key);
-        }
-    };
 
     if (error) return (<div>failed to load {error.toString()}</div>)
 
