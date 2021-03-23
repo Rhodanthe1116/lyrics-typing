@@ -16,32 +16,32 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
             <meta name="theme-color" content="#000000" />
 
         </Head>
-        <header className="p-4">
-            <nav>
-                <Link href="/">
-                    <a>Home</a>
-                </Link>{' '}
-        |{' '}
-                <Link href="/about">
-                    <a>About</a>
-                </Link>{' '}
-            </nav>
+        <div className="min-h-screen">
 
-            <div>
-                <h1 className="mt-2 text-3xl font-bold">Lyrics Typing</h1>
+            <header className="p-4">
+                <nav>
+                    <Link href="/">
+                        <a>Home</a>
+                    </Link>{' '}
+                            |{' '}
+                    <Link href="/about">
+                        <a>About</a>
+                    </Link>{' '}
+                </nav>
 
-            </div>
+                <div className="flex justify-between">
+                    <h1 className="mt-2 text-6xl font-bold">Lyrics Typing</h1>
+                    {/* <span>@hwchang</span> */}
+                </div>
 
-        </header>
-        <div className="p-4">
+
+            </header>
             {children}
+            <footer >
+                {/* <hr /> */}
+
+            </footer>
         </div>
-        <footer >
-            <hr />
-            <div className="p-4">
-                <span>Created by hwchang</span>
-            </div>
-        </footer>
     </div>
 )
 

@@ -78,6 +78,7 @@ const IndexPage = () => {
                     </div>
                 </Link>
             ))}
+            {track_list === [] &&  <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre> }
 
 
         </Layout>

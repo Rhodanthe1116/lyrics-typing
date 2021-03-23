@@ -1,5 +1,6 @@
 import 'tailwindcss/tailwind.css'
 import { useRouter } from 'next/router'
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 // import Link from 'next/link'
 import Layout from '../components/Layout'
@@ -17,6 +18,7 @@ const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
 const TrackPage = () => {
     const router = useRouter()
+    const handle = useFullScreenHandle();
 
     const track_id = router.query.id || 46915001
 
@@ -29,7 +31,7 @@ const TrackPage = () => {
 
     if (error) return (<div>failed to load {error.toString()}</div>)
 
-    if (!data) return <div>loading...</div>
+    // if (!data) return <div>loading...</div>
 
 
     return (
@@ -38,20 +40,32 @@ const TrackPage = () => {
             {/* <h1>Lyrics Typing👋</h1> */}
             {/* <pre>{JSON.stringify(trackRes.data, null, 2)}</pre> */}
 
+            <div className="container mx-auto flex flex-col ">
+                <button onClick={handle.enter}>
+                    Enter fullscreen
+                </button>
+                {/* <div className="mb-4">
+                        <h1 className="text-3xl font-bold">Type Input Demo</h1>
+                        
+                    </div> */}
+                {/* <h5 className="mb-2 text-gray-500">Esc to reset</h5> */}
+                <FullScreen className="p-4" handle={handle}>
+                    <div className="	">
 
-            <div className="container mx-auto flex flex-col p-4">
-                <div className="mb-4">
-                    {/* <h1 className="text-3xl font-bold">Type Input Demo</h1> */}
+                        {data ?
+                            <>
+                                <h1 className="text-lg font-semibold">{track_name}</h1>
+                                <p className="mb-2 text-gray-500">{artist_name}</p>
+                                <TypingInput
+                                    text={lyrics_body.slice(0, 150)}
+                                />
+                            </>
+                            :
+                            <div>loading...</div>
 
-                </div>
-                <h5 className="mb-2 text-gray-500">Esc to reset</h5>
-                <div className="border-2 p-4 rounded-lg">
-                    <h1 className="text-lg font-semibold">{track_name}</h1>
-                    <p className="mb-2 text-gray-500">{artist_name}</p>
-                    <TypingInput
-                        text={lyrics_body.slice(0, 150)}
-                    />
-                </div>
+                        }
+                    </div>
+                </FullScreen>
             </div>
 
         </Layout>

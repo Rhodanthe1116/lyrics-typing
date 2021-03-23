@@ -2,6 +2,8 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import useTyping from "react-typing-game-hook";
 
 const TypeInput: FC<{ text: string }> = ({ text }) => {
+    const lyricsContainerRef = useRef<HTMLDivElement>(null)
+
     const [duration, setDuration] = useState(0);
     const [typingInput, setTypingInput] = useState("");
     const [typedWrong, setTypeWrong] = useState(false);
@@ -17,7 +19,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
             startTime,
             endTime
         },
-        actions: { insertTyping, resetTyping }
+        actions: { insertTyping, resetTyping, getDuration }
     } = useTyping(text, {
         skipCurrentWordOnSpace: false
     });
@@ -45,7 +47,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
         });
     }, [typingInput, currWordPos, text]);
 
-    //Set the start and end index of the next word
+    // Set the start and end index of the next word
     useEffect(() => {
         let tempCurrIndex = text[currIndex] === " " || text[currIndex] === "\n" ? currIndex + 1 : currIndex;
         let startIndex = Math.max(text.lastIndexOf(" ", tempCurrIndex), text.lastIndexOf("\n", tempCurrIndex))
@@ -55,6 +57,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
 
         setCurrWordPos((oldcurrWordPos) => {
             if (startIndex !== oldcurrWordPos[0] || endIndex !== oldcurrWordPos[1]) {
+                lyricsContainerRef.current?.scrollBy(0, 24)
                 return [startIndex, endIndex];
             }
             return oldcurrWordPos;
@@ -64,6 +67,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
     //Reset
     const reset = () => {
         resetTyping();
+        // insertTyping();
         setTypingInput("");
     };
 
@@ -77,12 +81,13 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                 insertTyping(typingInput[index]);
             }
         }
+        // if (lyricsContainerRef.current?.scrollTop)
         insertTyping(" ");
         setTypingInput("");
         setTypeWrong(false);
     };
 
-    //set WPM
+    // set WPM
     useEffect(() => {
         if (phase === 2 && endTime && startTime) {
             setDuration(Math.floor((endTime - startTime) / 1000));
@@ -92,22 +97,29 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
         }
     }, [phase, startTime, endTime]);
 
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            setDuration(parseFloat((getDuration() / 1000).toFixed(2)))
+        }, 100);
+        return () => clearInterval(timerId);
+    }, [phase])
     return (
         <div>
+            
             <div
-                className={`text-xl font-serif select-none`}
+                className={`text-xl select-none  `}
                 onClick={() => {
                     inputRef.current.focus();
                 }}
             >
-                <div className="tracking-wide mb-2">
+                <div ref={lyricsContainerRef} className="border-2 border-purple-500 p-4 rounded-lg  tracking-wide mb-2 h-48 overflow-y-scroll overflow-x-hidden">
                     {text.split("").map((letter, index) => {
                         let shouldHightlight =
                             index >= currWordPos[0] && index <= currWordPos[1];
                         let state = charsState[index];
                         let styling = "text-red-500";
                         if (shouldHightlight) {
-                            styling = "text-black bg-yellow-600";
+                            styling = "text-black bg-purple-200";
                         } else if (state === 0) {
                             styling = "text-gray-700";
                         } else if (state === 1) {
@@ -154,21 +166,27 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                     />
                 </div>
             </div>
+            <div className="flex justify-between">
+                <span>Time: {duration}s</span>
+                <button onClick={() => reset()} >Reset</button>
+            </div>
             <p className="text-sm">
                 {phase === 2 && startTime && endTime ? (
-                    <>
-                        <span className="text-green-500 mr-4">
+                    <ul>
+                        <li className="text-green-500 mr-4">
                             WPM: {Math.round(((60 / duration) * correctChar) / 5)}
-                        </span>
-                        <span className="text-blue-500 mr-4">
+                        </li>
+                        <li className="text-blue-500 mr-4">
                             Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%
-            </span>
-                        <span className="text-yellow-500 mr-4">Duration: {duration}s</span>
-                    </>
+                        </li>
+                        <li className="text-yellow-500 mr-4">Duration: {duration}s</li>
+                        {/* <li className="mr-4"> Current Index: {currIndex}</li> */}
+                        <li className="mr-4"> Correct Characters: {correctChar}</li>
+                        <li className="mr-4"> Error Characters: {errorChar}</li>
+                    </ul>
                 ) : null}
-                <span className="mr-4"> Current Index: {currIndex}</span>
-                <span className="mr-4"> Correct Characters: {correctChar}</span>
-                <span className="mr-4"> Error Characters: {errorChar}</span>
+
+
             </p>
 
             {/* Debug */}
@@ -176,7 +194,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                 <pre>
                     {JSON.stringify({ currWordPos }, null, 2)}
                     {JSON.stringify({
-                        charsState,
+                        // charsState,
                         currIndex,
                         phase,
                         correctChar,
