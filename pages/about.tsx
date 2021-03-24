@@ -1,16 +1,14 @@
-import Link from 'next/link'
+// import Link from 'next/link'
 import Layout from '../components/Layout'
 
 const AboutPage = () => (
-  <Layout title="About | Next.js + TypeScript Example">
-    <h1>About</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
-      </Link>
-    </p>
-  </Layout>
+    <Layout title="Lyrics Typing">
+        <p className="mb-2">This is a lyrics typing game where you can learn typing, lyrics and language!</p>
+       
+        
+
+         <p>Created by hwchang. <a href="https://github.com/Rhodanthe1116/lyrics-typing" className="text-green-200">View on GitHub</a></p>
+    </Layout>
 )
 
 export default AboutPage
