@@ -212,7 +212,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
             </p>
 
             {/* Debug */}
-            {true &&
+            {false &&
                 <pre>
                     {JSON.stringify({ currWordPos }, null, 2)}
                     {JSON.stringify({
