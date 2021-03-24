@@ -50,14 +50,28 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
     // Set the start and end index of the next word
     useEffect(() => {
         let tempCurrIndex = text[currIndex] === " " || text[currIndex] === "\n" ? currIndex + 1 : currIndex;
+        if (tempCurrIndex === -1) {
+            tempCurrIndex = 0
+        }
         let startIndex = Math.max(text.lastIndexOf(" ", tempCurrIndex), text.lastIndexOf("\n", tempCurrIndex))
         startIndex = startIndex < 0 ? 0 : startIndex + 1;
-        let endIndex = Math.min(text.indexOf(" ", tempCurrIndex), text.indexOf("\n", tempCurrIndex));
-        endIndex = endIndex < 0 ? text.length - 1 : endIndex - 1;
+        
+        let nextSpace = text.indexOf(" ", tempCurrIndex)
+        if (nextSpace === -1) {
+            nextSpace = text.length
+        }
+        let nextBreak = text.indexOf("\n", tempCurrIndex)
+        if (nextBreak === -1) {
+            nextBreak = text.length
+        }
+        const nextSep = Math.min(nextSpace, nextBreak);
+        const endIndex = nextSep - 1;
 
         setCurrWordPos((oldcurrWordPos) => {
             if (startIndex !== oldcurrWordPos[0] || endIndex !== oldcurrWordPos[1]) {
-                lyricsContainerRef.current?.scrollBy(0, 24)
+                if (text[startIndex - 1] === "\n") {
+                    lyricsContainerRef.current?.scrollBy(0, 28)
+                }
                 return [startIndex, endIndex];
             }
             return oldcurrWordPos;
@@ -76,7 +90,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
         for (let i = currWordPos[0]; i <= currWordPos[1]; i++) {
             let index = i - currIndex - 1;
             if (index > typingInput.length - 1) {
-                insertTyping();
+                insertTyping(' ');
             } else {
                 insertTyping(typingInput[index]);
             }
@@ -105,7 +119,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
     }, [phase])
     return (
         <div>
-            
+
             <div
                 className={`text-xl select-none  `}
                 onClick={() => {
@@ -118,13 +132,21 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                             index >= currWordPos[0] && index <= currWordPos[1];
                         let state = charsState[index];
                         let styling = "text-red-500";
+
+                        const INIT = 0
+                        const CORRECT = 1
+                        const WRONG = 2
+
                         if (shouldHightlight) {
                             styling = "text-black bg-purple-200";
-                        } else if (state === 0) {
+                        } else if (state === INIT) {
                             styling = "text-gray-700";
-                        } else if (state === 1) {
-                            styling = "text-gray-400";
+                        } else if (state === CORRECT) {
+                            styling = "text-green-400";
+                        } else if (state === WRONG) {
+
                         }
+
                         if (letter === '\n') {
                             return <br key={letter + index} />
                         }
@@ -190,11 +212,11 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
             </p>
 
             {/* Debug */}
-            {false &&
+            {true &&
                 <pre>
                     {JSON.stringify({ currWordPos }, null, 2)}
                     {JSON.stringify({
-                        // charsState,
+                        charsState,
                         currIndex,
                         phase,
                         correctChar,

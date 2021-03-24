@@ -57,7 +57,7 @@ const TrackPage = () => {
                                 <h1 className="text-lg font-semibold">{track_name}</h1>
                                 <p className="mb-2 text-gray-500">{artist_name}</p>
                                 <TypingInput
-                                    text={lyrics_body.slice(0, 150)}
+                                    text={lyrics_body.slice(0, lyrics_body.length - 73).slice(0, 150)}
                                 />
                             </>
                             :
