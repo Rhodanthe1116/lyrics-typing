@@ -18,24 +18,24 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
         </Head>
         <div className="min-h-screen">
 
-            <header className="p-4">
-                <nav>
-                    <Link href="/">
-                        <a>Home</a>
-                    </Link>{' '}
-                            |{' '}
-                    <Link href="/about">
-                        <a>About</a>
-                    </Link>{' '}
-                </nav>
-
+            <header className="p-4 mb-4 flex justify-between items-center bg-gray-900">
                 <div className="flex justify-between">
-                    <h1 className="mt-2 text-6xl font-bold">Lyrics Typing</h1>
+                    <Link href="/">
+                        <a className="text-xl font-bold pr-2">Type Lyrics</a>
+                    </Link>
                     {/* <span>@hwchang</span> */}
                 </div>
+                <nav>
 
+
+                    <Link href="/about">
+                        <a>About</a>
+                    </Link>
+                </nav>
 
             </header>
+
+
             {children}
             <footer >
                 {/* <hr /> */}

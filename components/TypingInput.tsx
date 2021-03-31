@@ -55,7 +55,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
         }
         let startIndex = Math.max(text.lastIndexOf(" ", tempCurrIndex), text.lastIndexOf("\n", tempCurrIndex))
         startIndex = startIndex < 0 ? 0 : startIndex + 1;
-        
+
         let nextSpace = text.indexOf(" ", tempCurrIndex)
         if (nextSpace === -1) {
             nextSpace = text.length
@@ -126,7 +126,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                     inputRef.current.focus();
                 }}
             >
-                <div ref={lyricsContainerRef} className="border-2 border-purple-500 p-4 rounded-lg  tracking-wide mb-2 h-48 overflow-y-scroll overflow-x-hidden">
+                <div ref={lyricsContainerRef} className=" border-purple-500 p-4 rounded-lg  tracking-wide mb-2 h-48 overflow-y-scroll overflow-x-hidden">
                     {text.split("").map((letter, index) => {
                         let shouldHightlight =
                             index >= currWordPos[0] && index <= currWordPos[1];
@@ -138,7 +138,7 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                         const WRONG = 2
 
                         if (shouldHightlight) {
-                            styling = "text-black bg-purple-200";
+                            styling = "text-purple-200 bg-purple-900";
                         } else if (state === INIT) {
                             styling = "text-gray-700";
                         } else if (state === CORRECT) {
@@ -177,31 +177,32 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck={false}
-                        className={`focus:outline-none bg-black text-gray-400 border-b-2 p-1 w-full border-${
+                        className={`focus:outline-none bg-black placeholder-gray-500 border-b-2 p-1 w-full border-${
                             !typingInput.length ? "gray" : typedWrong ? "red" : "green"
                             }-500`}
                         placeholder={
                             phase !== 1
-                                ? "Type here... (Press enter or space to submit word)"
+                                ? "Type here... (Press enter to submit)"
                                 : ""
                         }
                     />
                 </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-gray-500">
                 <span>Time: {duration}s</span>
                 <button onClick={() => reset()} >Reset</button>
             </div>
             <p className="text-sm">
                 {phase === 2 && startTime && endTime ? (
                     <ul>
-                        <li className="text-green-500 mr-4">
+                        <li className="text-lg mr-4">Time: {duration}s</li>
+                        <li className="text-lg mr-4 text-green-500">
                             WPM: {Math.round(((60 / duration) * correctChar) / 5)}
                         </li>
-                        <li className="text-blue-500 mr-4">
+                        <li className="mr-4 text-blue-500 ">
                             Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%
                         </li>
-                        <li className="text-yellow-500 mr-4">Duration: {duration}s</li>
+                        <li className="mr-4 text-yellow-500 ">Duration: {duration}s</li>
                         {/* <li className="mr-4"> Current Index: {currIndex}</li> */}
                         <li className="mr-4"> Correct Characters: {correctChar}</li>
                         <li className="mr-4"> Error Characters: {errorChar}</li>

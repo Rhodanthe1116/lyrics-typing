@@ -16,6 +16,20 @@ const fetcher = (...args: any[]) => fetch(...args)
 
 const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
+interface FullScreenButtonProps {
+    onClick: () => void;
+}
+
+function FullScreenButton({ onClick }: FullScreenButtonProps) {
+    return (
+        <button className="w-8" onClick={onClick}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+        </button>
+    )
+}
+
 const TrackPage = () => {
     const router = useRouter()
     const handle = useFullScreenHandle();
@@ -40,31 +54,33 @@ const TrackPage = () => {
             {/* <h1>Lyrics Typing👋</h1> */}
             {/* <pre>{JSON.stringify(trackRes.data, null, 2)}</pre> */}
 
-            <div className="container mx-auto flex flex-col ">
-                <button onClick={handle.enter}>
-                    Enter fullscreen
-                </button>
+            <div className="px-4 container mx-auto flex flex-col ">
+
+
                 {/* <div className="mb-4">
                         <h1 className="text-3xl font-bold">Type Input Demo</h1>
                         
                     </div> */}
                 {/* <h5 className="mb-2 text-gray-500">Esc to reset</h5> */}
-                <FullScreen className="p-4" handle={handle}>
-                    <div className="	">
-
-                        {data ?
-                            <>
+                <FullScreen className={`${handle.active && "p-6"}`} handle={handle}>
+                    {data ?
+                        <>
+                            <div className="flex justify-between">
                                 <h1 className="text-lg font-semibold">{track_name}</h1>
-                                <p className="mb-2 text-gray-500">{artist_name}</p>
-                                <TypingInput
-                                    text={lyrics_body.slice(0, lyrics_body.length - 73).slice(0, 150)}
-                                />
-                            </>
-                            :
-                            <div>loading...</div>
+                                <FullScreenButton onClick={handle.active ? handle.exit : handle.enter} />
+                            </div>
 
-                        }
-                    </div>
+                            <p className="mb-2 text-gray-500">{artist_name}</p>
+
+
+                            <TypingInput
+                                text={lyrics_body.slice(0, lyrics_body.length - 73).slice(0, 150)}
+                            />
+                        </>
+                        :
+                        <div>loading...</div>
+
+                    }
                 </FullScreen>
             </div>
 

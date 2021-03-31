@@ -24,6 +24,86 @@ const fetcher = (...args: any[]) => fetch(...args)
 
 const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
+interface TrackItemProps {
+    className?: string;
+    track?: Track;
+    loading: boolean;
+}
+
+const TrackItem = ({ track, loading }: TrackItemProps) => {
+
+    const trackInfo = track?.track
+
+    if (loading) {
+        return (
+
+            <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
+                <div className="flex-1 truncate mr-2">
+                    <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4">　</div>
+                    <div className="h-4 my-1 bg-gray-900 rounded w-1/4">　</div>
+
+                </div>
+            </div>
+        )
+    }
+
+
+    return (
+        <Link href={`/track?id=${trackInfo?.track_id}`}>
+
+            <div className="border-2 border-green-200 p-4 hover:bg-green-900 flex justify-between">
+                <div className="flex-1 truncate mr-2">
+                    <p className="truncate">{trackInfo?.track_name}</p>
+                    <p className="truncate text-gray-500">{trackInfo?.artist_name}</p>
+                </div>
+                <div className="flex-none w-12 overflow-hidden">
+                    <p className="truncate">⭐{trackInfo?.track_rating}</p>
+                    <p className="truncate">❤{trackInfo?.num_favourite}</p>
+                </div>
+            </div>
+        </Link>
+    )
+}
+
+interface TrackListPorps {
+    trackList: Array<Track>;
+    loading: boolean;
+}
+const TrackList = ({ trackList, loading }: TrackListPorps) => {
+
+    if (loading) {
+        return (
+            <div>
+                {[1, 2, 3, 4].map((v) =>
+                    <div className="mb-2">
+                        <TrackItem key={v} loading={true} />
+                    </div>
+                )
+                }
+
+            </div>
+        )
+    }
+
+    // no result
+    if (trackList.length === 0) {
+        return (
+            <div>not found...</div>
+        )
+    }
+
+    return (
+        <div>
+            {trackList.map((track: Track, index) => (
+                <div className="mb-2">
+                    <TrackItem key={index} track={track} loading={false} />
+                </div>
+            ))}
+        </div>
+
+    )
+
+}
 const IndexPage = () => {
     const router = useRouter()
 
@@ -39,7 +119,7 @@ const IndexPage = () => {
     const { data, error } = useSWR(`https://api.musixmatch.com/ws/1.1/artist.search?format=jsonp&callback=callback&q_artist=${artist}&apikey=${apiKey}`, fetcher)
     // @ts-ignore  
     const artist_list: Array<Track> = data?.message?.body?.artist_list
-    const track_list: Array<Track> = queryInput ? tracksRes?.data?.message?.body?.track_list : chartTracksRes?.data?.message?.body?.track_list
+    const trackList: Array<Track> = queryInput ? tracksRes?.data?.message?.body?.track_list : chartTracksRes?.data?.message?.body?.track_list
 
     function handleQueryChange(queryInput: string) {
         // setQuery(queryInput)
@@ -77,44 +157,48 @@ const IndexPage = () => {
                 </div>
             ))} */}
 
-            <h1>Search songs here 👋</h1>
-            <input className="mb-2 bg-black border-2 border-purple-500 " value={queryInput} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQueryInput(e.target.value)}></input>
+            <div className="m-2">
 
-            {!queryInput &&
-                <div>
-                    <p>or look for what's popular in your country</p>
-                    <select className="mb-2 bg-black border-2 border-purple-500" value={country} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCountry(e.target.value)}>
-                        <option className="py-1" value="JP">JP</option>
-                        <option className="py-1" value="TW">TW</option>
-                        <option className="py-1" value="US">US</option>
-                    </select>
-                    {/* <input className="mb-2 bg-black border-2 border-purple-500" type="text" list="country_code_list" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}/>
+                <div className="mt-16 mb-12 flex flex-col items-center">
+
+
+                    <h1 className="text-3xl text-center mb-2">
+                        Learn <span className="text-green-200">Lyrics</span> and <span className="text-green-200">Language</span> with <span className="text-green-200">Typing</span>!
+                    </h1>
+
+
+                    <h1></h1>
+                    <input
+                        className="mb-2 p-1 w-80 text-lg bg-black border-2 border-green-200 focus:outline-none "
+                        value={queryInput}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQueryInput(e.target.value)}
+                        placeholder="Search song or artist here."
+                    />
+
+                    {!queryInput &&
+                        <div>
+                            <p className="inline mr-1">or look for what's popular in your country</p>
+                            <select className="mb-2 bg-black border-2 border-green-200" value={country} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCountry(e.target.value)}>
+                                <option className="py-1" value="JP">JP</option>
+                                <option className="py-1" value="TW">TW</option>
+                                <option className="py-1" value="US">US</option>
+                            </select>
+                            {/* <input className="mb-2 bg-black border-2 border-purple-500" type="text" list="country_code_list" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}/>
                     <datalist id="country_code_list">
                         <option className="py-1" value="JP">JP</option>
                         <option className="py-1" value="TW">TW</option>
                         <option className="py-1" value="US">US</option>
                     </datalist> */}
+                        </div>
+                    }
+
                 </div>
-            }
-            {track_list && track_list.map((track: Track) => (
-                <Link key={track?.track?.track_id} href={`/track?id=${track?.track?.track_id}`}>
 
-                    <div className="border-2 border-purple-500 p-4 hover:bg-red-700 flex justify-between">
-                        <div>
-                            <p>{track?.track?.track_name}</p>
-                            <p className="text-gray-500">{track?.track?.artist_name}</p>
-                        </div>
-                        <div>
-                            <p>
-                                ⭐{track?.track?.track_rating}
-                            </p>
-                            <p>❤{track?.track?.num_favourite}</p>
-                        </div>
-                    </div>
-                </Link>
-            ))}
-            {track_list === [] && <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre>}
+                <TrackList trackList={trackList} loading={!trackList} />
 
+                {/* {track_list === [] && <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre>} */}
+
+            </div>
 
         </Layout>
     )
