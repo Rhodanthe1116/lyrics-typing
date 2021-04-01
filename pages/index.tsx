@@ -75,8 +75,8 @@ const TrackList = ({ trackList, loading }: TrackListPorps) => {
         return (
             <div>
                 {[1, 2, 3, 4].map((v) =>
-                    <div className="mb-2">
-                        <TrackItem key={v} loading={true} />
+                    <div key={v} className="mb-2">
+                        <TrackItem  loading={true} />
                     </div>
                 )
                 }
@@ -95,8 +95,8 @@ const TrackList = ({ trackList, loading }: TrackListPorps) => {
     return (
         <div>
             {trackList.map((track: Track, index) => (
-                <div className="mb-2">
-                    <TrackItem key={index} track={track} loading={false} />
+                <div  key={index} className="mb-2">
+                    <TrackItem track={track} loading={false} />
                 </div>
             ))}
         </div>
