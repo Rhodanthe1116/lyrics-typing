@@ -5,14 +5,14 @@
 // import { User } from 'path/to/interfaces';
 
 export type User = {
-    id: string
+    id: number
     name: string
     typingRecords: TrackTypingRecord[] 
     completedTrackIds: number[]
 }
 
 export const newUser: User = {
-    id: 'local',
+    id: 8787878787,
     name: 'local user',
     typingRecords: [],
     completedTrackIds: []
