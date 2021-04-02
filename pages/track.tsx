@@ -1,6 +1,7 @@
 import 'tailwindcss/tailwind.css'
 import { useRouter } from 'next/router'
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import dataProvider from "../utils/dataProvider";
 
 // import Link from 'next/link'
 import Layout from '../components/Layout'
@@ -8,6 +9,7 @@ import Layout from '../components/Layout'
 import TypingInput from "../components/TypingInput";
 
 import useSWR from 'swr'
+import { TypingResult } from '../interfaces';
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)
@@ -34,16 +36,29 @@ const TrackPage = () => {
     const router = useRouter()
     const handle = useFullScreenHandle();
 
-    const track_id = router.query.id || 46915001
+    const trackId: number = Array.isArray(router.query.id) ? parseInt(router.query.id[0]) : parseInt(router.query.id)
 
-    const trackRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${track_id}&apikey=${apiKey}`, fetcher)
-    const { data, error } = useSWR(`https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id=${track_id}&apikey=${apiKey}`, fetcher)
-    const lyrics_body: string = data?.message?.body?.lyrics?.lyrics_body || ''
-    const track_name: string = trackRes?.data?.message?.body?.track?.track_name || ''
-    const artist_name: string = trackRes?.data?.message?.body?.track?.artist_name || ''
+    // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
+    const trackRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
+    const lyricsRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
+    const trackName: string = trackRes?.data?.message?.body?.track?.track_name || ''
+    const artistName: string = trackRes?.data?.message?.body?.track?.artist_name || ''
+    const lyricsBody: string = lyricsRes?.data?.message?.body?.lyrics?.lyrics_body || ''
+    const lyricsCopyright: string = lyricsRes?.data?.message?.body?.lyrics?.lyrics_copyright || ''
     // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
-    if (error) return (<div>failed to load {error.toString()}</div>)
+    function handleTypingEnded(result: TypingResult) {
+
+        try {
+
+            dataProvider.saveTrackTypingRecord(trackId, result)
+        } catch (e) {
+            alert(e)
+        }
+    }
+
+
+    if (lyricsRes.error) return (<div>failed to load {lyricsRes.error.toString()}</div>)
 
     // if (!data) return <div>loading...</div>
 
@@ -52,7 +67,8 @@ const TrackPage = () => {
 
         <Layout title="Lyrics Typing">
             {/* <h1>Lyrics Typing👋</h1> */}
-            {/* <pre>{JSON.stringify(trackRes.data, null, 2)}</pre> */}
+            {/* <pre>{JSON.stringify(trackRes.data, null, 2)}</pre>
+            <pre>{JSON.stringify(lyricsRes.data, null, 2)}</pre> */}
 
             <div className="px-4 container mx-auto flex flex-col ">
 
@@ -63,26 +79,31 @@ const TrackPage = () => {
                     </div> */}
                 {/* <h5 className="mb-2 text-gray-500">Esc to reset</h5> */}
                 <FullScreen className={`${handle.active && "p-6"}`} handle={handle}>
-                    {data ?
+                    {lyricsRes?.data ?
                         <>
                             <div className="flex justify-between">
-                                <h1 className="text-lg font-semibold">{track_name}</h1>
+                                <h1 className="text-lg font-semibold">{trackName}</h1>
                                 <FullScreenButton onClick={handle.active ? handle.exit : handle.enter} />
                             </div>
 
-                            <p className="mb-2 text-gray-500">{artist_name}</p>
+                            <p className="mb-2 text-gray-400">{artistName}</p>
 
 
                             <TypingInput
-                                text={lyrics_body.slice(0, lyrics_body.length - 73).slice(0, 150)}
+                                text={lyricsBody.slice(0, lyricsBody.length - 73).slice(0, 150)}
+                                onTypingEnded={handleTypingEnded}
                             />
+
+                            <img className="hidden" src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW" />
                         </>
                         :
                         <div>loading...</div>
 
                     }
                 </FullScreen>
+                <p className="text-sm text-gray-500">{lyricsCopyright}</p>
             </div>
+
 
         </Layout>
     )

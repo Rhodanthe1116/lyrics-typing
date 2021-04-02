@@ -5,6 +5,30 @@
 // import { User } from 'path/to/interfaces';
 
 export type User = {
-  id: number
-  name: string
+    id: string
+    name: string
+    typingRecords: TrackTypingRecord[] 
+    completedTrackIds: number[]
+}
+
+export const newUser: User = {
+    id: 'local',
+    name: 'local user',
+    typingRecords: [],
+    completedTrackIds: []
+}
+
+export type TypingResult = {
+    wpm: number,
+    duration: number,
+    correctChar: number,
+    errorChar: number,
+    accuracy: number,
+    textLength: number,
+}
+
+export type TrackTypingRecord = {
+    trackId: number
+    result: TypingResult
+    timestamp: Date
 }

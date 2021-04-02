@@ -15,7 +15,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             <meta name="theme-color" content="#000000" />
         </Head>
-        <div className="min-h-screen">
+        <div className="min-h-screen overflow-hidden">
 
             <header className="p-4 mb-4 flex justify-between items-center bg-gray-900">
                 <div className="flex justify-between">
@@ -27,8 +27,11 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => (
                 <nav>
 
 
-                    <Link href="/about">
-                        <a>About</a>
+                    <Link href="/about" >
+                        <a className="mr-2">About</a>
+                    </Link>
+                    <Link href="/profile">
+                        <a>Profile</a>
                     </Link>
                 </nav>
 

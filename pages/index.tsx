@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Layout from '../components/Layout'
 
 import useSWR from 'swr'
+import useUser from '../hooks/useUser'
 
 interface Track {
     track: {
@@ -28,9 +29,10 @@ interface TrackItemProps {
     className?: string;
     track?: Track;
     loading: boolean;
+    completed: boolean;
 }
 
-const TrackItem = ({ track, loading }: TrackItemProps) => {
+const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
 
     const trackInfo = track?.track
 
@@ -51,10 +53,10 @@ const TrackItem = ({ track, loading }: TrackItemProps) => {
     return (
         <Link href={`/track?id=${trackInfo?.track_id}`}>
 
-            <div className="border-2 border-green-200 p-4 hover:bg-green-900 flex justify-between">
+            <div className={`border-0 border-green-200 p-4 hover:bg-yellow-900 ${completed ? 'bg-green-900' : 'bg-gray-900' } flex justify-between`}>
                 <div className="flex-1 truncate mr-2">
                     <p className="truncate">{trackInfo?.track_name}</p>
-                    <p className="truncate text-gray-500">{trackInfo?.artist_name}</p>
+                    <p className="truncate text-gray-400">{trackInfo?.artist_name}</p>
                 </div>
                 <div className="flex-none w-12 overflow-hidden">
                     <p className="truncate">⭐{trackInfo?.track_rating}</p>
@@ -68,15 +70,16 @@ const TrackItem = ({ track, loading }: TrackItemProps) => {
 interface TrackListPorps {
     trackList: Array<Track>;
     loading: boolean;
+    completedIds: number[];
 }
-const TrackList = ({ trackList, loading }: TrackListPorps) => {
+const TrackList = ({ trackList, loading, completedIds }: TrackListPorps) => {
 
     if (loading) {
         return (
             <div>
                 {[1, 2, 3, 4].map((v) =>
                     <div key={v} className="mb-2">
-                        <TrackItem  loading={true} />
+                        <TrackItem  loading={true} completed={false}/>
                     </div>
                 )
                 }
@@ -96,7 +99,7 @@ const TrackList = ({ trackList, loading }: TrackListPorps) => {
         <div>
             {trackList.map((track: Track, index) => (
                 <div  key={index} className="mb-2">
-                    <TrackItem track={track} loading={false} />
+                    <TrackItem track={track} loading={false} completed={completedIds?.includes(track?.track?.track_id)}/>
                 </div>
             ))}
         </div>
@@ -107,6 +110,8 @@ const TrackList = ({ trackList, loading }: TrackListPorps) => {
 const IndexPage = () => {
     const router = useRouter()
 
+    const [user] = useUser()
+
     const artist = '%E9%B9%BF%E4%B9%83'
 
     const [queryInput, setQueryInput] = useState(router.query.q?.toString() || '')
@@ -114,8 +119,8 @@ const IndexPage = () => {
     const [country, setCountry] = useState('JP')
 
 
-    const chartTracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/chart.tracks.get?format=jsonp&callback=callback&country=${country}&f_has_lyrics=true&apikey=${apiKey}`, fetcher)
-    const tracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.search?format=jsonp&callback=callback&q_track_artist=${query}&f_has_lyrics=true&s_track_rating=desc&apikey=${apiKey}`, fetcher)
+    const chartTracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/chart.tracks.get?format=jsonp&callback=callback&page_size=${100}&country=${country}&f_has_lyrics=true&apikey=${apiKey}`, fetcher)
+    const tracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.search?format=jsonp&callback=callback&page_size=${100}&q_track_artist=${query}&f_has_lyrics=true&s_track_rating=desc&apikey=${apiKey}`, fetcher)
     const { data, error } = useSWR(`https://api.musixmatch.com/ws/1.1/artist.search?format=jsonp&callback=callback&q_artist=${artist}&apikey=${apiKey}`, fetcher)
     // @ts-ignore  
     const artist_list: Array<Track> = data?.message?.body?.artist_list
@@ -162,12 +167,10 @@ const IndexPage = () => {
                 <div className="mt-16 mb-12 flex flex-col items-center">
 
 
-                    <h1 className="text-3xl text-center mb-2">
+                    <h1 className="text-3xl text-center mb-8">
                         Learn <span className="text-green-200">Lyrics</span> and <span className="text-green-200">Language</span> with <span className="text-green-200">Typing</span>!
                     </h1>
 
-
-                    <h1></h1>
                     <input
                         className="mb-2 p-1 w-80 text-lg bg-black border-2 border-green-200 focus:outline-none "
                         value={queryInput}
@@ -194,9 +197,10 @@ const IndexPage = () => {
 
                 </div>
 
-                <TrackList trackList={trackList} loading={!trackList} />
+                <TrackList trackList={trackList} loading={!trackList} completedIds={user?.completedTrackIds || []}/>
 
-                {/* {track_list === [] && <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre>} */}
+                {/* {true && <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre>} */}
+                {/* {true && <pre>{JSON.stringify(tracksRes.data, null, 2)}</pre>} */}
 
             </div>
 

@@ -1,7 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import useTyping from "react-typing-game-hook";
+import { TypingResult } from "../interfaces"
 
-const TypeInput: FC<{ text: string }> = ({ text }) => {
+enum Phase {
+    HAVENTSTARTED = 0,
+    STARTED,
+    ENDED,
+}
+
+const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => void }> = ({ text, onTypingEnded }) => {
     const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
     const [duration, setDuration] = useState(0);
@@ -78,14 +85,14 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
         });
     }, [currIndex, text]);
 
-    //Reset
     const reset = () => {
         resetTyping();
+        setDuration(0)
         // insertTyping();
         setTypingInput("");
     };
 
-    //Submit inputted word
+    // Submit inputted word
     const submitWord = () => {
         for (let i = currWordPos[0]; i <= currWordPos[1]; i++) {
             let index = i - currIndex - 1;
@@ -103,20 +110,36 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
 
     // set WPM
     useEffect(() => {
-        if (phase === 2 && endTime && startTime) {
-            setDuration(Math.floor((endTime - startTime) / 1000));
+        if (phase === Phase.ENDED && endTime && startTime) {
+            const duration = Math.floor((endTime - startTime) / 1000)
+            // setDuration(Math.floor((endTime - startTime) / 1000));
             setCurrWordPos([-1, -1]);
-        } else {
-            setDuration(0);
+
+            // Save record.
+            const newResult: TypingResult = {
+                wpm: Math.round(((60 / duration) * correctChar) / 5),
+                duration: duration,
+                correctChar: correctChar,
+                errorChar: errorChar,
+                accuracy: ((correctChar / text.length) * 100),
+                textLength: text.length,
+            }
+
+            onTypingEnded(newResult)
+
+            console.log('save')
         }
-    }, [phase, startTime, endTime]);
+    }, [phase, startTime, endTime, correctChar, errorChar, text]);
 
     useEffect(() => {
         const timerId = setInterval(() => {
-            setDuration(parseFloat((getDuration() / 1000).toFixed(2)))
+            if (phase === Phase.STARTED) {
+                setDuration(parseFloat((getDuration() / 1000).toFixed(2)))
+            }
         }, 100);
         return () => clearInterval(timerId);
     }, [phase])
+
     return (
         <div>
 
@@ -181,36 +204,32 @@ const TypeInput: FC<{ text: string }> = ({ text }) => {
                             !typingInput.length ? "gray" : typedWrong ? "red" : "green"
                             }-500`}
                         placeholder={
-                            phase !== 1
+                            phase !== Phase.STARTED
                                 ? "Type here... (Press enter to submit)"
                                 : ""
                         }
                     />
                 </div>
             </div>
-            <div className="flex justify-between text-gray-500">
+            <div className="flex justify-between text-gray-500 mb-8">
                 <span>Time: {duration}s</span>
                 <button onClick={() => reset()} >Reset</button>
             </div>
-            <p className="text-sm">
-                {phase === 2 && startTime && endTime ? (
+
+            {phase === Phase.ENDED && startTime && endTime ? (
+                <div className="text-sm">
+                    <h2 className="text-xl">Result</h2>
                     <ul>
-                        <li className="text-lg mr-4">Time: {duration}s</li>
-                        <li className="text-lg mr-4 text-green-500">
-                            WPM: {Math.round(((60 / duration) * correctChar) / 5)}
-                        </li>
-                        <li className="mr-4 text-blue-500 ">
-                            Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%
-                        </li>
-                        <li className="mr-4 text-yellow-500 ">Duration: {duration}s</li>
-                        {/* <li className="mr-4"> Current Index: {currIndex}</li> */}
-                        <li className="mr-4"> Correct Characters: {correctChar}</li>
-                        <li className="mr-4"> Error Characters: {errorChar}</li>
+                        {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
+                        <li className="text-lg">Duration: {duration}s</li>
+                        <li className="text-green-500 mr-4"> Correct Characters: {correctChar}</li>
+                        <li className="text-red-500 mr-4"> Error Characters: {errorChar}</li>
+
+                        <li className="text-lg text-green-500 ">Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%</li>
+                        <li className="text-lg  text-green-500">WPM: {Math.round(((60 / duration) * correctChar) / 5)}</li>
                     </ul>
-                ) : null}
-
-
-            </p>
+                </div>
+            ) : null}
 
             {/* Debug */}
             {false &&
