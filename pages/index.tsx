@@ -151,7 +151,7 @@ const IndexPage = () => {
 
     return (
 
-        <Layout title="Lyrics Typing">
+        <Layout title="Lyrics Typing - Learn Lyrics and Language with Typing!">
             {/* <pre>{JSON.stringify(chartTracksRes.data, null, 2)}</pre> */}
 
             {/* <div>hello {artist_list[0].artist.artist_name}!</div> */}
