@@ -5,21 +5,31 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "codegen": "apollo client:codegen --target typescript --watch"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.14",
+    "apollo-datasource": "^0.7.3",
+    "apollo-datasource-rest": "^0.11.0",
+    "apollo-server-micro": "^2.22.2",
+    "graphql": "^15.5.0",
+    "isemail": "^3.2.0",
     "kuroshiro": "^1.1.2",
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-full-screen": "^1.0.2",
     "react-typing-game-hook": "^1.2.1",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2",
     "swr": "^0.5.3"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
+    "apollo": "^2.32.5",
     "autoprefixer": "^10.2.5",
     "postcss": "^8.2.8",
     "tailwindcss": "^2.0.4",

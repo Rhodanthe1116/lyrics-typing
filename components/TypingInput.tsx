@@ -111,7 +111,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
     // set WPM
     useEffect(() => {
         if (phase === Phase.ENDED && endTime && startTime) {
-            const duration = Math.floor((endTime - startTime) / 1000)
+            const duration = (endTime - startTime) / 1000
             // setDuration(Math.floor((endTime - startTime) / 1000));
             setCurrWordPos([-1, -1]);
 
@@ -161,7 +161,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                         const WRONG = 2
 
                         if (shouldHightlight) {
-                            styling = "text-purple-200 bg-purple-900";
+                            styling = "";
                         } else if (state === INIT) {
                             styling = "text-gray-700";
                         } else if (state === CORRECT) {

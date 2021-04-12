@@ -14,7 +14,7 @@ const saveTrackTypingRecord = (trackId: number, result: TypingResult) => {
     const record: TrackTypingRecord = {
         trackId: trackId,
         result: result,
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
     }
 
     try {

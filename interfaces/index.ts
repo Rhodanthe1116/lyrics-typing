@@ -7,7 +7,7 @@
 export type User = {
     id: number
     name: string
-    typingRecords: TrackTypingRecord[] 
+    typingRecords: TrackTypingRecord[]
     completedTrackIds: number[]
 }
 
@@ -30,5 +30,25 @@ export type TypingResult = {
 export type TrackTypingRecord = {
     trackId: number
     result: TypingResult
-    timestamp: Date
+    timestamp: string
+}
+
+export interface Track {
+    id: number,
+    name: string,
+    artistName: string,
+    rating: number,
+    numFavourite: number
+}
+
+export interface MusixmatchTrackWrapperObject {
+    track: MusixmatchTrack
+}
+
+export interface MusixmatchTrack {
+    track_id: number,
+    track_name: string,
+    artist_name: string,
+    track_rating: number,
+    num_favourite: number
 }

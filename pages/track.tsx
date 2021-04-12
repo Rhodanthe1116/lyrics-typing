@@ -94,7 +94,7 @@ const TrackPage = () => {
                                 onTypingEnded={handleTypingEnded}
                             />
 
-                            <img className="hidden" src="http://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW" />
+                            <img className="hidden" src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW" />
                         </>
                         :
                         <div>loading...</div>
