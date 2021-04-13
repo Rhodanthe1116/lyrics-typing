@@ -34,6 +34,8 @@ module.exports = {
       const allTracks = await dataSources.musixmatchAPI.searchTracks({ query: query });
       return allTracks;
     },
+    track: (_, { id }, { dataSources }) =>
+      dataSources.musixmatchAPI.getTrackById({ trackId: id }),
   },
 
   Mutation: {
@@ -91,6 +93,11 @@ module.exports = {
   Launch: {
     isBooked: async (launch, _, { dataSources }) =>
       dataSources.userAPI.isBookedOnLaunch({ launchId: launch.id }),
+  },
+
+  Track: {
+    lyrics: (track, _, { dataSources }) =>
+      dataSources.musixmatchAPI.getLyricsByTrackId({ trackId: track.id }),
   },
 
   User: {

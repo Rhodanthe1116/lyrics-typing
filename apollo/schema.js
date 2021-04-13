@@ -34,11 +34,45 @@ const typeDefs = gql`
   }
 
   type Track {
-    id: Int
-    name: String
-    artistName: String
+    id: ID!
+    name: String!
+    rating: Int!
+    numFavourite: Int!
+    
+    artistName: String!
+    
+    album: Album
+    artist: Artist
+    lyrics: Lyrics
+  }
+
+  type Lyrics {
+    id: ID!
+    instrumental: Boolean
+    body: String!
+    language: String
+    scriptTrackingUrl: String
+    pixelTrackingUrl: String
+    copyright: String!
+    backlinkUrl: String
+    updatedTime: String!
+  }
+
+  type Artist {
+    id: ID!
+    mbid: String
+    name: String!
+    country: String
     rating: Int
-    numFavourite: Int
+    updatedTime: String
+  }
+
+  type Album {
+    id: ID!
+    name: String!
+    trackCount: Int
+
+    artist: Artist
   }
 
   type Query {
@@ -57,6 +91,9 @@ const typeDefs = gql`
 
     chartTracks(country: String): [Track]
     tracks(query: String): [Track]
+    track(id: ID!): Track
+    artist(id: ID!): Artist
+    album(id: ID!): Album
   }
 
   """
