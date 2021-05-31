@@ -196,8 +196,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                         autoCapitalize="off"
                         spellCheck={false}
                         className={`focus:outline-none bg-black placeholder-gray-500 border-b-2 p-1 w-full border-${
-                            !typingInput.length ? "gray" : typedWrong ? "red" : "green"
-                            }-500`}
+                            !typingInput.length ? "gray-500" : typedWrong ? "red-500" : "green-500"}`}
                         placeholder={
                             phase !== PhaseType.Started
                                 ? "Type here... (Press enter to submit)"
