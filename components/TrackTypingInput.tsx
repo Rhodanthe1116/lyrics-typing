@@ -1,20 +1,15 @@
 import 'tailwindcss/tailwind.css'
-import { useRouter } from 'next/router'
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 // Interface
-import { Track, Lyrics, TypingResult } from '../interfaces';
+import { Lyrics, TypingResult } from '../interfaces';
 
 // Components
 // import Link from 'next/link'
-import Layout from '../components/Layout'
 import TypingInput from "../components/TypingInput";
 import FullScreenButton from './FullScreenButton'
 
 // Data
-import dataProvider from "../utils/dataProvider";
-import { useQuery } from "@apollo/client"
-import { GET_TRACK_WITH_LYRICS } from '../apollo/query'
 import { GetTrackWithLyrics_track } from '../apollo/__generated__/GetTrackWithLyrics'
 
 interface TrackTypingInputProps {

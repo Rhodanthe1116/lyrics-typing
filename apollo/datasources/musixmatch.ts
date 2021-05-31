@@ -1,4 +1,4 @@
-import { RESTDataSource, RequestOptions, Response } from 'apollo-datasource-rest'
+import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { Track, Lyrics } from '../../interfaces'
 import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics } from './interfaces'
 
