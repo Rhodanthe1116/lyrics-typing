@@ -5,7 +5,7 @@ module.exports = {
     // service: 'My Graph 2',
     service: {
       name: 'My Graph 2',
-      url: 'http://localhost:3000/api/graphql',
+    //   url: 'http://localhost:3000/api/graphql',
     
       // optional disable SSL validation check
       skipSSLValidation: true

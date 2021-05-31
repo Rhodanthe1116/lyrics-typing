@@ -3,13 +3,13 @@ require('dotenv').config();
 import { ApolloServer } from 'apollo-server-micro'
 import typeDefs from '../../apollo/schema'
 const resolvers = require('../../apollo/resolvers');
-const { createStore } = require('../../apollo/utils');
+// const { createStore } = require('../../apollo/utils');
 
 const LaunchAPI = require('../../apollo/datasources/launch');
 const MusixmatchAPI = require('../../apollo/datasources/musixmatch');
-const UserAPI = require('../../apollo/datasources/user');
+// const UserAPI = require('../../apollo/datasources/user');
 
-const store = createStore();
+// const store = createStore();
 const isEmail = require('isemail');
 
 const apolloServer = new ApolloServer({
@@ -29,7 +29,7 @@ const apolloServer = new ApolloServer({
   dataSources: () => ({
     launchAPI: new LaunchAPI(),
     musixmatchAPI: new MusixmatchAPI(),
-    userAPI: new UserAPI({ store })
+    // userAPI: new UserAPI({ store })
   })
 })
 
