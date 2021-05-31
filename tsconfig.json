@@ -19,6 +19,6 @@
     "strictNullChecks": true,
     "target": "esnext"
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "__generated__/globalTypes.ts"],
   "include": ["**/*.ts", "**/*.tsx"]
 }
