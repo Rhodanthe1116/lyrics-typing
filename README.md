@@ -28,7 +28,7 @@ This is a typing game where you can learn lyrics and language!
 
 ### Service
 
-- Musixmatch (need API-KEY)
+- [Musixmatch](https://developer.musixmatch.com/documentation/api-reference/track-chart-get) (need API-KEY)
 
 ## Start dev.
 
