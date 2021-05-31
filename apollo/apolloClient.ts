@@ -21,7 +21,8 @@ export const typeDefs = gql`
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   ssrMode: typeof window === 'undefined',
   cache,
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
+  // config
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL || '/api/graphql',
   headers: {
     authorization:  typeof window !== 'undefined' ? (localStorage.getItem('token') || '') : '',
   },
