@@ -2,7 +2,6 @@
 
 This is a typing game where you can learn lyrics and language!
 
-
 [Link](https://lyrics-typing.vercel.app/)
 
 ## Features
@@ -10,7 +9,7 @@ This is a typing game where you can learn lyrics and language!
 - Multi-language support. (It is now optimized for Japanese.)
 - Huge amount of lyrics powered by MusixMatch.
 - It's mobile-first so you can learn anywhere, anytime.
-- 🚧Track your learning progress with your account. 
+- 🚧Track your learning progress with your account.
 
 ## Tech Stack
 
@@ -58,4 +57,8 @@ https://tailwindcss.com/docs/optimizing-for-production#writing-purgeable-html
 
 // ✅ Do dynamically select a complete class name
 <div class="{{  error  ?  'text-red-600'  :  'text-green-600'  }}"></div>
+```
+
+```
+test
 ```
