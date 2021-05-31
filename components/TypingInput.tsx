@@ -1,12 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import useTyping from "react-typing-game-hook";
+import useTyping, {PhaseType} from "react-typing-game-hook";
 import { TypingResult } from "../interfaces"
 
-enum Phase {
-    HAVENTSTARTED = 0,
-    STARTED,
-    ENDED,
-}
 
 const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => void }> = ({ text, onTypingEnded }) => {
     const lyricsContainerRef = useRef<HTMLDivElement>(null)
@@ -110,8 +105,8 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
 
     // set WPM
     useEffect(() => {
-        if (phase === Phase.ENDED && endTime && startTime) {
-            const duration = Math.floor((endTime - startTime) / 1000)
+        if (phase === PhaseType.Ended && endTime && startTime) {
+            const duration = (endTime - startTime) / 1000
             // setDuration(Math.floor((endTime - startTime) / 1000));
             setCurrWordPos([-1, -1]);
 
@@ -133,7 +128,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
 
     useEffect(() => {
         const timerId = setInterval(() => {
-            if (phase === Phase.STARTED) {
+            if (phase === PhaseType.Started) {
                 setDuration(parseFloat((getDuration() / 1000).toFixed(2)))
             }
         }, 100);
@@ -161,7 +156,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                         const WRONG = 2
 
                         if (shouldHightlight) {
-                            styling = "text-purple-200 bg-purple-900";
+                            styling = "";
                         } else if (state === INIT) {
                             styling = "text-gray-700";
                         } else if (state === CORRECT) {
@@ -203,7 +198,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                         className={`focus:outline-none bg-black placeholder-gray-500 border-b-2 p-1 w-full border-${
                             !typingInput.length ? "gray-500" : typedWrong ? "red-500" : "green-500"}`}
                         placeholder={
-                            phase !== Phase.STARTED
+                            phase !== PhaseType.Started
                                 ? "Type here... (Press enter to submit)"
                                 : ""
                         }
@@ -215,7 +210,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                 <button onClick={() => reset()} >Reset</button>
             </div>
 
-            {phase === Phase.ENDED && startTime && endTime ? (
+            {phase === PhaseType.Ended && startTime && endTime ? (
                 <div className="text-sm">
                     <h2 className="text-xl">Result</h2>
                     <ul>

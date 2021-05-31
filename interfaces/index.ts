@@ -5,14 +5,14 @@
 // import { User } from 'path/to/interfaces';
 
 export type User = {
-    id: number
+    id: string
     name: string
-    typingRecords: TrackTypingRecord[] 
-    completedTrackIds: number[]
+    typingRecords: TrackTypingRecord[]
+    completedTrackIds: string[]
 }
 
 export const newUser: User = {
-    id: 8787878787,
+    id: '8787878787',
     name: 'local user',
     typingRecords: [],
     completedTrackIds: []
@@ -28,7 +28,31 @@ export type TypingResult = {
 }
 
 export type TrackTypingRecord = {
-    trackId: number
+    trackId: string
     result: TypingResult
-    timestamp: Date
+    timestamp: string
+}
+
+export interface Track {
+    id: string,
+    name: string,
+    artistName: string,
+    rating: number,
+    numFavourite: number,
+
+    lyrics?: Lyrics
+}
+
+export interface Lyrics {
+    id: string
+    instrumental?: Boolean
+    body: String
+    language?: String
+    scriptTrackingUrl?: String
+    pixelTrackingUrl?: String
+    copyright: String
+    backlinkUrl?: String
+    updatedTime: String
+
+    track?: Track
 }

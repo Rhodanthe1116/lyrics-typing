@@ -20,6 +20,10 @@ This is a typing game where you can learn lyrics and language!
 - [Tailwind CSS](https://tailwindcss.com/docs) (like normal CSS)
 - 🚧 [Apollo Graphql Client](https://www.apollographql.com/docs/react/)
 
+#### Tutorials
+
+<https://www.apollographql.com/blog/typescript-graphql-code-generator-generate-graphql-types-with-apollo-codegen-tutorial/>
+
 ### Backend 🚧
 
 - NestJS
@@ -28,7 +32,7 @@ This is a typing game where you can learn lyrics and language!
 
 ### Service
 
-- Musixmatch (need API-KEY)
+- [Musixmatch](https://developer.musixmatch.com/documentation/api-reference/track-chart-get) (need API-KEY)
 
 ## Start dev.
 
@@ -57,8 +61,4 @@ https://tailwindcss.com/docs/optimizing-for-production#writing-purgeable-html
 
 // ✅ Do dynamically select a complete class name
 <div class="{{  error  ?  'text-red-600'  :  'text-green-600'  }}"></div>
-```
-
-```
-test
 ```
