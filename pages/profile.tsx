@@ -4,7 +4,7 @@ import useUser from "../hooks/useUser";
 import Link from 'next/link'
 import Layout from '../components/Layout'
 
-import { Track, TrackTypingRecord } from '../interfaces'
+import { TrackTypingRecord } from '../interfaces'
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)

@@ -1,17 +1,17 @@
-import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
+import { RESTDataSource, RequestOptions, Response } from 'apollo-datasource-rest'
 import { Track, Lyrics } from '../../interfaces'
 import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics } from './interfaces'
 
 const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
-interface MusixmatchResponse {
-  message: {
-    header: {
-      status_code: number,
-    }
-    body: any
-  }
-}
+// interface MusixmatchResponse {
+//   message: {
+//     header: {
+//       status_code: number,
+//     }
+//     body: any
+//   }
+// }
 
 class MusixmatchAPI extends RESTDataSource {
   constructor() {
@@ -34,10 +34,11 @@ class MusixmatchAPI extends RESTDataSource {
 
       }
 
-      throw new Error(JSON.stringify(responseJson))
+      console.log(JSON.stringify(responseJson))
+      throw new Error('Unknown musixmatch error')
     }
 
-    return response
+    return responseJson.message.body
   }
 
   trackReducer(track: MusixmatchTrack) {
@@ -60,29 +61,33 @@ class MusixmatchAPI extends RESTDataSource {
   }
 
   async getChartTracks({ country }: { country: string }) {
-    const response = await this.get('chart.tracks.get', {
-      page_size: 100,
-      country: country,
-      f_has_lyrics: true,
-    });
+    try {
 
-    const trackList: MusixmatchTrackWrapperObject[] = JSON.parse(response).message.body.track_list
-    return Array.isArray(trackList)
-      ? trackList.map((track) => this.trackReducer(track.track))
-      : [];
+        const body = await this.get('chart.tracks.get', {
+            page_size: 10,
+            country: country,
+            f_has_lyrics: true,
+        });
+        
+        const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+        return Array.isArray(trackList)
+        ? trackList.map((track) => this.trackReducer(track.track))
+        : [];
+    } catch (err) {
+        console.log(err)
+        return []    
+    }
   }
 
   async searchTracks({ query }: { query: string }) {
-    const responseStr = await this.get('track.search', {
-      page_size: 100,
+    const body = await this.get('track.search', {
+      page_size: 10,
       q_track_artist: query,
       f_has_lyrics: true,
       s_track_rating: 'desc',
     });
-    console.log(99999999999999999999)
-    const responseJson: MusixmatchResponse = JSON.parse(responseStr)
 
-    const trackList: MusixmatchTrackWrapperObject[] = responseJson.message.body.track_list
+    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
     return Array.isArray(trackList)
       ? trackList.map((track) => this.trackReducer(track.track))
       : [];
@@ -90,21 +95,19 @@ class MusixmatchAPI extends RESTDataSource {
 
 
   async getTrackById({ trackId }: { trackId: number }) {
-    const responseStr = await this.get('track.get', {
+    const body = await this.get('track.get', {
       track_id: trackId,
     });
-    const responseJson: MusixmatchResponse = JSON.parse(responseStr)
 
-    return this.trackReducer(responseJson.message.body.track);
+    return this.trackReducer(body.track);
   }
 
   async getLyricsByTrackId({ trackId }: { trackId: number }) {
-    const responseStr = await this.get('track.lyrics.get', {
+    const body = await this.get('track.lyrics.get', {
       track_id: trackId,
     });
-    const responseJson: MusixmatchResponse = JSON.parse(responseStr)
 
-    return this.lyricsReducer(responseJson.message.body.lyrics);
+    return this.lyricsReducer(body.lyrics);
   }
 
 

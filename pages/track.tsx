@@ -2,7 +2,7 @@ import 'tailwindcss/tailwind.css'
 import { useRouter } from 'next/router'
 
 // Interface
-import { Track, Lyrics, TypingResult } from '../interfaces';
+import { TypingResult } from '../interfaces';
 
 // Components
 // import Link from 'next/link'

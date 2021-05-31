@@ -11,17 +11,17 @@ export const typeDefs = gql`
     cartItems: [ID!]!
   }
 `;
-const IS_LOGGED_IN = gql`
-  query IsUserLoggedIn {
-    isLoggedIn @client
-  }
-`;
+// const IS_LOGGED_IN = gql`
+//   query IsUserLoggedIn {
+//     isLoggedIn @client
+//   }
+// `;
 
 // Initialize ApolloClient
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   ssrMode: typeof window === 'undefined',
   cache,
-  uri: 'https://3000-black-bonobo-6oq2sa6m.ws-us03.gitpod.io/api/graphql',
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
   headers: {
     authorization:  typeof window !== 'undefined' ? (localStorage.getItem('token') || '') : '',
   },
