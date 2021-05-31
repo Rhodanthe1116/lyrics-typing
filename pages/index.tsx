@@ -7,7 +7,7 @@ import Layout from '../components/Layout'
 
 import useSWR from 'swr'
 import useUser from '../hooks/useUser'
-
+const PAGE_SIZE = 10
 interface Track {
     track: {
         track_id: number,
@@ -119,8 +119,8 @@ const IndexPage = () => {
     const [country, setCountry] = useState('JP')
 
 
-    const chartTracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/chart.tracks.get?format=jsonp&callback=callback&page_size=${100}&country=${country}&f_has_lyrics=true&apikey=${apiKey}`, fetcher)
-    const tracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.search?format=jsonp&callback=callback&page_size=${100}&q_track_artist=${query}&f_has_lyrics=true&s_track_rating=desc&apikey=${apiKey}`, fetcher)
+    const chartTracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/chart.tracks.get?format=jsonp&callback=callback&page_size=${PAGE_SIZE}&country=${country}&f_has_lyrics=true&apikey=${apiKey}`, fetcher)
+    const tracksRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.search?format=jsonp&callback=callback&page_size=${PAGE_SIZE}&q_track_artist=${query}&f_has_lyrics=true&s_track_rating=desc&apikey=${apiKey}`, fetcher)
     const { data, error } = useSWR(`https://api.musixmatch.com/ws/1.1/artist.search?format=jsonp&callback=callback&q_artist=${artist}&apikey=${apiKey}`, fetcher)
     // @ts-ignore  
     const artist_list: Array<Track> = data?.message?.body?.artist_list
