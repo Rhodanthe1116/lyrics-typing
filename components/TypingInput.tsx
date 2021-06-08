@@ -1,4 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
+import 'tailwindcss/tailwind.css'
+
 import useTyping, {PhaseType} from "react-typing-game-hook";
 import { TypingResult } from "../interfaces"
 
