@@ -1,4 +1,3 @@
-const { ScalarLeafs } = require("graphql/validation/rules/ScalarLeafs");
 const colors = require("tailwindcss/colors");
 
 module.exports = {

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import 'tailwindcss/tailwind.css'
 
 import Layout from '../components/Layout'
 import TrackList from '../components/TrackList'
