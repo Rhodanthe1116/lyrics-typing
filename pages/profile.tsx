@@ -1,4 +1,3 @@
-import 'tailwindcss/tailwind.css'
 import useUser from "../hooks/useUser";
 
 import Link from 'next/link'

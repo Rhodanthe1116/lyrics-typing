@@ -1,4 +1,3 @@
-import 'tailwindcss/tailwind.css'
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 // Interface

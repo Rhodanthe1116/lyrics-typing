@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
+
 import useTyping, {PhaseType} from "react-typing-game-hook";
 import { TypingResult } from "../interfaces"
 
@@ -212,16 +213,25 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
 
             {phase === PhaseType.Ended && startTime && endTime ? (
                 <div className="text-sm">
+                  <div className="transform rotate-45 ">
+                    <div className="animate-floatup21 transform scale-90 left-21/40 absolute opacity-75 bg-white shadow-lg top-0.01 buttom-0 m-auto rounded">1</div>
+                    <div className="animate-floatup17 transform scale-170 left-15/40 absolute opacity-75 bg-white shadow-lg top-0.01 buttom-0 m-auto rounded">2</div>
+                    <div className="animate-floatup09 transform scale-320 left-1/4 absolute opacity-75 bg-white shadow-lg top-0.1 buttom-0 m-auto rounded">3</div> 
+                    <div className="animate-floatup17 transform scale-320 left-18/40 absolute opacity-75 bg-white shadow-lg top-0.1 buttom-0 m-auto rounded">4</div> 
+                    <div className="animate-floatup07 transform scale-320 left-21/40 absolute opacity-75 bg-white shadow-lg top-0.1 buttom-0 m-auto rounded">4</div> 
+                    <div className="animate-floatup13 transform scale-320 left-3/10 absolute opacity-75 bg-white shadow-lg top-0.1 buttom-0 m-auto rounded">4</div> 
+                  </div>   
                     <h2 className="text-xl">Result</h2>
-                    <ul>
+                    <ul >
                         {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
-                        <li className="text-lg">Duration: {duration}s</li>
-                        <li className="text-green-500 mr-4"> Correct Characters: {correctChar}</li>
+                        <li className="text-lg border-solid">Duration: {duration}s</li>
+                        <li className="text-green-500 mr-4 border-solid	"> Correct Characters: {correctChar}</li>
                         <li className="text-red-500 mr-4"> Error Characters: {errorChar}</li>
 
                         <li className="text-lg text-green-500 ">Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%</li>
                         <li className="text-lg  text-green-500">WPM: {Math.round(((60 / duration) * correctChar) / 5)}</li>
                     </ul>
+                    
                 </div>
             ) : null}
 
