@@ -26,7 +26,8 @@
     "react-typing-game-hook": "^1.2.1",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2",
-    "swr": "^0.5.3"
+    "swr": "^0.5.3",
+    "use-sound": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
@@ -34,9 +35,11 @@
     "@types/react-dom": "^17.0.1",
     "apollo": "^2.32.5",
     "autoprefixer": "^10.2.5",
+    "file-loader": "^6.2.0",
     "postcss": "^8.2.8",
     "tailwindcss": "^2.0.4",
-    "typescript": "4.0"
+    "typescript": "4.0",
+    "url-loader": "^4.1.1"
   },
   "resolutions": {
     "graphql": "15.4.0"

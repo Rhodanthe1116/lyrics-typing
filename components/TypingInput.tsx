@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import useTyping, {PhaseType} from "react-typing-game-hook";
 import { TypingResult } from "../interfaces"
-
+import useSounds from '../hooks/useSounds'
 
 const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => void }> = ({ text, onTypingEnded }) => {
     const lyricsContainerRef = useRef<HTMLDivElement>(null)
@@ -10,6 +10,8 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
     const [typingInput, setTypingInput] = useState("");
     const [typedWrong, setTypeWrong] = useState(false);
     const inputRef = useRef<any>(null);
+
+    const [playKeySound, playBeepSound, playErrorSound] = useSounds()
 
     const {
         states: {
@@ -36,14 +38,20 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                 let char = typingInput[i];
                 let correctChar = text[currWordPos[0] + i];
                 let diff = char !== correctChar;
+                console.log(char, correctChar, diff)
                 if (diff) {
+                    playErrorSound()
                     hasError = true;
                     break;
                 }
+                
             }
+            
             if (hasError !== prev) {
+                
                 return !prev;
             } else {
+                playKeySound()
                 return prev;
             }
         });
@@ -185,6 +193,8 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                                 reset();
                             } else if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
+                                playBeepSound() 
+                                
                                 submitWord();
                             }
                         }}
