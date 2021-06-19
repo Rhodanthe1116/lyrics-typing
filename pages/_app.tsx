@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app'
-import '../styles.css'
+import '../globals.css'
 
 import { ApolloProvider } from "@apollo/client";
 import client from "../apollo/apolloClient";

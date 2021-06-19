@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 const { ScalarLeafs } = require("graphql/validation/rules/ScalarLeafs");
+=======
+>>>>>>> c8b39c9d1c12a796f29e67be924e33da36d1a417
 const colors = require("tailwindcss/colors");
 
 module.exports = {
