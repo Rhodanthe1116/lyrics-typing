@@ -1,6 +1,6 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { Track, Lyrics } from '../../interfaces'
-import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics } from './interfaces'
+import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics} from './interfaces'
 
 const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
@@ -42,6 +42,7 @@ class MusixmatchAPI extends RESTDataSource {
   }
 
   trackReducer(track: MusixmatchTrack) {
+    console.log(track)
     return {
       id: track.track_id.toString(),
       name: track.track_name,
@@ -59,6 +60,8 @@ class MusixmatchAPI extends RESTDataSource {
       updatedTime: lyrics.updated_time
     } as Lyrics
   }
+
+ 
 
   async getChartTracks({ country }: { country: string }) {
     try {
@@ -110,6 +113,7 @@ class MusixmatchAPI extends RESTDataSource {
     return this.lyricsReducer(body.lyrics);
   }
 
+  
 
 }
 

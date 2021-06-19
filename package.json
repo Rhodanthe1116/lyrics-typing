@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.14",
+    "@headlessui/react": "^1.2.0",
+    "@heroicons/react": "^1.0.1",
+    "@popperjs/core": "^2.9.2",
     "apollo-datasource": "^0.7.3",
     "apollo-datasource-rest": "^0.11.0",
     "apollo-server-micro": "^2.22.2",
@@ -23,6 +26,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-full-screen": "^1.0.2",
+    "react-popper": "^2.2.5",
     "react-typing-game-hook": "^1.2.1",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2",
@@ -35,11 +39,9 @@
     "@types/react-dom": "^17.0.1",
     "apollo": "^2.32.5",
     "autoprefixer": "^10.2.5",
-    "file-loader": "^6.2.0",
     "postcss": "^8.2.8",
     "tailwindcss": "^2.0.4",
     "typescript": "4.0",
-    "url-loader": "^4.1.1"
   },
   "resolutions": {
     "graphql": "15.4.0"

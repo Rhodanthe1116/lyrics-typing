@@ -1,17 +1,20 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import useTyping, {PhaseType} from "react-typing-game-hook";
 import { TypingResult } from "../interfaces"
-import useSounds from '../hooks/useSounds'
+
+
+
+
 
 const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => void }> = ({ text, onTypingEnded }) => {
+    
+
     const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
     const [duration, setDuration] = useState(0);
     const [typingInput, setTypingInput] = useState("");
     const [typedWrong, setTypeWrong] = useState(false);
     const inputRef = useRef<any>(null);
-
-    const [playKeySound, playBeepSound, playErrorSound] = useSounds()
 
     const {
         states: {
@@ -29,6 +32,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
     });
 
     const [currWordPos, setCurrWordPos] = useState([-1, -1]);
+    
 
     //checks whether the word is correct while the user is typing
     useEffect(() => {
@@ -40,7 +44,6 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                 let diff = char !== correctChar;
                 console.log(char, correctChar, diff)
                 if (diff) {
-                    playErrorSound()
                     hasError = true;
                     break;
                 }
@@ -51,7 +54,6 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                 
                 return !prev;
             } else {
-                playKeySound()
                 return prev;
             }
         });
@@ -144,6 +146,8 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
     }, [phase])
 
     return (
+      <>
+        
         <div>
 
             <div
@@ -192,9 +196,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                                 e.preventDefault();
                                 reset();
                             } else if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                playBeepSound() 
-                                
+                                e.preventDefault();                                
                                 submitWord();
                             }
                         }}
@@ -243,7 +245,7 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                     
                 </div>
             ) : null}
-
+            
             {/* Debug */}
             {false &&
                 <pre>
@@ -260,6 +262,9 @@ const TypeInput: FC<{ text: string, onTypingEnded: (result: TypingResult) => voi
                 </pre>
             }
         </div>
+        
+      
+    </>
 
     );
 };
