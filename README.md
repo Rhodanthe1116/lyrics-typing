@@ -62,3 +62,21 @@ https://tailwindcss.com/docs/optimizing-for-production#writing-purgeable-html
 // ✅ Do dynamically select a complete class name
 <div class="{{  error  ?  'text-red-600'  :  'text-green-600'  }}"></div>
 ```
+
+### Linting & Formatting
+
+```bash
+yarn add -D
+ @types/eslint
+    @typescript-eslint/eslint-plugin
+    @typescript-eslint/parser
+    eslint
+    eslint-config-airbnb
+    eslint-config-prettier
+    eslint-import-resolver-typescript
+    eslint-plugin-import
+    eslint-plugin-jsx-a11y
+    eslint-plugin-prettier
+    eslint-plugin-react
+    eslint-plugin-react-hooks
+```
