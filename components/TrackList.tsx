@@ -65,7 +65,7 @@ const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
   }
 
   return (
-    <Link href={`/track?id=${track.id}`}>
+    <Link href={`/tracks/${track.id}`}>
       <a
         className={`border-0 border-green-200 p-4 hover:bg-pink-900 ${
           completed ? 'bg-green-900' : 'bg-gray-900'

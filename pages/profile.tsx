@@ -41,7 +41,7 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
 
 
   return (
-    <Link href={`/track?id=${record.trackId}`}>
+    <Link href={`/tracks/${record.trackId}`}>
 
       <a className={`border-0 border-green-200 p-4 hover:bg-pink-900 flex justify-between`}>
         <div className="flex-1 truncate mr-2">
