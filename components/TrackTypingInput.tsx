@@ -22,9 +22,6 @@ export enum Status {
   Stopped, Running
 }
 
-export type State = {
-  status: Status,
-}
 
 function TrackTypingInput({
   track,
@@ -33,28 +30,14 @@ function TrackTypingInput({
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
   const handle = useFullScreenHandle()
-
-  const startGame = (state: State): State => ({
-    ...state,
-    status: Status.Running,
-    // secondLeft: TIME_LIMIT
-  })
   
-  const showProgress = (state: State): boolean => (
-    state.status === Status.Running 
+  const [status, setStatus] = useState(
+    Status.Stopped,
   )
-
-  const [state, setState] = useState({
-    // board: generateNewBoard(INITIAL_LEVEL.value),
-    // secondLeft: TIME_LIMIT,
-    status: Status.Stopped,
-    // level: INITIAL_LEVEL
-  })
-  const { status } = state
+  
   const handleStartingClick = (): void => {
     if (status !== Status.Running) {
-      // setNewLevel(state.level)
-      setState(startGame)
+      setStatus(Status.Running)
     }
     if(!handle.active) handle.enter()
   }
@@ -97,7 +80,7 @@ function TrackTypingInput({
 
   return (
     <>
-      {showProgress(state) ?
+      {status === Status.Running ?
       <>
         <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
           <div className="flex justify-between">
