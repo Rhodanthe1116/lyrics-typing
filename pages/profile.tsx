@@ -5,10 +5,36 @@ import Layout from '../components/Layout'
 
 import { TrackTypingRecord } from '../interfaces'
 
+import { useQuery } from '@apollo/client';
+import { GET_TRACK } from '../apollo/query'
+
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)
   .then((res: Response) => res.text())
   .then((text: string) => JSON.parse(text.slice(9, text.length - 2)))
+
+const timeStampConverter = (stamp: any) => {
+  const date = new Date(stamp)
+  const output = ((date.getMonth()+1) 
+                  + "/" 
+                  + date.getDate() 
+                  + " "
+                  + date.getHours()
+                  + ":"
+                  + date.getMinutes())
+  return output
+}
+
+const findTrackById = (id: String) =>{
+  const track = useQuery(GET_TRACK, {
+    variables: { id: id }
+  })
+  // console.log(track)
+  if(track.data){
+    return track.data.track
+  }
+  return "undefined"
+};
 
 interface RecordItemProps {
   className?: string;
@@ -44,14 +70,16 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
     <Link href={`/tracks/${record.trackId}`}>
 
       <a className={`border-0 border-green-200 p-4 hover:bg-pink-900 flex justify-between`}>
+        <img className="md:w-48 md:h-48 w-20 h-20" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png/v1/fill/w_952,h_839,q_70,strp/great_days_album_cover_by_orochismith_dc1yn5d-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwNiIsInBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIiwid2lkdGgiOiI8PTExNDEifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.QJ7sn-riqwsCp_38xmJI1gwNfVlJ_j8iOJ2aKo-Mtak"></img>
         <div className="flex-1 truncate mr-2">
-          <p className="truncate">{record.trackId}</p>
-          <p className="truncate text-gray-400">{new Date(record.timestamp).toLocaleString()}</p>
+          <p className="font-bold">{findTrackById(record.trackId).name}</p>
+          <p className="text-gray-400">{findTrackById(record.trackId).artistName}</p>
         </div>
-        <div className="flex-none w-12 overflow-hidden">
-          <p className="truncate">WPM</p>
-          <p className="truncate">{record.result.wpm}</p>
+        <div className="w-auto overflow-hidden text-right">
+          <p className="text-red-500">{record.result.wpm} CPM</p>
+          <p className="truncate text-gray-400">{timeStampConverter(record.timestamp).toLocaleString()}</p>
         </div>
+        
       </a>
     </Link>
   )
@@ -101,7 +129,6 @@ const ProfilePage = () => {
   const [user] = useUser()
   // const lyricsRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
 
-
   // if (error) return (<div>failed to load {lyricsRes.error.toString()}</div>)
 
   // if (!data) return <div>loading...</div>
@@ -110,21 +137,53 @@ const ProfilePage = () => {
   return (
 
     <Layout title="Lyrics Typing">
+
+      <div className="">
+        <div className="relative bg-gray-900 p-4">
+            <div className="flex mt-2">
+              <div className="flex-1 justify-center">
+                <div className="flex items-center justify-center gap-2 min-w-max ml-3">
+                  <img className="md:w-48 md:h-48 w-20 h-20 rounded-full" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
+                  <h3 className="md:text-2xl text-sm font-bold min-w-max p-2">{user.name}</h3>
+                </div>
+              </div>
+              <div className="flex-1 text-center transform translate-y-1">
+                <h2 className="text-green-200 font-bold md:text-9xl text-6xl"> {user?.completedTrackIds?.length || 0}</h2>
+                <p> Songs Completed</p>
+              </div>
+            </div>
+            
+        </div>
+      </div>
+
       <div className="m-4">
 
-        <div className="bg-gray-900 p-4">
-          <img className="w-32 h-32 rounded-full mx-auto mb-2" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
-          <h3 className="text-xl font-bold text-center">{user.name}</h3>
+        <div className="bg-gray-900 p-3">
+         
           {/* <p>{user.id}</p> */}
-          <div className="mt-2 flex">
-            <div className="flex-1 text-center">
-              <h2 className="text-4xl">{user?.typingRecords?.length || 0}</h2>
-              <p>Total Completed </p>
+          <div className="flex">
+            <div className="flex-1 text-left">
+              <p className="text-gray-900 bg-white inline-block font-semibold">Average CMP</p>
+              <div className="pl-7 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+                <div>JP</div>
+                <div>32</div>
+                <div>TW</div>
+                <div>40</div>
+                <div>KR</div>
+                <div>3</div>
+              </div>
             </div>
-            <div className="flex-1 text-center">
-              <h2 className="text-4xl"> {user?.completedTrackIds?.length || 0}</h2>
-              <p>Songs Completed</p>
-            </div> 
+            <div className="flex-1 text-left">
+              <p className="text-gray-900 bg-white inline-block font-semibold">Top Artists</p>
+              <div className="pl-7 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+                <div>A</div>
+                <div>32</div>
+                <div>B</div>
+                <div>12</div>
+                <div>C</div>
+                <div>3</div>
+              </div>
+            </div>
           </div>
 
         </div>
