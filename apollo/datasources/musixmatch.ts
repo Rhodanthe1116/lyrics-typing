@@ -79,9 +79,7 @@ class MusixmatchAPI extends RESTDataSource {
             country: country,
             f_has_lyrics: true,
         });
-        console.log(body)
         const trackList: MusixmatchTrackWrapperObject[] = body.track_list
-        console.log(trackList)
         return Array.isArray(trackList)
         ? trackList.map((track) => this.trackReducer(track.track))
         : [];
@@ -117,9 +115,6 @@ class MusixmatchAPI extends RESTDataSource {
       ? trackList.map((track) => this.trackReducer(track.track))
       : [];
     }
-    
-
-    
   }
 
 
