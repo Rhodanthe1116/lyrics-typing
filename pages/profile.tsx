@@ -69,16 +69,16 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
 
       <a className={`border-0 border-green-200 md:py-3 md:px-6 py-1 px-3 hover:bg-pink-900 flex justify-between bg-gray-900`}>
         <div>
-          <img className="md:w-28 md:h-28 w-16 h-16 object-cover object-fill" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png/v1/fill/w_952,h_839,q_70,strp/great_days_album_cover_by_orochismith_dc1yn5d-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwNiIsInBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIiwid2lkdGgiOiI8PTExNDEifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.QJ7sn-riqwsCp_38xmJI1gwNfVlJ_j8iOJ2aKo-Mtak"></img>
+          <img className="md:w-22 md:h-22 w-16 h-16 object-cover object-fill" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png/v1/fill/w_952,h_839,q_70,strp/great_days_album_cover_by_orochismith_dc1yn5d-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwNiIsInBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIiwid2lkdGgiOiI8PTExNDEifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.QJ7sn-riqwsCp_38xmJI1gwNfVlJ_j8iOJ2aKo-Mtak"></img>
         </div>
 
         <div className="flex-1 truncate ml-4 md:ml-8">
-          <p className="truncate font-bold text-2xl  md:text-3xl">Pale Blue</p>
-          <p className="truncate font-bold text-gray-400 mt-2 md:mt-8 md:text-2xl">Kenshi Yonezu</p>
+          <p className="truncate font-bold text-xl  md:text-xl">Pale Blue</p>
+          <p className="truncate font-bold text-gray-400 mt-2 md:mt-2 md:text-xl">Kenshi Yonezu</p>
         </div>
         <div className="flex-none w-auto overflow-hidden text-right">
-          <p className="truncate text-red-500 md:text-3xl">{record.result.wpm} CPM</p>
-          <p className="truncate text-gray-400 mt-4 md:mt-8 md:text-2xl">{timeStampConverter(record.timestamp).toLocaleString()}</p>
+          <p className="truncate text-red-500 md:text-xl">{record.result.wpm} CPM</p>
+          <p className="truncate text-gray-400 mt-4 md:mt-2 md:text-xl">{timeStampConverter(record.timestamp).toLocaleString()}</p>
         </div>
         
       </a>
@@ -141,53 +141,53 @@ const ProfilePage = () => {
 
       <div className="">
         <div className="relative">
-            <div className="flex mt-8">
-              <div className="flex-1 justify-center">
-                <div className="flex items-center justify-center gap-2 min-w-max ml-3">
+            <div className="flex my-8">
+              <div className="flex-1">
+                <div className="flex items-center justify-center gap-2 ml-12 md:ml-0">
                   <img className="md:w-48 md:h-48 w-20 h-20 rounded-full" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
-                  <h3 className="md:text-2xl text-base font-bold min-w-max p-2">{user.name}</h3>
+                  <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">{user.name}</p>
                 </div>
               </div>
-              <div className="flex-1 text-center transform translate-y-1">
-                <h2 className="text-green-200 font-bold md:text-9xl text-5xl"> {user?.completedTrackIds?.length || 0}</h2>
-                <p className="font-bold"> Songs Passed</p>
+              <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
+                <p className="text-green-200 font-bold md:text-9xl text-4xl text-center"> {user?.completedTrackIds?.length || 0}</p>
+                <p className="font-bold text-sm text-center"> Songs Passed</p>
               </div>
             </div>
             
         </div>
       </div>
 
-      <div className="m-4 m-8">
+      
         {/* bg-gray-900 p-3 */}
-        <div className="md:mb-24 mb-16">
+        <div className="m-4 md:mb-24 mb-16">
          
           {/* <p>{user.id}</p> */}
-          <div className="flex">
-            <div className="flex-1 ">
-              <p className="md:text-3xl font-semibold text-center mr-56 whitespace-nowrap">Average CMP</p>
-              <div className="md:pt-4 md:text-xl pt-1 grid grid-flow-row grid-cols-2 grid-rows-3 text-center">
-                <div>JP</div>
-                <div>32</div>
-                <div>TW</div>
-                <div>40</div>
-                <div>KR</div>
-                <div>3</div>
+          <div className="text-sm flex mb-12">
+            <div className="flex-1 ml-2 md:ml-10">
+              <p className="truncate md:text-2xl font-semibold">Average CMP</p>
+              <div className="truncate pl-4 md:pt-4 md:text-2xl md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+                <p>JP</p>
+                <p className="pl-8 md:pl-28">32</p>
+                <p>TW</p>
+                <p className="pl-8 md:pl-28">40</p>
+                <p>KR</p>
+                <p className="pl-8 md:pl-28">3</p>
               </div>
             </div>
-            <div className="flex-1">
-              <p className="md:text-3xl font-semibold text-center mr-56 whitespace-nowrap">Top Artists</p>
-              <div className="md:pt-4 md:text-xl pt-1 grid grid-flow-row grid-cols-2 grid-rows-3 text-center">
-                <div>A</div>
-                <div>32</div>
-                <div>B</div>
-                <div>12</div>
-                <div>C</div>
-                <div>3</div>
+            <div className="flex-1 md:pl-12">
+              <p className="truncate md:text-2xl font-semibold">Top Artists</p>
+              <div className="truncate pl-4 md:pt-4 md:text-2xl md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+                <p>A</p>
+                <p className="pl-8 md:pl-28">32</p>
+                <p>B</p>
+                <p className="pl-8 md:pl-28">12</p>
+                <p>C</p>
+                <p className="pl-8 md:pl-28">3</p>
               </div>
             </div>
           </div>
 
-        </div>
+        
 
         <RecordList recordList={user?.typingRecords.reverse()} loading={!user}/>
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
