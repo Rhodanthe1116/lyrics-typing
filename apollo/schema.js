@@ -71,6 +71,8 @@ const typeDefs = gql`
     id: ID!
     name: String!
     trackCount: Int
+    artistId: ID
+    coverart: String
 
     artist: Artist
   }

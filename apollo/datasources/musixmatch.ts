@@ -1,6 +1,6 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { Track, Lyrics } from '../../interfaces'
-import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics } from './interfaces'
+import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics, MusixmatchAlbum } from './interfaces'
 
 const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
 
@@ -48,6 +48,8 @@ class MusixmatchAPI extends RESTDataSource {
       artistName: track.artist_name,
       rating: track.track_rating,
       numFavourite: track.num_favourite,
+      artistId: track.artist_id.toString(),
+      albumId:track.album_id.toString()
     } as Track
   }
   lyricsReducer(lyrics: MusixmatchLyrics) {
@@ -58,6 +60,15 @@ class MusixmatchAPI extends RESTDataSource {
       copyright: lyrics.lyrics_copyright,
       updatedTime: lyrics.updated_time
     } as Lyrics
+  }
+  albumReducer(album: MusixmatchAlbum){
+    return{
+      id: album.album_id.toString(),
+      name: album.album_name,
+      trackCount: album.album_track_count,
+      artistId: album.artist_id.toString(),
+      coverart: album.album_coverart_100x100
+    }
   }
 
   async getChartTracks({ country }: { country: string }) {
@@ -108,6 +119,42 @@ class MusixmatchAPI extends RESTDataSource {
     });
 
     return this.lyricsReducer(body.lyrics);
+  }
+
+  async searchTracksByArtistId({ artistId }: { artistId: number }) {
+    const body = await this.get('track.search', {
+      page_size: 5,
+      f_artist_id: artistId,
+      f_has_lyrics: true,
+      s_track_rating: 'desc',
+    });
+
+    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+    return Array.isArray(trackList)
+      ? trackList.map((track) => this.trackReducer(track.track))
+      : [];
+  }
+
+  async getTracksByAlbumId({ albumId }: { albumId: number }) {
+    const body = await this.get('album.tracks.get', {
+      page_size: 5,
+      album_id: albumId,
+      f_has_lyrics: true,
+    });
+
+    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+    return Array.isArray(trackList)
+      ? trackList.map((track) => this.trackReducer(track.track))
+      : [];
+  }
+
+  async getAlbumById({ albumId }: { albumId: number }){
+    const body = await this.get('album.get', {
+      album_id: albumId,
+    });
+
+    return this.albumReducer(body.album)
+
   }
 
 
