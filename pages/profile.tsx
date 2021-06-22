@@ -72,13 +72,13 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
           <img className="md:w-28 md:h-28 w-16 h-16 object-cover object-fill" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png/v1/fill/w_952,h_839,q_70,strp/great_days_album_cover_by_orochismith_dc1yn5d-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwNiIsInBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIiwid2lkdGgiOiI8PTExNDEifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.QJ7sn-riqwsCp_38xmJI1gwNfVlJ_j8iOJ2aKo-Mtak"></img>
         </div>
 
-        <div className="flex-1 truncate ml-4 mt-2 md:ml-8">
-          <p className="font-bold text-2xl  md:text-3xl">Pale Blue</p>
-          <p className="font-bold text-gray-400 mt-4 md:mt-8 text-sm md:text-xl">Kenshi Yonezu</p>
+        <div className="flex-1 truncate ml-4 md:ml-8">
+          <p className="truncate font-bold text-2xl  md:text-3xl">Pale Blue</p>
+          <p className="truncate font-bold text-gray-400 mt-2 md:mt-8 md:text-2xl">Kenshi Yonezu</p>
         </div>
-        <div className="w-auto overflow-hidden text-right">
-          <p className="text-red-500 md:text-3xl">{record.result.wpm} CPM</p>
-          <p className="truncate text-gray-400 mt-6 md:text-2xl">{timeStampConverter(record.timestamp).toLocaleString()}</p>
+        <div className="flex-none w-auto overflow-hidden text-right">
+          <p className="truncate text-red-500 md:text-3xl">{record.result.wpm} CPM</p>
+          <p className="truncate text-gray-400 mt-4 md:mt-8 md:text-2xl">{timeStampConverter(record.timestamp).toLocaleString()}</p>
         </div>
         
       </a>
@@ -164,7 +164,7 @@ const ProfilePage = () => {
           {/* <p>{user.id}</p> */}
           <div className="flex">
             <div className="flex-1 ">
-              <p className="md:text-3xl font-semibold text-left pl-1">Average CMP</p>
+              <p className="md:text-3xl font-semibold text-center mr-56 whitespace-nowrap">Average CMP</p>
               <div className="md:pt-4 md:text-xl pt-1 grid grid-flow-row grid-cols-2 grid-rows-3 text-center">
                 <div>JP</div>
                 <div>32</div>
@@ -175,7 +175,7 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex-1">
-              <p className="md:text-3xl font-semibold text-left pl-1">Top Artists</p>
+              <p className="md:text-3xl font-semibold text-center mr-56 whitespace-nowrap">Top Artists</p>
               <div className="md:pt-4 md:text-xl pt-1 grid grid-flow-row grid-cols-2 grid-rows-3 text-center">
                 <div>A</div>
                 <div>32</div>
