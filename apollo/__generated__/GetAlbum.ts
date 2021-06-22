@@ -4,24 +4,22 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetTrack
+// GraphQL query operation: GetAlbum
 // ====================================================
 
-export interface GetTrack_track {
-  __typename: "Track";
+export interface GetAlbum_album {
+  __typename: "Album";
   id: string;
   name: string;
-  artistName: string;
-  rating: number;
-  numFavourite: number;
+  trackCount: number | null;
   artistId: string | null;
-  albumId: string | null;
+  coverart: string | null;
 }
 
-export interface GetTrack {
-  track: GetTrack_track | null;
+export interface GetAlbum {
+  album: GetAlbum_album | null;
 }
 
-export interface GetTrackVariables {
+export interface GetAlbumVariables {
   id: string;
 }

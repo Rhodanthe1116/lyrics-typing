@@ -30,12 +30,18 @@ module.exports = {
       const allTracks = await dataSources.musixmatchAPI.getChartTracks({ country: country });
       return allTracks;
     },
-    tracks: async (_, { query }, { dataSources }) => {
-      const allTracks = await dataSources.musixmatchAPI.searchTracks({ query: query });
+    tracks: async (_, { query , artistId}, { dataSources }) => {
+      const allTracks = await dataSources.musixmatchAPI.searchTracks({ query: query ,artistId:artistId});
       return allTracks;
     },
     track: (_, { id }, { dataSources }) =>
       dataSources.musixmatchAPI.getTrackById({ trackId: id }),
+    album: (_, { id }, { dataSources }) =>
+      dataSources.musixmatchAPI.getAlbumById({ albumId: id }),
+    tracksByAlbum: async (_, { id }, { dataSources }) => {
+      const allTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: id });
+      return allTracks;
+    },
   },
 
   Mutation: {

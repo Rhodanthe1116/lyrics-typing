@@ -9,6 +9,8 @@ fragment TrackTile on Track {
   artistName
   rating
   numFavourite
+  artistId
+  albumId
 }
 `;
 
@@ -32,8 +34,8 @@ ${TRACK_TILE_DATA}
 `;
 
 export const SEARCH_TRACKS = gql`
-query SearchTracks($query: String) {
-  tracks(query: $query) {
+query SearchTracks($query: String, $artistId: ID) {
+  tracks(query: $query, artistId: $artistId) {
     ...TrackTile
   }
 }
@@ -61,4 +63,25 @@ query GetTrackWithLyrics($id: ID!) {
 }
 ${TRACK_TILE_DATA}
 ${LYRICS_TILE_DATA}
+`;
+
+export const GET_TRACKS_FROM_ALBUM = gql`
+query GetTracksFromAlbum($id: ID!) {
+  tracksByAlbum(id: $id) {
+    ...TrackTile
+    
+  }
+}
+`;
+
+export const GET_ALBUM = gql`
+query GetAlbum($id: ID!) {
+  album(id: $id){
+    id
+    name
+    trackCount
+    artistId
+    coverart
+  }
+}
 `;

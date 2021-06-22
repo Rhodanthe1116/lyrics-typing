@@ -14,6 +14,8 @@ export interface SearchTracks_tracks {
   artistName: string;
   rating: number;
   numFavourite: number;
+  artistId: string | null;
+  albumId: string | null;
 }
 
 export interface SearchTracks {
@@ -22,4 +24,5 @@ export interface SearchTracks {
 
 export interface SearchTracksVariables {
   query?: string | null;
+  artistId?: string | null;
 }

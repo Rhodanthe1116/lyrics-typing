@@ -79,8 +79,9 @@ class MusixmatchAPI extends RESTDataSource {
             country: country,
             f_has_lyrics: true,
         });
-        
+        console.log(body)
         const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+        console.log(trackList)
         return Array.isArray(trackList)
         ? trackList.map((track) => this.trackReducer(track.track))
         : [];
@@ -90,18 +91,35 @@ class MusixmatchAPI extends RESTDataSource {
     }
   }
 
-  async searchTracks({ query }: { query: string }) {
-    const body = await this.get('track.search', {
+  async searchTracks({ query, artistId}: { query: string,artistId:number }) {
+    if (query){
+      const body = await this.get('track.search', {
       page_size: 10,
       q_track_artist: query,
       f_has_lyrics: true,
       s_track_rating: 'desc',
     });
-
     const trackList: MusixmatchTrackWrapperObject[] = body.track_list
     return Array.isArray(trackList)
       ? trackList.map((track) => this.trackReducer(track.track))
       : [];
+    }
+    
+    else if (artistId) {
+      const body = await this.get('track.search', {
+      page_size: 5,
+      f_artist_id: artistId,
+      f_has_lyrics: true,
+      s_track_rating: 'desc',
+    });
+    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+    return Array.isArray(trackList)
+      ? trackList.map((track) => this.trackReducer(track.track))
+      : [];
+    }
+    
+
+    
   }
 
 
@@ -119,20 +137,6 @@ class MusixmatchAPI extends RESTDataSource {
     });
 
     return this.lyricsReducer(body.lyrics);
-  }
-
-  async searchTracksByArtistId({ artistId }: { artistId: number }) {
-    const body = await this.get('track.search', {
-      page_size: 5,
-      f_artist_id: artistId,
-      f_has_lyrics: true,
-      s_track_rating: 'desc',
-    });
-
-    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
-    return Array.isArray(trackList)
-      ? trackList.map((track) => this.trackReducer(track.track))
-      : [];
   }
 
   async getTracksByAlbumId({ albumId }: { albumId: number }) {

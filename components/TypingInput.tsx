@@ -5,14 +5,15 @@ import { TypingResult } from '../interfaces'
 
 const TypeInput: FC<{
   text: string
+  typingEnded:boolean
+  setTypingEnded:(typingEnded:boolean) => void
   onTypingEnded: (result: TypingResult) => void
-}> = ({ text, onTypingEnded }) => {
+}> = ({ text, onTypingEnded, typingEnded, setTypingEnded }) => {
   const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
   const [duration, setDuration] = useState(0)
   const [typingInput, setTypingInput] = useState('')
   const [typedWrong, setTypeWrong] = useState(false)
-  const [typingEnded, setTypingEnded] = useState(false)
   const inputRef = useRef<any>(null)
 
   const {
@@ -275,7 +276,6 @@ const TypeInput: FC<{
               4
             </div>
           </div>
-          <h2 className="text-xl">Same Albums / Artists</h2>
         </div>
       ) : null}
 

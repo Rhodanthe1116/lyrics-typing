@@ -40,6 +40,8 @@ const typeDefs = gql`
     numFavourite: Int!
     
     artistName: String!
+    artistId:String,
+    albumId: String,
     
     album: Album
     artist: Artist
@@ -92,10 +94,11 @@ const typeDefs = gql`
     me: User
 
     chartTracks(country: String): [Track]
-    tracks(query: String): [Track]
+    tracks(query: String,artistId: ID): [Track]
     track(id: ID!): Track
     artist(id: ID!): Artist
     album(id: ID!): Album
+    tracksByAlbum(id: ID!): [Track]
   }
 
   """

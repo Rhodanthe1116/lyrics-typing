@@ -34,6 +34,11 @@ function TrackTypingInput({
   const [status, setStatus] = useState(
     Status.Stopped,
   )
+  const [typingEnded, setTypingEnded] = useState(false)
+  //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
+  //  variables: { id: trackId }
+  //});
+
   
   const handleStartingClick = (): void => {
     if (status !== Status.Running) {
@@ -64,7 +69,9 @@ function TrackTypingInput({
                   ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
                   : ''
               }
-              onTypingEnded={onTypingEnded}
+              onTypingEnded={onTypingEnded} 
+              typingEnded={typingEnded} 
+              setTypingEnded={setTypingEnded}
             />
 
             <img
@@ -99,6 +106,8 @@ function TrackTypingInput({
                 : ''
             }
             onTypingEnded={onTypingEnded}
+            typingEnded={typingEnded} 
+            setTypingEnded={setTypingEnded}
           />
 
           <img
@@ -107,6 +116,12 @@ function TrackTypingInput({
           />
         </FullScreen>
         <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+        {typingEnded?(
+          <>
+            <h2 className="text-xl">Same Albums / Artists</h2>
+
+          </>
+        ):null}
       </>
       :
       (<div>
