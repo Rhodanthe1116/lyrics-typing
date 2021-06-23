@@ -43,10 +43,24 @@ module.exports = {
       return allTracks;
     },
     recommandTracks: async (_, { artistId, albumId }, { dataSources }) => {
-      const allTracks = await dataSources.musixmatchAPI.searchTracks({artistId:artistId})??[];
-      const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: albumId })??[];
-      allTracks.push(...otherTracks)
-      return allTracks;
+      if (artistId&&albumId){
+        const allTracks = await dataSources.musixmatchAPI.searchTracks({artistId:artistId})??[];
+        const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: albumId })??[];
+        allTracks.push(...otherTracks)
+        return allTracks;
+      }
+      else if (!artistId && albumId){
+        const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: albumId })??[];
+        return otherTracks;
+      }
+      else if (artistId && !albumId){
+        const allTracks = await dataSources.musixmatchAPI.searchTracks({artistId:artistId})??[];
+        return allTracks;
+      }
+      else{
+        return []
+      }
+      
     },
   },
 

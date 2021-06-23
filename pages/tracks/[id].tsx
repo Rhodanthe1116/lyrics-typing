@@ -82,7 +82,7 @@ const TrackPage = () => {
                 }{
                     typingPhase===TypingPhase.End?
                     <>
-                        <h2 className="text-xl">Same Albums / Artists</h2>
+                        <h2 className="text-xl my-2">Same Albums / Artists</h2>
                         <TrackList trackList={tracksList??[]} loading={recommandTracksRes.loading} completedIds={[]}/>
                     </>
                     :null

@@ -153,11 +153,11 @@ const TypeInput: FC<{
           <p className={`text-xl" ${Math.round(((60 / duration) * correctChar))>=30?'text-green-500':'text-red-500'}`}>
             {Math.round(((60 / duration) * correctChar))>=30?'Passed':'Failed'}</p>
           <div className='my-4 flex justify-center items-end'>
-            <h2 className={`text-2xl text-center border-solid mx-4 ${Math.round(((60 / duration) * correctChar))>=30?'text-green-500':'text-red-500'}`}>
+            <h2 className={`text-3xl text-center border-solid mx-4 ${Math.round(((60 / duration) * correctChar))>=30?'text-green-500':'text-red-500'}`}>
               {Math.round(((60 / duration) * correctChar))}</h2>   
             <div className='text-sm'> CPM</div>
           </div>
-          <ul className='mb-4'>
+          <ul className='text-sm mb-4 text-gray-500'>
             {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
             <li>Times: {Math.round(duration)}s</li>
             <li>
