@@ -93,4 +93,5 @@ query GetRecommandTracks($artistId: ID!, $albumId: ID!) {
     
   }
 }
+${TRACK_TILE_DATA}
 `;

@@ -32,7 +32,6 @@ module.exports = {
     },
     tracks: async (_, { query , artistId}, { dataSources }) => {
       const allTracks = await dataSources.musixmatchAPI.searchTracks({ query: query ,artistId:artistId});
-      console.log(typeof allTracks)
       return allTracks??[];
     },
     track: (_, { id }, { dataSources }) =>
@@ -44,8 +43,8 @@ module.exports = {
       return allTracks;
     },
     recommandTracks: async (_, { artistId, albumId }, { dataSources }) => {
-      const allTracks = await dataSources.musixmatchAPI.searchTracks({artistId:artistId});
-      const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: albumId });
+      const allTracks = await dataSources.musixmatchAPI.searchTracks({artistId:artistId})??[];
+      const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({ albumId: albumId })??[];
       allTracks.push(...otherTracks)
       return allTracks;
     },

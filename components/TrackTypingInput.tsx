@@ -1,7 +1,7 @@
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import React, { useState } from "react";
+import React from "react";
 // Interface
-import { Album, Lyrics, TypingResult } from '../interfaces'
+import { /*Album,*/ Lyrics, TypingResult } from '../interfaces'
 import {TypingPhase} from '../pages/tracks/[id]'
 
 // Components

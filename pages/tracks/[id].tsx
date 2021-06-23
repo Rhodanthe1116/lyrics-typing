@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
 // Interface
-import { TypingResult, Track } from '../../interfaces';
+import { TypingResult } from '../../interfaces';
 
 // Components
 // import Link from 'next/link'
@@ -14,12 +14,10 @@ import TrackList from '../../components/TrackList';
 // Data
 import dataProvider from "../../utils/dataProvider";
 import { useQuery } from "@apollo/client"
-import { GET_ALBUM, GET_RECOMMAND_TRACKS, GET_TRACKS_FROM_ALBUM, GET_TRACK_WITH_LYRICS, SEARCH_TRACKS } from '../../apollo/query'
+import { GET_RECOMMAND_TRACKS, GET_TRACK_WITH_LYRICS} from '../../apollo/query'
 import { GetTrackWithLyrics } from '../../apollo/__generated__/GetTrackWithLyrics'
-//import { GetAlbum } from '../../apollo/__generated__/GetAlbum'
-//import { GetRecommandTracks } from '../../apollo/__generated__/GetRecommandTracks'
-//import { GetTracksFromAlbum } from '../../apollo/__generated__/GetTracksFromAlbum'
-import {SearchTracks} from '../../apollo/__generated__/SearchTracks'
+import { GetRecommandTracks } from '../../apollo/__generated__/GetRecommandTracks'
+
 import { useState } from 'react';
 
 
@@ -41,22 +39,11 @@ const TrackPage = () => {
     const track = trackRes.data?.track
     const lyrics = trackRes.data?.track?.lyrics
 
-    //const albumRes = useQuery<GetAlbum>(GET_ALBUM,{
-    //    variables: { id: track?.albumId }
-    //})
-    console.log([Number(track?.artistId),Number(track?.albumId)])
-    //const recommandTracksRes = useQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS,{
-    //    variables: { artistId: Number(track?.artistId), albumId: Number(track?.albumId)}
-    //})
-    //const sameAlbumRes = useQuery<GetTracksFromAlbum>(GET_TRACKS_FROM_ALBUM,{
-    //    variables: { id: Number(track?.albumId) }
-    //})
-
-    const sameArtistRes = useQuery<SearchTracks>(SEARCH_TRACKS,{
-        variables: { artistId: Number(track?.artistId) }
+    const recommandTracksRes = useQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS,{
+        variables: { artistId: Number(track?.artistId), albumId: Number(track?.albumId)}
     })
-    //const album = albumRes.data?.album
-    const tracksList = sameArtistRes?.data?.tracks
+
+    const tracksList = recommandTracksRes?.data?.recommandTracks
     // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
     function handleTypingEnded(result: TypingResult) {
@@ -96,7 +83,7 @@ const TrackPage = () => {
                     typingPhase===TypingPhase.End?
                     <>
                         <h2 className="text-xl">Same Albums / Artists</h2>
-                        <TrackList trackList={tracksList??[]} loading={sameArtistRes.loading} completedIds={[]}/>
+                        <TrackList trackList={tracksList??[]} loading={recommandTracksRes.loading} completedIds={[]}/>
                     </>
                     :null
                 }
