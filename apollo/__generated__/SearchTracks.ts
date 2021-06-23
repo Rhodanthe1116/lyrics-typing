@@ -19,7 +19,7 @@ export interface SearchTracks_tracks {
 }
 
 export interface SearchTracks {
-  tracks: (SearchTracks_tracks | null)[] | null;
+  tracks: SearchTracks_tracks[];
 }
 
 export interface SearchTracksVariables {

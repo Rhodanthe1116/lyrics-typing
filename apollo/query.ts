@@ -85,3 +85,12 @@ query GetAlbum($id: ID!) {
   }
 }
 `;
+
+export const GET_RECOMMAND_TRACKS = gql`
+query GetRecommandTracks($artistId: ID!, $albumId: ID!) {
+  recommandTracks(artistId:$artistId, albumId:$albumId) {
+    ...TrackTile
+    
+  }
+}
+`;

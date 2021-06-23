@@ -94,11 +94,12 @@ const typeDefs = gql`
     me: User
 
     chartTracks(country: String): [Track]
-    tracks(query: String,artistId: ID): [Track]
+    tracks(query: String,artistId: ID): [Track!]!
     track(id: ID!): Track
     artist(id: ID!): Artist
     album(id: ID!): Album
-    tracksByAlbum(id: ID!): [Track]
+    tracksByAlbum(id: ID!): [Track!]!
+    recommandTracks(artistId: ID!, albumId: ID!): [Track!]!
   }
 
   """

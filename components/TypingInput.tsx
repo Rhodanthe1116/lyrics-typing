@@ -2,13 +2,13 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import useTyping, { PhaseType } from 'react-typing-game-hook'
 import { TypingResult } from '../interfaces'
+import { TypingPhase } from '../pages/tracks/[id]'
 
 const TypeInput: FC<{
   text: string
-  typingEnded:boolean
-  setTypingEnded:(typingEnded:boolean) => void
+  typingPhase:TypingPhase
   onTypingEnded: (result: TypingResult) => void
-}> = ({ text, onTypingEnded, typingEnded, setTypingEnded }) => {
+}> = ({ text, onTypingEnded, typingPhase }) => {
   const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
   const [duration, setDuration] = useState(0)
@@ -96,7 +96,6 @@ const TypeInput: FC<{
     setDuration(0)
     // insertTyping();
     setTypingInput('')
-    setTypingEnded(false)
   }
 
   // Submit inputted word
@@ -133,7 +132,6 @@ const TypeInput: FC<{
       }
 
       onTypingEnded(newResult)
-      setTypingEnded(true)
 
       console.log('save')
     }
@@ -213,7 +211,7 @@ const TypeInput: FC<{
             )
           })}
         </div>
-        <div className={`mb-2 ${typingEnded?'hidden':''}`}>
+        <div className={`mb-2 ${typingPhase===TypingPhase.End?'hidden':''}`}>
           <input
             type="text"
             ref={inputRef}
@@ -245,11 +243,11 @@ const TypeInput: FC<{
                 ? 'Type here... (Press enter to submit)'
                 : ''
             }
-            disabled={typingEnded}
+            disabled={typingPhase===TypingPhase.End}
           />
         </div>
       </div>
-      <div className={`flex justify-between text-gray-500 mb-8 ${typingEnded?'hidden':''}`}>
+      <div className={`flex justify-between text-gray-500 mb-8 ${typingPhase===TypingPhase.End?'hidden':''}`}>
         <span>Time: {duration}s</span>
         <button onClick={() => reset()} >Reset</button>
       </div>
