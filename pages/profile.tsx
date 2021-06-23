@@ -73,12 +73,12 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
         </div>
 
         <div className="flex-1 truncate ml-4 md:ml-8">
-          <p className="truncate font-bold text-xl  md:text-xl">Pale Blue</p>
-          <p className="truncate font-bold text-gray-400 mt-2 md:mt-2 md:text-xl">Kenshi Yonezu</p>
+          <p className="truncate font-bold">Pale Blue</p>
+          <p className="truncate font-bold text-gray-400 mt-4 md:mt-4` ">Kenshi Yonezu</p>
         </div>
         <div className="flex-none w-auto overflow-hidden text-right">
-          <p className="truncate text-red-500 md:text-xl">{record.result.wpm} CPM</p>
-          <p className="truncate text-gray-400 mt-4 md:mt-2 md:text-xl">{timeStampConverter(record.timestamp).toLocaleString()}</p>
+          <p className="truncate text-red-500">{record.result.wpm} CPM</p>
+          <p className="truncate text-gray-400 mt-4 md:mt-4">{timeStampConverter(record.timestamp).toLocaleString()}</p>
         </div>
         
       </a>
@@ -144,13 +144,13 @@ const ProfilePage = () => {
             <div className="flex my-8">
               <div className="flex-1">
                 <div className="flex items-center justify-center gap-2 ml-12 md:ml-0">
-                  <img className="md:w-48 md:h-48 w-20 h-20 rounded-full" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
+                  <img className="md:w-36 md:h-36 w-20 h-20 rounded-full" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
                   <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">{user.name}</p>
                 </div>
               </div>
               <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
-                <p className="text-green-200 font-bold md:text-9xl text-4xl text-center"> {user?.completedTrackIds?.length || 0}</p>
-                <p className="font-bold text-sm text-center"> Songs Passed</p>
+                <p className="text-green-200 font-bold md:text-8xl text-4xl text-center"> {user?.completedTrackIds?.length || 0}</p>
+                <p className="font-bold text-center md:pt-4"> Songs Passed</p>
               </div>
             </div>
             
@@ -163,9 +163,9 @@ const ProfilePage = () => {
          
           {/* <p>{user.id}</p> */}
           <div className="text-sm flex mb-12">
-            <div className="flex-1 ml-2 md:ml-10">
-              <p className="truncate md:text-2xl font-semibold">Average CMP</p>
-              <div className="truncate pl-4 md:pt-4 md:text-2xl md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+            <div className=" flex-1 ml-2 md:ml-10">
+              <p className="truncate font-semibold">Average CMP</p>
+              <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
                 <p>JP</p>
                 <p className="pl-8 md:pl-28">32</p>
                 <p>TW</p>
@@ -175,8 +175,8 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex-1 md:pl-12">
-              <p className="truncate md:text-2xl font-semibold">Top Artists</p>
-              <div className="truncate pl-4 md:pt-4 md:text-2xl md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+              <p className="truncate font-semibold">Top Artists</p>
+              <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
                 <p>A</p>
                 <p className="pl-8 md:pl-28">32</p>
                 <p>B</p>
