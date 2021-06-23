@@ -40,8 +40,8 @@ const typeDefs = gql`
     numFavourite: Int!
     
     artistName: String!
-    artistId:String,
-    albumId: String,
+    artistId: String!,
+    albumId: String!,
     
     album: Album
     artist: Artist

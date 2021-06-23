@@ -72,6 +72,7 @@ query GetTracksFromAlbum($id: ID!) {
     
   }
 }
+${TRACK_TILE_DATA}
 `;
 
 export const GET_ALBUM = gql`

@@ -13,7 +13,7 @@ import TrackList from '../../components/TrackList';
 
 // Data
 import dataProvider from "../../utils/dataProvider";
-import { useQuery } from "@apollo/client"
+import { useQuery, useLazyQuery } from "@apollo/client"
 import { GET_RECOMMAND_TRACKS, GET_TRACK_WITH_LYRICS} from '../../apollo/query'
 import { GetTrackWithLyrics } from '../../apollo/__generated__/GetTrackWithLyrics'
 import { GetRecommandTracks } from '../../apollo/__generated__/GetRecommandTracks'
@@ -39,11 +39,11 @@ const TrackPage = () => {
     const track = trackRes.data?.track
     const lyrics = trackRes.data?.track?.lyrics
 
-    const recommandTracksRes = useQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS,{
-        variables: { artistId: Number(track?.artistId), albumId: Number(track?.albumId)}
+    const [getRecommand,recommandTracksRes] = useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS,{
+        variables: { artistId: track?.artistId, albumId: track?.albumId}
     })
 
-    const tracksList = recommandTracksRes?.data?.recommandTracks
+    const tracksList = recommandTracksRes.loading? [] : recommandTracksRes?.data?.recommandTracks
     // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
     function handleTypingEnded(result: TypingResult) {
@@ -60,6 +60,7 @@ const TrackPage = () => {
         if (typingPhase !== TypingPhase.Typing) {
           setTypingPhase(TypingPhase.Typing)
         }
+        getRecommand()
       }
 
 
