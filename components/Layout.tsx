@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
 import { useAuth } from 'shared/auth/context/authUser'
+import { colorImageUrl } from 'shared/utils/placeholder'
 
 type Props = {
   children?: ReactNode
@@ -32,21 +33,22 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
             <Link href="/">
               <a className="text-xl font-bold pr-2">Type Lyrics</a>
             </Link>
-            {/* <span>@hwchang</span> */}
           </div>
-          <nav>
+          <nav className="flex justify-end content-center">
             <Link href="/about">
               <a className="mr-2">About</a>
             </Link>
 
-            {/* {authState.status === 'in' && (
-              <button onClick={logout} className="mr-2">
-                <a>Logout</a>
-              </button>
-            )} */}
-
             <Link href="/profile">
-              <a>Profile</a>
+              <a>
+                <img
+                  className="w-8 h-8 rounded-full"
+                  src={authState.user?.photoURL ?? colorImageUrl}
+                  alt="avatar"
+                  width="32"
+                  height="32"
+                ></img>
+              </a>
             </Link>
           </nav>
         </header>

@@ -1,3 +1,4 @@
+import { VFC } from 'react'
 import useUser from '../hooks/useUser'
 
 import Link from 'next/link'
@@ -5,6 +6,7 @@ import Layout from '../components/Layout'
 
 import { TrackTypingRecord } from '../interfaces'
 import { useAuth } from 'shared/auth/context/authUser'
+import { colorImageUrl } from 'shared/utils/placeholder'
 
 // This function gets called at build time
 export async function getStaticProps() {
@@ -15,8 +17,6 @@ export async function getStaticProps() {
     },
   }
 }
-
-const randomPhotoUrl = 'https://picsum.photos/500/500'
 
 const timeStampConverter = (stamp: any) => {
   const date = new Date(stamp)
@@ -58,8 +58,8 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
     return (
       <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
         <div className="flex-1 truncate mr-2">
-          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4">　</div>
-          <div className="h-4 my-1 bg-gray-900 rounded w-1/4">　</div>
+          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4">  </div>
+          <div className="h-4 my-1 bg-gray-900 rounded w-1/4">  </div>
         </div>
       </div>
     )
@@ -127,12 +127,29 @@ const RecordList = ({ recordList, loading }: RecordListPorps) => {
   )
 }
 
+interface LoginAlertProps {
+  onClick?: () => void
+}
+
+const LoginAlert: VFC<LoginAlertProps> = ({ onClick }) => {
+  return (
+    <div className="m-4 p-4 h-16 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
+      <Link href="/login">
+        <p>Sign in to track your progress!</p>
+      </Link>
+    </div>
+  )
+}
+
 const ProfilePage = () => {
-  const { authState } = useAuth()
-  const [user] = useUser()
+  const { authState, logout } = useAuth()
+  const user = authState.user
+  const [deprecatedUser] = useUser()
 
   return (
     <Layout title="Lyrics Typing">
+      {user?.isAnonymous && <LoginAlert />}
+
       <div className="">
         <div className="relative">
           <div className="flex my-8">
@@ -140,20 +157,20 @@ const ProfilePage = () => {
               <div className="flex items-center justify-center gap-2 ml-12 md:ml-0">
                 <img
                   className="md:w-36 md:h-36 w-20 h-20 rounded-full"
-                  src={authState.user?.photoURL}
+                  src={authState.user?.photoURL ?? colorImageUrl}
                   alt=""
                   width="384"
                   height="512"
                 ></img>
                 <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">
-                  {authState.user?.displayName ?? user.name}
+                  {authState.user?.displayName ?? deprecatedUser.name}
                 </p>
               </div>
             </div>
             <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
               <p className="text-green-200 font-bold md:text-8xl text-4xl text-center">
                 {' '}
-                {user?.completedTrackIds?.length || 0}
+                {deprecatedUser?.completedTrackIds?.length || 0}
               </p>
               <p className="font-bold text-center md:pt-4"> Songs Passed</p>
             </div>
@@ -189,9 +206,17 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {!user?.isAnonymous && (
+          <div className="flex justify-end text-gray-700">
+            <button onClick={logout} className="">
+              <a>Logout</a>
+            </button>
+          </div>
+        )}
+
         <RecordList
-          recordList={user?.typingRecords.reverse()}
-          loading={!user}
+          recordList={deprecatedUser?.typingRecords.reverse()}
+          loading={!deprecatedUser}
         />
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       </div>

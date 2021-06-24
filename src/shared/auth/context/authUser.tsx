@@ -5,7 +5,7 @@ import 'firebase/auth'
 import 'firebase/database'
 import { getHasuraClaims } from 'shared/auth/utils/firebase'
 import { logout } from 'shared/auth/utils/firebase'
-import getRandomAnimal from '../utils/getRandomAnimal'
+import getRandomAnimal from 'shared/utils/getRandomAnimal'
 
 export interface AuthContextProps {
   authState: AuthState
@@ -97,10 +97,6 @@ export const AuthProvider = (props) => {
       }
     })
   }, [])
-
-  if (authState.status === 'loading') {
-    return <MyLoader />
-  }
 
   return (
     <AuthContext.Provider value={{ authState, logout }}>
