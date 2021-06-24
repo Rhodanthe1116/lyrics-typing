@@ -39,11 +39,11 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
               <a className="mr-2">About</a>
             </Link>
 
-            {authState.status === 'in' && (
+            {/* {authState.status === 'in' && (
               <button onClick={logout} className="mr-2">
                 <a>Logout</a>
               </button>
-            )}
+            )} */}
 
             <Link href="/profile">
               <a>Profile</a>

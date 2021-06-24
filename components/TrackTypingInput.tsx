@@ -120,7 +120,7 @@ function TrackTypingInput({
           </div>
         </div>  
           <div className="justify-center items-center flex mt-20">
-            <button className="bg-pink-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-36 h-12" onClick={handleStartingClick}>START</button>
+            <button className="bg-pink-400 text-white font-bold py-2 px-4 rounded w-36 h-12" onClick={handleStartingClick}>START</button>
           </div>
       </div>)
     }

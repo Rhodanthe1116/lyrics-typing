@@ -5,6 +5,7 @@ import 'firebase/auth'
 import 'firebase/database'
 import { getHasuraClaims } from 'shared/auth/utils/firebase'
 import { logout } from 'shared/auth/utils/firebase'
+import getRandomAnimal from '../utils/getRandomAnimal'
 
 export interface AuthContextProps {
   authState: AuthState
@@ -55,6 +56,26 @@ export const AuthProvider = (props) => {
           token: undefined,
         })
         return
+      }
+
+      // Anonymous user
+      if (user.isAnonymous && !user.displayName) {
+        // const randomPhotoUrl = 'https://picsum.photos/500/500'
+        const colorImageUrl = 'https://singlecolorimage.com/get/f178b6/64x64'
+
+        user
+          .updateProfile({
+            displayName: getRandomAnimal(),
+            photoURL: colorImageUrl,
+          })
+          .then(() => {
+            // Update successful
+            // ...
+          })
+          .catch((error) => {
+            // An error occurred
+            // ...
+          })
       }
 
       const token = await user.getIdToken()

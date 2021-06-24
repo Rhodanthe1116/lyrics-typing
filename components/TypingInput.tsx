@@ -121,7 +121,7 @@ const TypeInput: FC<{
 
       // Save record.
       const newResult: TypingResult = {
-        wpm: Math.round(((60 / duration) * correctChar) / 5),
+        wpm: Math.round(((60 / duration) * correctChar)),
         duration: duration,
         correctChar: correctChar,
         errorChar: errorChar,
