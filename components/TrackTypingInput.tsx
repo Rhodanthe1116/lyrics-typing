@@ -1,5 +1,5 @@
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import React from "react";
+import React,{useRef,useEffect} from "react";
 // Interface
 import { /*Album,*/ Lyrics, TypingResult } from '../interfaces'
 import {TypingPhase} from '../pages/tracks/[id]'
@@ -35,10 +35,20 @@ function TrackTypingInput({
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
   const handle = useFullScreenHandle()
-  
+  const inputRef = useRef<any>(null)
   //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
   //  variables: { id: trackId }
   //});
+  useEffect(()=>{
+    handle.enter()
+    inputRef.current.focus()
+  },[])
+
+  useEffect(()=>{
+    if (typingPhase===TypingPhase.End){
+      handle.exit()
+    }
+  },[typingPhase])
 
   if (loading) {
     return (
@@ -63,7 +73,8 @@ function TrackTypingInput({
                   : ''
               }
               onTypingEnded={onTypingEnded} 
-              typingPhase={typingPhase} 
+              typingPhase={typingPhase}
+              inputRef={inputRef} 
             />
 
             <img
@@ -96,7 +107,8 @@ function TrackTypingInput({
                 : ''
             }
             onTypingEnded={onTypingEnded}
-            typingPhase={typingPhase} 
+            typingPhase={typingPhase}
+            inputRef={inputRef} 
           />
 
           <img

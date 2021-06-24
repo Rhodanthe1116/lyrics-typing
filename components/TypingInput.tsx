@@ -7,14 +7,15 @@ import { TypingPhase } from '../pages/tracks/[id]'
 const TypeInput: FC<{
   text: string
   typingPhase:TypingPhase
+  inputRef:any,
   onTypingEnded: (result: TypingResult) => void
-}> = ({ text, onTypingEnded, typingPhase }) => {
+}> = ({ text, onTypingEnded, typingPhase, inputRef }) => {
   const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
   const [duration, setDuration] = useState(0)
   const [typingInput, setTypingInput] = useState('')
   const [typedWrong, setTypeWrong] = useState(false)
-  const inputRef = useRef<any>(null)
+  //const inputRef = useRef<any>(null)
 
   const {
     states: {
@@ -26,7 +27,7 @@ const TypeInput: FC<{
       startTime,
       endTime,
     },
-    actions: { insertTyping, resetTyping, getDuration },
+    actions: { insertTyping, resetTyping, getDuration,deleteTyping },
   } = useTyping(text, {
     skipCurrentWordOnSpace: false,
   })
@@ -94,8 +95,11 @@ const TypeInput: FC<{
   const reset = () => {
     resetTyping()
     setDuration(0)
-    // insertTyping();
     setTypingInput('')
+    inputRef.current.focus()
+    //insertTyping();
+    //deleteTyping()
+    
   }
 
   // Submit inputted word
@@ -145,6 +149,11 @@ const TypeInput: FC<{
     }, 100)
     return () => clearInterval(timerId)
   }, [phase])
+
+  useEffect(()=>{
+    insertTyping()
+    deleteTyping()
+  },[])
 
   return (
     <div>
