@@ -80,3 +80,14 @@ yarn add -D
     eslint-plugin-react
     eslint-plugin-react-hooks
 ```
+
+### firebase & hasura
+
+#### Tutorial
+
+https://hasura.io/blog/authentication-and-authorization-using-hasura-and-firebase/
+
+Important note: 
+
+- upgrade firebase-admin version
+- `admin.initializeApp()`

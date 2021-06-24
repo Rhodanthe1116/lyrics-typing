@@ -4,6 +4,18 @@ import Link from 'next/link'
 import Layout from '../components/Layout'
 
 import { TrackTypingRecord } from '../interfaces'
+import { useAuth } from "shared/auth/context/authUser";
+
+// This function gets called at build time
+export async function getStaticProps() {
+  return {
+    props: {
+      // ...(await serverSideTranslations(locale, ['common'])),
+      requiredLogin: true,
+    },
+  }
+}
+
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args)
@@ -97,7 +109,7 @@ const RecordList = ({ recordList, loading }: RecordListPorps) => {
 }
 
 const ProfilePage = () => {
-
+  const { authState } = useAuth()
   const [user] = useUser()
   // const lyricsRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.lyrics.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
 
@@ -114,7 +126,7 @@ const ProfilePage = () => {
 
         <div className="bg-gray-900 p-4">
           <img className="w-32 h-32 rounded-full mx-auto mb-2" src="https://picsum.photos/500/500" alt="" width="384" height="512"></img>
-          <h3 className="text-xl font-bold text-center">{user.name}</h3>
+          <h3 className="text-xl font-bold text-center">{authState.user?.displayName}</h3>
           {/* <p>{user.id}</p> */}
           <div className="mt-2 flex">
             <div className="flex-1 text-center">
