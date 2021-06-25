@@ -39,7 +39,6 @@ const TrackPage = () => {
     // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
     const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
         variables: { id: trackId },
-        fetchPolicy: 'network-only'
     });
 
     const track = trackRes.data?.track
