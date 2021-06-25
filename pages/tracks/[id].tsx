@@ -19,6 +19,7 @@ import { GetTrackWithLyrics } from '../../apollo/__generated__/GetTrackWithLyric
 import { GetRecommandTracks } from '../../apollo/__generated__/GetRecommandTracks'
 
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 
 export enum TypingPhase{
@@ -31,17 +32,20 @@ const TrackPage = () => {
     const trackId: number = Array.isArray(router.query.id) ? parseInt(router.query.id[0]) : parseInt(router.query.id)
     const [typingPhase, setTypingPhase]=useState(TypingPhase.Ready)
     
+    useEffect(()=>{
+        setTypingPhase(TypingPhase.Ready)
+    },[trackId])
+
     // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
     const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
-        variables: { id: trackId }
+        variables: { id: trackId },
+        fetchPolicy: 'network-only'
     });
 
     const track = trackRes.data?.track
     const lyrics = trackRes.data?.track?.lyrics
 
-    const [getRecommand,recommandTracksRes] = useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS,{
-        variables: { artistId: track?.artistId, albumId: track?.albumId}
-    })
+    const [getRecommand,recommandTracksRes] = useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
 
     const tracksList = recommandTracksRes.loading? [] : recommandTracksRes?.data?.recommandTracks
     // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
@@ -60,7 +64,7 @@ const TrackPage = () => {
         if (typingPhase !== TypingPhase.Typing) {
           setTypingPhase(TypingPhase.Typing)
         }
-        getRecommand()
+        getRecommand({variables: { artistId: track?.artistId, albumId: track?.albumId}})
       }
 
 
