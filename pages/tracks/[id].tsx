@@ -11,13 +11,20 @@ import TrackTypingInput from "../../components/TrackTypingInput";
 
 // Data
 import dataProvider from "../../utils/dataProvider";
-import { useQuery } from "@apollo/client"
-import { GET_TRACK_WITH_LYRICS } from '../../apollo/query'
+import { useQuery, useMutation } from "@apollo/client"
+import {
+  GET_TRACK_WITH_LYRICS,
+  INSERT_TYPING_RECORD_ONE,
+} from '../../apollo/query'
 import { GetTrackWithLyrics } from '../../apollo/__generated__/GetTrackWithLyrics'
+import { InsertTypingRecordOne } from '../../apollo/__generated__/InsertTypingRecordOne'
+import { useAuth } from 'shared/auth/context/authUser';
 
 
 
 const TrackPage = () => {
+    const {authState} = useAuth()
+    const user = authState.user
     const router = useRouter()
 
     const trackId: number = Array.isArray(router.query.id) ? parseInt(router.query.id[0]) : parseInt(router.query.id)
@@ -31,11 +38,29 @@ const TrackPage = () => {
     const lyrics = trackRes.data?.track?.lyrics
     // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
+    const [ insertTypingRecord ] = useMutation<InsertTypingRecordOne>(
+      INSERT_TYPING_RECORD_ONE
+    )
+
     function handleTypingEnded(result: TypingResult) {
 
         try {
 
             dataProvider.saveTrackTypingRecord(trackId, result)
+            insertTypingRecord({
+              variables: {
+                object: {
+                  userId: user?.uid,
+                  trackId: track?.id,
+                  trackName: track?.name,
+                  artistName: track?.artistName,
+                  duration: result.duration,
+                  correctChar: result.correctChar,
+                  errorChar: result.errorChar,
+                  textLength: result.textLength,
+                },
+              },
+            })
         } catch (e) {
             alert(e)
         }

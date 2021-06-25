@@ -4,9 +4,15 @@ import useUser from '../hooks/useUser'
 import Link from 'next/link'
 import Layout from '../components/Layout'
 
-import { TrackTypingRecord } from '../interfaces'
 import { useAuth } from 'shared/auth/context/authUser'
 import { colorImageUrl } from 'shared/utils/placeholder'
+import { useQuery } from '@apollo/client'
+import { GET_TYPING_RECORDS } from '../apollo/query'
+import {
+  GetTypingRecords,
+  GetTypingRecords_typing_record,
+} from '../apollo/__generated__/GetTypingRecords'
+import { calcCPM } from 'shared/utils/typing'
 
 // This function gets called at build time
 export async function getStaticProps() {
@@ -45,11 +51,13 @@ const timeStampConverter = (stamp: any) => {
 
 interface RecordItemProps {
   className?: string
-  record?: TrackTypingRecord
+  record?: GetTypingRecords_typing_record
   loading: boolean
 }
 
 const RecordItem = ({ record, loading }: RecordItemProps) => {
+  const cpm = calcCPM(record?.duration, record?.correctChar)
+
   if (!record) {
     return <div>no record.</div>
   }
@@ -78,15 +86,15 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
         </div>
 
         <div className="flex-1 truncate ml-4 md:ml-8">
-          <p className="truncate font-bold">Pale Blue</p>
+          <p className="truncate font-bold">{record.trackName}</p>
           <p className="truncate font-bold text-gray-400 mt-4 md:mt-4` ">
-            Kenshi Yonezu
+            {record.artistName}
           </p>
         </div>
         <div className="flex-none w-auto overflow-hidden text-right">
-          <p className="truncate text-red-500">{record.result.wpm} CPM</p>
+          <p className="truncate text-red-500">{cpm} CPM</p>
           <p className="truncate text-gray-400 mt-4 md:mt-4">
-            {timeStampConverter(record.timestamp).toLocaleString()}
+            {timeStampConverter(record.createdAt).toLocaleString()}
           </p>
         </div>
       </a>
@@ -95,7 +103,7 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
 }
 
 interface RecordListPorps {
-  recordList: Array<TrackTypingRecord>
+  recordList: GetTypingRecords_typing_record[]
   loading: boolean
 }
 const RecordList = ({ recordList, loading }: RecordListPorps) => {
@@ -118,7 +126,7 @@ const RecordList = ({ recordList, loading }: RecordListPorps) => {
 
   return (
     <div>
-      {recordList.map((record: TrackTypingRecord, index) => (
+      {recordList.map((record, index) => (
         <div key={index} className="mb-2">
           <RecordItem record={record} loading={false} />
         </div>
@@ -146,6 +154,10 @@ const ProfilePage = () => {
   const user = authState.user
   const [deprecatedUser] = useUser()
 
+  const { data: typingRecordsQueryData } =
+    useQuery<GetTypingRecords>(GET_TYPING_RECORDS)
+  const typingRecords = typingRecordsQueryData?.typing_record ?? []
+
   return (
     <Layout title="Lyrics Typing">
       {user?.isAnonymous && <LoginAlert />}
@@ -170,7 +182,7 @@ const ProfilePage = () => {
             <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
               <p className="text-green-200 font-bold md:text-8xl text-4xl text-center">
                 {' '}
-                {deprecatedUser?.completedTrackIds?.length || 0}
+                {typingRecords?.length || 0}
               </p>
               <p className="font-bold text-center md:pt-4"> Songs Passed</p>
             </div>
@@ -214,10 +226,7 @@ const ProfilePage = () => {
           </div>
         )}
 
-        <RecordList
-          recordList={deprecatedUser?.typingRecords.reverse()}
-          loading={!deprecatedUser}
-        />
+        <RecordList recordList={typingRecords} loading={!deprecatedUser} />
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       </div>
     </Layout>

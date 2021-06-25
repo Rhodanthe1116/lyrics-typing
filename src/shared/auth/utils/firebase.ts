@@ -14,16 +14,18 @@ if (!firebase.apps.length) {
 }
 
 export const getCurrentUserIdToken = () => {
-  return new Promise((resolve) => {
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (user) {
-        const hasuraClaims = await getHasuraClaims(user)
-        const token = hasuraClaims ? await user.getIdToken() : null
-        resolve(token)
-      }
-      resolve(null)
-    })
-  })
+  // return new Promise((resolve) => {
+  //   firebase.auth().onAuthStateChanged(async (user) => {
+  //     if (user) {
+  //       console.log(user)
+  //       const hasuraClaims = await getHasuraClaims(user)
+  //       const token = hasuraClaims ? await user.getIdToken() : null
+  //       resolve(token)
+  //     }
+  //     resolve(null)
+  //   })
+  // })
+  return firebase.auth().currentUser?.getIdToken()
 }
 
 export const logout = () => {

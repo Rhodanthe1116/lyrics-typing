@@ -62,3 +62,43 @@ query GetTrackWithLyrics($id: ID!) {
 ${TRACK_TILE_DATA}
 ${LYRICS_TILE_DATA}
 `;
+
+export const GET_TYPING_RECORDS = gql`
+  query GetTypingRecords {
+      typing_record {
+      id
+      albumId
+      albumName
+      artistId
+      artistName
+      correctChar
+      createdAt
+      duration
+      errorChar
+      textLength
+      trackId
+      trackName
+      userId
+    }
+  }
+`
+
+export const INSERT_TYPING_RECORD_ONE = gql`
+  mutation InsertTypingRecordOne($object: typing_record_insert_input!) {
+    insert_typing_record_one(object: $object) {
+      albumId
+      albumName
+      artistId
+      artistName
+      correctChar
+      createdAt
+      duration
+      errorChar
+      id
+      textLength
+      trackId
+      trackName
+      userId
+    }
+  }
+`
