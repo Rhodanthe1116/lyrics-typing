@@ -10,7 +10,7 @@ type Props = {
 }
 
 const Layout = ({ children, title = 'This is the default title' }: Props) => {
-  const { authState, logout } = useAuth()
+  const { authState } = useAuth()
   return (
     <div style={{ backgroundColor: 'black', color: 'white' }}>
       <Head>

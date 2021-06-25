@@ -58,8 +58,8 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
     return (
       <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
         <div className="flex-1 truncate mr-2">
-          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4">  </div>
-          <div className="h-4 my-1 bg-gray-900 rounded w-1/4">  </div>
+          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4"> </div>
+          <div className="h-4 my-1 bg-gray-900 rounded w-1/4"> </div>
         </div>
       </div>
     )
@@ -131,7 +131,7 @@ interface LoginAlertProps {
   onClick?: () => void
 }
 
-const LoginAlert: VFC<LoginAlertProps> = ({ onClick }) => {
+const LoginAlert: VFC<LoginAlertProps> = () => {
   return (
     <div className="m-4 p-4 h-16 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
       <Link href="/login">

@@ -75,6 +75,7 @@ export const AuthProvider = (props) => {
           .catch((error) => {
             // An error occurred
             // ...
+            console.error(error)
           })
       }
 
@@ -104,7 +105,5 @@ export const AuthProvider = (props) => {
     </AuthContext.Provider>
   )
 }
-
-const MyLoader = () => <div>Loading...</div>
 
 export default AuthProvider

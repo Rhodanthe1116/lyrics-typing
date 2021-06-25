@@ -1,7 +1,7 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 // import Snackbar from './Snackbar'
 import dynamic from 'next/dynamic'
-import { logout } from 'shared/auth/utils/firebase'
+// import { logout } from 'shared/auth/utils/firebase'
 import { useAuth } from 'shared/auth/context/authUser'
 
 const LoginLayout = dynamic({
@@ -15,18 +15,14 @@ interface Props {
   requiredLogin?: boolean
 }
 
-const AuthLayoutComponent: FC<Props> = ({
-  children,
-  pageTitle,
-  requiredLogin,
-}) => {
+const AuthLayoutComponent: FC<Props> = ({ children, requiredLogin }) => {
   // const { snackbar, setSnackbar } = useContext(SnackbarContext)
   // const { topProgressBar } = useTopProgressBar()
   // const onClose = () => setSnackbar({ ...snackbar, open: false })
   // const authRenter = useAuthUser()
   // const { isRenter, isAdminUser } = useAuthType()
   // const [renterLogin, setRenterLogin] = useState(false)
-  const [loginError, setLoginError] = useState(false)
+  // const [loginError, setLoginError] = useState(false)
   const { authState } = useAuth()
 
   // useEffect(() => {
@@ -43,9 +39,7 @@ const AuthLayoutComponent: FC<Props> = ({
         <LinearProgress className={classes.progressBar} />
       )} */}
 
-      {requiredLogin && authState.status !== 'in' && (
-        <LoginLayout error={loginError} />
-      )}
+      {requiredLogin && authState.status !== 'in' && <LoginLayout />}
       <main>{children}</main>
       {/* <Snackbar
         open={snackbar.open}
