@@ -20,20 +20,11 @@ const Layout = ({
   const onClose = () => setSnackbar({ ...snackbar, open: false })
 
   return (
-    <div>
+    <>
       <Head>
         <title>{title}</title>
-        <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="theme-color" content="#171717" />
-        <meta
-          name="description"
-          content="A new way to learn Lyrics and Language with Typing!"
-        />
-        <meta
-          name="keywords"
-          content="lyrics language learn typing musix musixmatch spotify"
-        ></meta>
       </Head>
 
       <div className="min-h-screen overflow-hidden bg-trueGray-900 text-white">
@@ -74,7 +65,7 @@ const Layout = ({
       >
         {snackbar.message}
       </Snackbar>
-    </div>
+    </>
   )
 }
 

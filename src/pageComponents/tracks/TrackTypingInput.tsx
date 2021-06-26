@@ -72,6 +72,7 @@ function TrackTypingInput({
                   ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
                   : ''
               }
+              onInputFocus={setFullscreen}
               onTypingEnded={onTypingEnded}
               typingPhase={typingPhase}
               inputRef={inputRef}
@@ -104,6 +105,7 @@ function TrackTypingInput({
               ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
               : ''
           }
+          onInputFocus={() => setFullscreen()}
           onTypingEnded={onTypingEnded}
           typingPhase={typingPhase}
           inputRef={inputRef}
