@@ -51,29 +51,55 @@ module.exports = {
     },
     recommandTracks: async (_, { artistId, albumId }, { dataSources }) => {
       if (artistId && albumId) {
-        const allTracks =
-          (await dataSources.musixmatchAPI.searchTracks({
+        const sameAlbumTracks =
+          (await dataSources.musixmatchAPI.getTracksByAlbumId({
+            albumId: albumId,
+          })) ?? []
+        const needSize = 20 - sameAlbumTracks.length + 1
+        if (needSize <= 0){
+          return sameAlbumTracks
+        }
+        const allAlbums = (await dataSources.musixmatchAPI.getAlbumsByArtistId({
             artistId: artistId,
           })) ?? []
-        const otherTracks =
+        let selectAlbum = allAlbums[Math.floor(Math.random() * allAlbums.length)]
+        if (selectAlbum.id !== albumId){
+          const otherTracks = (await dataSources.musixmatchAPI.getTracksByAlbumId({
+          size: needSize,
+          albumId: selectAlbum.id,
+          }))
+          otherTracks.push(...sameAlbumTracks)
+          return otherTracks
+        }
+        else{
+          selectAlbum = allAlbums[Math.floor(Math.random() * allAlbums.length)]
+          const otherTracks = (await dataSources.musixmatchAPI.getTracksByAlbumId({
+            size: needSize,
+            albumId: selectAlbum.id,
+            }))
+          otherTracks.push(...sameAlbumTracks)
+          return otherTracks
+        }
+      } 
+      else if (!artistId && albumId) {
+        const sameAlbumTracks =
           (await dataSources.musixmatchAPI.getTracksByAlbumId({
             albumId: albumId,
           })) ?? []
-        allTracks.push(...otherTracks)
-        return allTracks
-      } else if (!artistId && albumId) {
-        const otherTracks =
-          (await dataSources.musixmatchAPI.getTracksByAlbumId({
-            albumId: albumId,
-          })) ?? []
+        return sameAlbumTracks
+      } 
+      else if (artistId && !albumId) {
+        const allAlbums = (await dataSources.musixmatchAPI.getAlbumsByArtistId({
+          artistId: artistId,
+        })) ?? []
+        const selectAlbum = allAlbums[Math.floor(Math.random() * allAlbums.length)]
+        const otherTracks = (await dataSources.musixmatchAPI.getTracksByAlbumId({
+        size: needSize,
+        albumId: selectAlbum.id,
+        }))
         return otherTracks
-      } else if (artistId && !albumId) {
-        const allTracks =
-          (await dataSources.musixmatchAPI.searchTracks({
-            artistId: artistId,
-          })) ?? []
-        return allTracks
-      } else {
+      } 
+      else {
         return []
       }
     },
