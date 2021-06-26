@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import { useAuth } from 'shared/auth/context/authUser'
 import { colorImageUrl } from 'shared/utils/placeholder'
+import { useSnackbar } from 'shared/context/snackbar'
 
 type Props = {
   children?: ReactNode
@@ -11,6 +12,7 @@ type Props = {
 
 const Layout = ({ children, title = 'This is the default title' }: Props) => {
   const { authState } = useAuth()
+  const {} = useSnackbar()
   return (
     <div style={{ backgroundColor: 'black', color: 'white' }}>
       <Head>
@@ -29,16 +31,15 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
       </Head>
       <div className="min-h-screen overflow-hidden">
         <header className="p-4 mb-4 flex justify-between items-center bg-gray-900">
-          <div className="flex justify-between">
+          <div className="flex justify-start content-end">
             <Link href="/">
-              <a className="text-xl font-bold pr-2">Type Lyrics</a>
+              <a className="text-xl font-bold pr-2 flex items-end">kanatype</a>
+            </Link>
+            <Link href="/about">
+              <a className="mx-2 font-bold flex items-end">About</a>
             </Link>
           </div>
           <nav className="flex justify-end content-center">
-            <Link href="/about">
-              <a className="mr-2">About</a>
-            </Link>
-
             <Link href="/profile">
               <a>
                 <img
@@ -56,6 +57,15 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         {children}
         <footer>{/* <hr /> */}</footer>
       </div>
+
+      {/* <Snackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        onClose={onClose}
+        timeout={snackbar?.timeout || 5000}
+      >
+        {snackbar.message}
+      </Snackbar> */}
     </div>
   )
 }

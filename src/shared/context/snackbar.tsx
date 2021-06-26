@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client/errors'
 import { useTranslation } from 'next-i18next'
-import { useState, createContext } from 'react'
+import { useState, createContext, useContext } from 'react'
 
 interface ISnackbar {
   open: boolean
@@ -9,11 +9,15 @@ interface ISnackbar {
   timeout?: number
 }
 
+export type Notification = 'updated' | 'created' | 'deleted' | 'submitted'
+
 export const SnackbarContext = createContext<{
   snackbar: ISnackbar
   setSnackbar: (state: ISnackbar) => void
   handleApolloError: (error: ApolloError) => void
-  handleUnknownError: (error: Error) => void
+  handleUnknownError: (error: unknown) => void
+  handleError: (error?: unknown) => void
+  handleCommonNotification: (notification: Notification) => void
 }>({
   snackbar: {
     open: false,
@@ -25,10 +29,18 @@ export const SnackbarContext = createContext<{
   handleApolloError: (error: ApolloError) => {
     console.error(error)
   },
-  handleUnknownError: (error: Error) => {
+  handleUnknownError: (error: unknown) => {
     console.error(error)
   },
+  handleError: (error?: unknown) => {
+    console.error(error)
+  },
+  handleCommonNotification: (notification: Notification) => {
+    console.log(notification)
+  },
 })
+
+export const useSnackbar = () => useContext(SnackbarContext)
 
 export const SnackbarProvider = (props) => {
   const { t } = useTranslation()
@@ -50,25 +62,65 @@ export const SnackbarProvider = (props) => {
   }
   const handleApolloError = (error: ApolloError) => {
     console.error(error)
-    const code = error.graphQLErrors[0].extensions?.code
-    setSnackbar({
-      ...snackbar,
-      open: true,
-      severity: 'error',
-      message:
-        t([`common:errors.code.${code}`, 'common:errors.code.fallback']) +
-        ': ' +
-        t([`common:errors.message.${code}`, 'common:errors.message.fallback']),
-    })
+    const { graphQLErrors, networkError } = error
+
+    if (graphQLErrors.length !== 0) {
+      const code = graphQLErrors[0].extensions?.code
+      setSnackbar({
+        ...snackbar,
+        open: true,
+        severity: 'error',
+        message:
+          t([`common:errors.code.${code}`, 'common:errors.code.fallback']) +
+          ': ' +
+          t([
+            `common:errors.message.${code}`,
+            'common:errors.message.fallback',
+          ]),
+      })
+    }
+
+    if (networkError) {
+      const code = networkError.message
+      setSnackbar({
+        ...snackbar,
+        open: true,
+        severity: 'error',
+        message:
+          t([`common:errors.code.${code}`, 'common:errors.code.fallback']) +
+          ': ' +
+          t([
+            `common:errors.message.${code}`,
+            'common:errors.message.fallback',
+          ]),
+      })
+    }
   }
 
-  const handleUnknownError = (error: Error) => {
+  const handleUnknownError = (error?: unknown) => {
     console.error(error)
     setSnackbar({
       ...snackbar,
       open: true,
       severity: 'error',
       message: t(`common:errors.code.fallback`),
+    })
+  }
+
+  const handleError = (error?: unknown) => {
+    if (error instanceof ApolloError) {
+      handleApolloError(error)
+    } else {
+      handleUnknownError(error)
+    }
+  }
+
+  const handleCommonNotification = (notification: Notification) => {
+    setSnackbar({
+      ...snackbar,
+      open: true,
+      severity: 'success',
+      message: t(`common:notification.${notification}`),
     })
   }
 
@@ -79,6 +131,8 @@ export const SnackbarProvider = (props) => {
         setSnackbar: setter,
         handleApolloError: handleApolloError,
         handleUnknownError: handleUnknownError,
+        handleError: handleError,
+        handleCommonNotification: handleCommonNotification,
       }}
     >
       {props.children}

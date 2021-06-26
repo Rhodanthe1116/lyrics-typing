@@ -141,7 +141,7 @@ interface LoginAlertProps {
 
 const LoginAlert: VFC<LoginAlertProps> = () => {
   return (
-    <div className="m-4 p-4 h-16 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
+    <div className="m-4 p-4 h-14 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
       <Link href="/login">
         <p>Sign in to track your progress!</p>
       </Link>
