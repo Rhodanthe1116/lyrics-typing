@@ -35,7 +35,7 @@ const TrackPage = () => {
   const user = authState.user
   const router = useRouter()
 
-  const [isFullscreen, setFullscreen] = useFullscreen()
+  const { setFullscreen } = useFullscreen()
   useEffect(() => {
     setFullscreen()
   }, [])

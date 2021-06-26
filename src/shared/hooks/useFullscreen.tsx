@@ -24,7 +24,7 @@ export default function useFullscreen() {
     }
   })
 
-  return [isFullscreen, setFullscreen]
+  return { isFullscreen, setFullscreen }
 }
 
 function getBrowserFullscreenElementProp() {

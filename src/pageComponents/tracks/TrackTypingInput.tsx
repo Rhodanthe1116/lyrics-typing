@@ -35,7 +35,7 @@ function TrackTypingInput({
   typingPhase,
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
-  const [isFullscreen, setFullscreen] = useFullscreen()
+  const { setFullscreen } = useFullscreen()
   const handle = useFullScreenHandle()
   const inputRef = useRef<any>(null)
   //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
