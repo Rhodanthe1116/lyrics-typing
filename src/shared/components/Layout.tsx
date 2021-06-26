@@ -25,7 +25,7 @@ const Layout = ({
         <title>{title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="theme-color" content="#232323" />
+        <meta name="theme-color" content="#171717" />
         <meta
           name="description"
           content="A new way to learn Lyrics and Language with Typing!"
