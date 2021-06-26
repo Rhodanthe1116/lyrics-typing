@@ -18,14 +18,13 @@ export interface typing_record_insert_input {
   correctChar?: number | null;
   createdAt?: any | null;
   deletedAt?: any | null;
-  duration?: number | null;
+  duration?: any | null;
   errorChar?: number | null;
   id?: any | null;
   textLength?: number | null;
   trackId?: string | null;
   trackName?: string | null;
-  updatedAt?: any | null;
-  userId?: any | null;
+  userId?: string | null;
 }
 
 //==============================================================

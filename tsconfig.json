@@ -18,9 +18,10 @@
     "alwaysStrict": true,
     "noUnusedParameters": true,
     "paths": {
-      "features/*": ["src/features/*"],
+      "pageComponents/*": ["src/pageComponents/*"],
       "pages/*": ["src/pages/*"],
-      "shared/*": ["src/shared/*"]
+      "shared/*": ["src/shared/*"],
+      "api/*": ["src/shared/api/*"]
     },
     "skipLibCheck": true,
     "noEmit": true,

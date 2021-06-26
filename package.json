@@ -10,7 +10,7 @@
     "generate2": "apollo-codegen generate ./apollo/query.ts --schema=schema.json --target=typescript --output=./apollo/query-types.ts --tagName=gql --addTypename ",
     "introspect-schema2": "apollo-codegen introspect-schema http://localhost:3000/api/graphql --output schema.json",
     "download-schema": "apollo client:download-schema graphql-schema.json --endpoint http://localhost:8080/v1/graphql --header 'X-Hasura-Admin-Secret: hasura'",
-    "generate": "apollo client:codegen --includes=./apollo/**/*.ts --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
+    "generate": "apollo client:codegen --includes=./src/shared/apollo/**/*.ts --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
   },
   "dependencies": {
     "@apollo/client": "^3.3.14",
@@ -27,8 +27,6 @@
     "react-dom": "^17.0.1",
     "react-full-screen": "^1.0.2",
     "react-typing-game-hook": "^1.2.1",
-    "sequelize": "^6.6.2",
-    "sqlite3": "^5.0.2",
     "swr": "^0.5.3"
   },
   "devDependencies": {
