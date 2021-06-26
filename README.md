@@ -39,7 +39,7 @@ This is a typing game where you can learn lyrics and language!
 prepare .env
 
 ```
-NEXT_PUBLIC_MUSIXMATCH_APIKEY=xxx
+MUSIXMATCH_APIKEY=xxx
 APOLLO_KEY=service:xxxxx
 APOLLO_GRAPH_VARIANT=current
 APOLLO_SCHEMA_REPORTING=true

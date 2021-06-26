@@ -27,15 +27,12 @@ const requestAccessToken = async () => {
 
 const authMiddleware = setContext(async () => {
   await requestAccessToken()
-  if (idToken) {
-    return {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
-        'x-hasura-role': 'user',
-      },
-    }
+  return {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      'x-hasura-role': 'user',
+    },
   }
-  return
 })
 
 const httpLink = new HttpLink({

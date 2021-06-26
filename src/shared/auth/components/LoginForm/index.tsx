@@ -16,6 +16,7 @@ const LoginPage: VFC = () => {
     const uiConfig = {
       autoUpgradeAnonymousUsers: true,
       signInSuccessUrl: '/',
+      signInFlow: 'popup',
       signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
       callbacks: {
         // signInFailure callback must be provided to handle merge conflicts which
