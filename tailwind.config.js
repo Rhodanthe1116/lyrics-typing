@@ -14,9 +14,7 @@ module.exports = {
       colors: {
         cyan: colors.cyan,
         teal: colors.teal,
-        gray: {
-          1000: '#0D1117',
-        },
+        trueGray: colors.trueGray,
       },
       inset: {
         '3/10': '30%',

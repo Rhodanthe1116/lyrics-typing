@@ -36,7 +36,7 @@ const Layout = ({
         ></meta>
       </Head>
 
-      <div className="min-h-screen overflow-hidden bg-gray-1000 text-white">
+      <div className="min-h-screen overflow-hidden bg-trueGray-900 text-white">
         <header className="p-4 mb-4 flex justify-between items-center bg-gray-900">
           <div className="flex justify-start content-end">
             <Link href="/">
