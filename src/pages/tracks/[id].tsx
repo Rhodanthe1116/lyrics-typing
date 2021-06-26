@@ -22,6 +22,7 @@ import { GetRecommandTracks } from 'shared/apollo/__generated__/GetRecommandTrac
 import { InsertTypingRecordOne } from 'shared/apollo/__generated__/InsertTypingRecordOne'
 
 import { useAuth } from 'shared/auth/context/authUser'
+import useFullscreen from 'shared/hooks/useFullscreen'
 
 export enum TypingPhase {
   Ready,
@@ -33,6 +34,11 @@ const TrackPage = () => {
   const { authState } = useAuth()
   const user = authState.user
   const router = useRouter()
+
+  const [isFullscreen, setFullscreen] = useFullscreen()
+  useEffect(() => {
+    setFullscreen()
+  }, [])
 
   const trackId: number = Array.isArray(router.query.id)
     ? parseInt(router.query.id[0])

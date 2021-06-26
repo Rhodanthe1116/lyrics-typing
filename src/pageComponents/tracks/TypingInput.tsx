@@ -194,7 +194,7 @@ const TypeInput: FC<{
         </div>
       ) : null}
       <div
-        className={`text-xl select-none  `}
+        className={`text-xl select-none bg-black  `}
         onClick={() => {
           inputRef.current.focus()
         }}

@@ -11,6 +11,7 @@ import FullScreenButton from 'shared/components/FullScreenButton'
 
 // Data
 import { GetTrackWithLyrics_track } from 'shared/apollo/__generated__/GetTrackWithLyrics'
+import useFullscreen from 'shared/hooks/useFullscreen'
 
 interface TrackTypingInputProps {
   track?: GetTrackWithLyrics_track
@@ -34,13 +35,14 @@ function TrackTypingInput({
   typingPhase,
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
+  const [isFullscreen, setFullscreen] = useFullscreen()
   const handle = useFullScreenHandle()
   const inputRef = useRef<any>(null)
   //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
   //  variables: { id: trackId }
   //});
   useEffect(() => {
-    handle.enter()
+    setFullscreen()
     inputRef.current.focus()
   }, [])
 
@@ -58,9 +60,7 @@ function TrackTypingInput({
             <div className="flex justify-between">
               <h1 className="text-lg font-semibold">{track?.name}</h1>
               <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4"> </div>
-              <FullScreenButton
-                onClick={handle.active ? handle.exit : handle.enter}
-              />
+              <FullScreenButton onClick={setFullscreen} />
             </div>
 
             <p className="mb-2 text-gray-400">{track?.artistName}</p>
@@ -93,9 +93,7 @@ function TrackTypingInput({
       <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
         <div className="flex justify-between">
           <h1 className="text-lg font-semibold">{track?.name}</h1>
-          <FullScreenButton
-            onClick={handle.active ? handle.exit : handle.enter}
-          />
+          <FullScreenButton onClick={setFullscreen} />
         </div>
 
         <p className="mb-2 text-gray-400">{track?.artistName}</p>
