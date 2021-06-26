@@ -2,7 +2,7 @@ import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { Track, Lyrics } from '../../interfaces'
 import { MusixmatchTrackWrapperObject, MusixmatchTrack, MusixmatchLyrics, MusixmatchAlbum } from './interfaces'
 
-const apiKey = process?.env?.NEXT_PUBLIC_MUSIXMATCH_APIKEY || ''
+const apiKey = process?.env?.MUSIXMATCH_APIKEY || ''
 
 // interface MusixmatchResponse {
 //   message: {
