@@ -2,6 +2,10 @@ export interface MusixmatchTrackWrapperObject {
   track: MusixmatchTrack
 }
 
+export interface MusixmatchAlbumWrapperObject {
+  album: MusixmatchAlbum
+}
+
 export interface MusixmatchTrack {
   track_id: number
   track_name: string

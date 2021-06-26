@@ -2,6 +2,7 @@ import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { Track, Lyrics } from 'shared/interfaces'
 import {
   MusixmatchTrackWrapperObject,
+  MusixmatchAlbumWrapperObject,
   MusixmatchTrack,
   MusixmatchLyrics,
   MusixmatchAlbum,
@@ -132,17 +133,28 @@ class MusixmatchAPI extends RESTDataSource {
     return this.lyricsReducer(body.lyrics)
   }
 
-  async getTracksByAlbumId({ albumId }: { albumId: number }) {
-    const body = await this.get('album.tracks.get', {
-      page_size: 5,
+  async getTracksByAlbumId({ albumId, size }: { albumId: number, size: number }) {
+    if (size){
+      const body = await this.get('album.tracks.get', {
+      page_size: size,
       album_id: albumId,
       f_has_lyrics: true,
     })
-
-    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
-    return Array.isArray(trackList)
-      ? trackList.map((track) => this.trackReducer(track.track))
-      : []
+      const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+      return Array.isArray(trackList)
+        ? trackList.map((track) => this.trackReducer(track.track))
+        : []
+    }
+    else{
+      const body = await this.get('album.tracks.get', {
+        album_id: albumId,
+        f_has_lyrics: true,
+      })
+      const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+      return Array.isArray(trackList)
+        ? trackList.map((track) => this.trackReducer(track.track))
+        : []
+    }  
   }
 
   async getAlbumById({ albumId }: { albumId: number }) {
@@ -151,6 +163,18 @@ class MusixmatchAPI extends RESTDataSource {
     })
 
     return this.albumReducer(body.album)
+  }
+
+  async getAlbumsByArtistId({ artistId } : {artistId : number}){
+    const body = await this.get('artist.albums.get',{
+      artist_id: artistId,
+      s_release_date: 'desc',
+    })
+
+    const albumList: MusixmatchAlbumWrapperObject[] = body.album_list
+      return Array.isArray(albumList)
+        ? albumList.map((track) => this.albumReducer(track.album))
+        : []
   }
 }
 

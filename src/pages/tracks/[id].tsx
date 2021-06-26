@@ -54,9 +54,10 @@ const TrackPage = () => {
   const [getRecommand, recommandTracksRes] =
     useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
 
-  const tracksList = recommandTracksRes.loading
+  const tracksListOri = recommandTracksRes.loading
     ? []
     : recommandTracksRes?.data?.recommandTracks
+  const tracksList = tracksListOri?.filter(track => track.id !== trackId.toString())
   // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
   const [insertTypingRecord] = useMutation<InsertTypingRecordOne>(
