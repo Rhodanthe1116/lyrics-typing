@@ -5,7 +5,7 @@
     "dev": "next -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --ignore-path .gitignore \"components/**/*.+(ts|js|tsx)\"",
+    "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js|tsx)\"",
     "type-check": "tsc",
     "generate2": "apollo-codegen generate ./apollo/query.ts --schema=schema.json --target=typescript --output=./apollo/query-types.ts --tagName=gql --addTypename ",
     "introspect-schema2": "apollo-codegen introspect-schema http://localhost:3000/api/graphql --output schema.json",
