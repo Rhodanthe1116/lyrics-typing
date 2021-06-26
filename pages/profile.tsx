@@ -1,18 +1,21 @@
 import { VFC } from 'react'
-import useUser from '../hooks/useUser'
-
 import Link from 'next/link'
-import Layout from '../components/Layout'
+import { useQuery } from '@apollo/client'
 
+// custom
 import { useAuth } from 'shared/auth/context/authUser'
 import { colorImageUrl } from 'shared/utils/placeholder'
-import { useQuery } from '@apollo/client'
 import { GET_TYPING_RECORDS } from '../apollo/query'
 import {
   GetTypingRecords,
   GetTypingRecords_typing_record,
 } from '../apollo/__generated__/GetTypingRecords'
 import { calcCPM } from 'shared/utils/typing'
+import { login } from 'shared/auth/utils/firebase'
+import { getAnimalByHash } from 'shared/utils/animals'
+
+// custom ui
+import Layout from 'components/Layout'
 
 // This function gets called at build time
 export async function getStaticProps() {
@@ -142,9 +145,7 @@ interface LoginAlertProps {
 const LoginAlert: VFC<LoginAlertProps> = () => {
   return (
     <div className="m-4 p-4 h-14 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
-      <Link href="/login">
-        <p>Sign in to track your progress!</p>
-      </Link>
+      <a onClick={login}>Sign in to track your progress!</a>
     </div>
   )
 }
@@ -152,14 +153,17 @@ const LoginAlert: VFC<LoginAlertProps> = () => {
 const ProfilePage = () => {
   const { authState, logout } = useAuth()
   const user = authState.user
-  const [deprecatedUser] = useUser()
 
-  const { data: typingRecordsQueryData } =
-    useQuery<GetTypingRecords>(GET_TYPING_RECORDS)
+  const { data: typingRecordsQueryData } = useQuery<GetTypingRecords>(
+    GET_TYPING_RECORDS,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  )
   const typingRecords = typingRecordsQueryData?.typing_record ?? []
 
   return (
-    <Layout title="Lyrics Typing">
+    <Layout>
       {user?.isAnonymous && <LoginAlert />}
 
       <div className="">
@@ -169,13 +173,14 @@ const ProfilePage = () => {
               <div className="flex items-center justify-center gap-2 ml-12 md:ml-0">
                 <img
                   className="md:w-36 md:h-36 w-20 h-20 rounded-full"
-                  src={authState.user?.photoURL ?? colorImageUrl}
+                  src={user?.photoURL ?? colorImageUrl}
                   alt=""
                   width="384"
                   height="512"
                 ></img>
                 <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">
-                  {authState.user?.displayName ?? deprecatedUser.name}
+                  {user?.displayName ??
+                    `${getAnimalByHash(user?.uid)}-${user?.uid?.slice(0, 5)}`}
                 </p>
               </div>
             </div>
@@ -226,7 +231,7 @@ const ProfilePage = () => {
           </div>
         )}
 
-        <RecordList recordList={typingRecords} loading={!deprecatedUser} />
+        <RecordList recordList={typingRecords} loading={!user} />
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       </div>
     </Layout>

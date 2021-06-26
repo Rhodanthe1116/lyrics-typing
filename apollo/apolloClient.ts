@@ -5,12 +5,13 @@ import {
   gql,
   from,
 } from '@apollo/client'
+import firebase from 'firebase/app'
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
-import { getCurrentUserIdToken, logout } from 'shared/auth/utils/firebase'
+import { logout } from 'shared/auth/utils/firebase'
 import { cache } from './cache'
 
-let idToken
+// let idToken
 
 export const typeDefs = gql`
   extend type Query {
@@ -19,14 +20,19 @@ export const typeDefs = gql`
   }
 `
 
-const requestAccessToken = async () => {
-  if (idToken) return
+// const requestAccessToken = async () => {
+//   if (idToken) return
 
-  idToken = await getCurrentUserIdToken()
-}
+//   idToken = await firebase.auth().currentUser?.getIdToken()
+// }
 
 const authMiddleware = setContext(async () => {
-  await requestAccessToken()
+  // await requestAccessToken()
+  const idToken = await firebase.auth().currentUser?.getIdToken()
+  if (!idToken) {
+    return
+  }
+
   return {
     headers: {
       Authorization: `Bearer ${idToken}`,

@@ -100,7 +100,7 @@ const TrackPage = () => {
   // if (!data) return <div>loading...</div>
 
   return (
-    <Layout title="Lyrics Typing">
+    <Layout>
       <div className="px-4 container mx-auto flex flex-col ">
         {!trackRes.error && track && lyrics ? (
           typingPhase === TypingPhase.Ready ? (
