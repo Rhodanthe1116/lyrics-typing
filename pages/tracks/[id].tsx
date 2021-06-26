@@ -1,101 +1,138 @@
 import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client'
 
 // Interface
-import { TypingResult } from '../../interfaces';
+import { TypingResult } from '../../interfaces'
 
 // Components
 // import Link from 'next/link'
 import Layout from '../../components/Layout'
-import TrackTypingInput from "../../components/TrackTypingInput";
-import TypingReady from '../../components/TypingReady';
-import TrackList from '../../components/TrackList';
-
+import TrackTypingInput from '../../components/TrackTypingInput'
+import TypingReady from '../../components/TypingReady'
+import TrackList from '../../components/TrackList'
 
 // Data
-import dataProvider from "../../utils/dataProvider";
-import { useQuery, useLazyQuery } from "@apollo/client"
-import { GET_RECOMMAND_TRACKS, GET_TRACK_WITH_LYRICS} from '../../apollo/query'
+import dataProvider from '../../utils/dataProvider'
+import {
+  INSERT_TYPING_RECORD_ONE,
+  GET_RECOMMAND_TRACKS,
+  GET_TRACK_WITH_LYRICS,
+} from '../../apollo/query'
 import { GetTrackWithLyrics } from '../../apollo/__generated__/GetTrackWithLyrics'
 import { GetRecommandTracks } from '../../apollo/__generated__/GetRecommandTracks'
+import { InsertTypingRecordOne } from '../../apollo/__generated__/InsertTypingRecordOne'
 
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useAuth } from 'shared/auth/context/authUser'
 
-
-export enum TypingPhase{
-      Ready, Typing, End   
-    }
+export enum TypingPhase {
+  Ready,
+  Typing,
+  End,
+}
 
 const TrackPage = () => {
-    const router = useRouter()
+  const { authState } = useAuth()
+  const user = authState.user
+  const router = useRouter()
 
-    const trackId: number = Array.isArray(router.query.id) ? parseInt(router.query.id[0]) : parseInt(router.query.id)
-    const [typingPhase, setTypingPhase]=useState(TypingPhase.Ready)
-    
-    useEffect(()=>{
-        setTypingPhase(TypingPhase.Ready)
-    },[trackId])
+  const trackId: number = Array.isArray(router.query.id)
+    ? parseInt(router.query.id[0])
+    : parseInt(router.query.id)
+  const [typingPhase, setTypingPhase] = useState(TypingPhase.Ready)
 
-    // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
-    const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
-        variables: { id: trackId },
-    });
+  useEffect(() => {
+    setTypingPhase(TypingPhase.Ready)
+  }, [trackId])
 
-    const track = trackRes.data?.track
-    const lyrics = trackRes.data?.track?.lyrics
+  // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
+  const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
+    variables: { id: trackId },
+  })
 
-    const [getRecommand,recommandTracksRes] = useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
+  const track = trackRes.data?.track
+  const lyrics = trackRes.data?.track?.lyrics
 
-    const tracksList = recommandTracksRes.loading? [] : recommandTracksRes?.data?.recommandTracks
-    // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
+  const [getRecommand, recommandTracksRes] =
+    useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
 
-    function handleTypingEnded(result: TypingResult) {
+  const tracksList = recommandTracksRes.loading
+    ? []
+    : recommandTracksRes?.data?.recommandTracks
+  // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
-        try {
-            setTypingPhase(TypingPhase.End)
-            dataProvider.saveTrackTypingRecord(trackId, result)
-        } catch (e) {
-            alert(e)
-        }
+  const [insertTypingRecord] = useMutation<InsertTypingRecordOne>(
+    INSERT_TYPING_RECORD_ONE
+  )
+
+  function handleTypingEnded(result: TypingResult) {
+    try {
+      setTypingPhase(TypingPhase.End)
+      dataProvider.saveTrackTypingRecord(trackId, result)
+      insertTypingRecord({
+        variables: {
+          object: {
+            userId: user?.uid,
+            trackId: track?.id,
+            trackName: track?.name,
+            artistName: track?.artistName,
+            duration: result.duration,
+            correctChar: result.correctChar,
+            errorChar: result.errorChar,
+            textLength: result.textLength,
+          },
+        },
+      })
+    } catch (e) {
+      alert(e)
     }
+  }
 
-    const handleStartingClick = (): void => {
-        if (typingPhase !== TypingPhase.Typing) {
-          setTypingPhase(TypingPhase.Typing)
-        }
-        getRecommand({variables: { artistId: track?.artistId, albumId: track?.albumId}})
-      }
+  const handleStartingClick = (): void => {
+    if (typingPhase !== TypingPhase.Typing) {
+      setTypingPhase(TypingPhase.Typing)
+    }
+    getRecommand({
+      variables: { artistId: track?.artistId, albumId: track?.albumId },
+    })
+  }
 
+  // if (!data) return <div>loading...</div>
 
-    // if (!data) return <div>loading...</div>
-
-
-    return (
-
-        <Layout title="Lyrics Typing">
-
-            <div className="px-4 container mx-auto flex flex-col ">
-
-                {!trackRes.error && track && lyrics ?
-                    typingPhase===TypingPhase.Ready?
-                    <TypingReady track={track} handleStartingClick={handleStartingClick}/>:
-                    <TrackTypingInput track={track} lyrics={lyrics} loading={trackRes.loading} onTypingEnded={handleTypingEnded} typingPhase={typingPhase} />
-                    :
-
-                    <div>no data or Error: {trackRes.error?.toString()}</div>
-                }{
-                    typingPhase===TypingPhase.End?
-                    <>
-                        <h2 className="text-xl my-2">Same Albums / Artists</h2>
-                        <TrackList trackList={tracksList??[]} loading={recommandTracksRes.loading} completedIds={[]}/>
-                    </>
-                    :null
-                }
-
-            </div>
-
-        </Layout>
-    )
+  return (
+    <Layout title="Lyrics Typing">
+      <div className="px-4 container mx-auto flex flex-col ">
+        {!trackRes.error && track && lyrics ? (
+          typingPhase === TypingPhase.Ready ? (
+            <TypingReady
+              track={track}
+              handleStartingClick={handleStartingClick}
+            />
+          ) : (
+            <TrackTypingInput
+              track={track}
+              lyrics={lyrics}
+              loading={trackRes.loading}
+              onTypingEnded={handleTypingEnded}
+              typingPhase={typingPhase}
+            />
+          )
+        ) : (
+          <div>no data or Error: {trackRes.error?.toString()}</div>
+        )}
+        {typingPhase === TypingPhase.End ? (
+          <>
+            <h2 className="text-xl my-2">Same Albums / Artists</h2>
+            <TrackList
+              trackList={tracksList ?? []}
+              loading={recommandTracksRes.loading}
+              completedIds={[]}
+            />
+          </>
+        ) : null}
+      </div>
+    </Layout>
+  )
 }
 
 export default TrackPage

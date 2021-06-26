@@ -1,8 +1,8 @@
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import React,{useRef,useEffect} from "react";
+import React, { useRef, useEffect } from 'react'
 // Interface
 import { /*Album,*/ Lyrics, TypingResult } from '../interfaces'
-import {TypingPhase} from '../pages/tracks/[id]'
+import { TypingPhase } from '../pages/tracks/[id]'
 
 // Components
 // import Link from 'next/link'
@@ -22,9 +22,9 @@ interface TrackTypingInputProps {
 }
 
 export enum Status {
-  Stopped, Running
+  Stopped,
+  Running,
 }
-
 
 function TrackTypingInput({
   track,
@@ -39,16 +39,16 @@ function TrackTypingInput({
   //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
   //  variables: { id: trackId }
   //});
-  useEffect(()=>{
+  useEffect(() => {
     handle.enter()
     inputRef.current.focus()
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    if (typingPhase===TypingPhase.End){
+  useEffect(() => {
+    if (typingPhase === TypingPhase.End) {
       handle.exit()
     }
-  },[typingPhase])
+  }, [typingPhase])
 
   if (loading) {
     return (
@@ -72,9 +72,9 @@ function TrackTypingInput({
                   ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
                   : ''
               }
-              onTypingEnded={onTypingEnded} 
+              onTypingEnded={onTypingEnded}
               typingPhase={typingPhase}
-              inputRef={inputRef} 
+              inputRef={inputRef}
             />
 
             <img
@@ -90,33 +90,33 @@ function TrackTypingInput({
 
   return (
     <>
-        <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
-          <div className="flex justify-between">
-            <h1 className="text-lg font-semibold">{track?.name}</h1>
-            <FullScreenButton
-              onClick={handle.active ? handle.exit : handle.enter}
-            />
-          </div>
-
-          <p className="mb-2 text-gray-400">{track?.artistName}</p>
-
-          <TypingInput
-            text={
-              lyrics?.body
-                ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
-                : ''
-            }
-            onTypingEnded={onTypingEnded}
-            typingPhase={typingPhase}
-            inputRef={inputRef} 
+      <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
+        <div className="flex justify-between">
+          <h1 className="text-lg font-semibold">{track?.name}</h1>
+          <FullScreenButton
+            onClick={handle.active ? handle.exit : handle.enter}
           />
+        </div>
 
-          <img
-            className="hidden"
-            src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
-          />
-        </FullScreen>
-        <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+        <p className="mb-2 text-gray-400">{track?.artistName}</p>
+
+        <TypingInput
+          text={
+            lyrics?.body
+              ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
+              : ''
+          }
+          onTypingEnded={onTypingEnded}
+          typingPhase={typingPhase}
+          inputRef={inputRef}
+        />
+
+        <img
+          className="hidden"
+          src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
+        />
+      </FullScreen>
+      <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
     </>
   )
 }

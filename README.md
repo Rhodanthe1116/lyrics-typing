@@ -80,3 +80,23 @@ yarn add -D
     eslint-plugin-react
     eslint-plugin-react-hooks
 ```
+
+### firebase & hasura
+
+#### Tutorial
+
+https://hasura.io/blog/authentication-and-authorization-using-hasura-and-firebase/
+
+Important note:
+
+- upgrade firebase-admin version
+- `admin.initializeApp()`
+
+```js
+{
+    "type":"RS256",
+    "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+    "audience": "<firebase-project-id>",
+    "issuer": "https://securetoken.google.com/<firebase-project-id>"
+}
+```

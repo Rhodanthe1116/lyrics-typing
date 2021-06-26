@@ -1,34 +1,33 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "lib": [
-      "dom",
-      "es2017"
-    ],
+    "baseUrl": ".",
     "module": "esnext",
+    "target": "es5",
+    "lib": ["es6", "dom", "esnext.asynciterable"],
+    "sourceMap": true,
+    "allowJs": true,
+    "jsx": "preserve",
     "moduleResolution": "node",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": true,
+    "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true,
-    "target": "esnext"
+    "noImplicitAny": false,
+    "alwaysStrict": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "features/*": ["src/features/*"],
+      "pages/*": ["src/pages/*"],
+      "shared/*": ["src/shared/*"]
+    },
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "exclude": [
-    "node_modules",
-    "__generated__/globalTypes.ts",
-    "**/__generated__/**.ts"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", ".next", ".vscode"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
