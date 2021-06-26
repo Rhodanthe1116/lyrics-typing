@@ -37,10 +37,13 @@ export const logout = () => {
     })
 }
 
-export const login = async ({ email, password }) => {
+const provider = new firebase.auth.GoogleAuthProvider()
+// You can add additional scopes to the provider:
+provider.addScope('email')
+export const login = async () => {
   return await firebase
     .auth()
-    .signInWithEmailAndPassword(email, password)
+    .signInWithPopup(provider)
     .then((data) => {
       return { user: data.user, error: false }
     })
@@ -78,8 +81,6 @@ export const getHasuraClaims = async (firebaseUser) => {
 
   try {
     const idTokenResult = await firebaseUser.getIdTokenResult()
-    console.log('idTokenResult')
-    console.log(idTokenResult)
     const hasuraClaims = Object.keys(idTokenResult.claims).length
       ? idTokenResult.claims[HASURA_TOKEN_KEY]
       : undefined

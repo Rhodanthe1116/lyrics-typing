@@ -2,6 +2,7 @@ import { VFC, useEffect } from 'react'
 import firebase from 'firebase'
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
+import { useSnackbar } from 'shared/context/snackbar'
 
 const Component: VFC = () => {
   return (
@@ -12,6 +13,8 @@ const Component: VFC = () => {
 }
 
 const LoginPage: VFC = () => {
+  const { handleError } = useSnackbar()
+
   useEffect(() => {
     const uiConfig = {
       autoUpgradeAnonymousUsers: true,
@@ -22,6 +25,7 @@ const LoginPage: VFC = () => {
         // signInFailure callback must be provided to handle merge conflicts which
         // occur when an existing credential is linked to an anonymous user.
         signInFailure: function (error) {
+          handleError(error)
           // For merge conflicts, the error.code will be
           // 'firebaseui/anonymous-upgrade-merge-conflict'.
           if (error.code != 'firebaseui/anonymous-upgrade-merge-conflict') {

@@ -4,15 +4,21 @@ import Head from 'next/head'
 import { useAuth } from 'shared/auth/context/authUser'
 import { colorImageUrl } from 'shared/utils/placeholder'
 import { useSnackbar } from 'shared/context/snackbar'
+import Snackbar from 'components/Snackbar'
 
 type Props = {
   children?: ReactNode
   title?: string
 }
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => {
+const Layout = ({
+  children,
+  title = 'kanatype - a new way to learn language',
+}: Props) => {
   const { authState } = useAuth()
-  const {} = useSnackbar()
+  const { snackbar, setSnackbar } = useSnackbar()
+  const onClose = () => setSnackbar({ ...snackbar, open: false })
+
   return (
     <div style={{ backgroundColor: 'black', color: 'white' }}>
       <Head>
@@ -58,14 +64,14 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
         <footer>{/* <hr /> */}</footer>
       </div>
 
-      {/* <Snackbar
+      <Snackbar
         open={snackbar.open}
         severity={snackbar.severity}
         onClose={onClose}
         timeout={snackbar?.timeout || 5000}
       >
         {snackbar.message}
-      </Snackbar> */}
+      </Snackbar>
     </div>
   )
 }
