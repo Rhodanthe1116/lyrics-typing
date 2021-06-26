@@ -72,7 +72,7 @@ const IndexPage = () => {
 
           <div className={`${queryInput && 'invisible'}`}>
             <p className="inline mr-1 text-gray-400">
-              ...or see what's popular in your country
+              ...or see what&apos;s popular in your country
             </p>
             <select
               className="mb-2 bg-black border-green-200"

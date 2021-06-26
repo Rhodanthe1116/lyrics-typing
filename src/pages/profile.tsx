@@ -51,10 +51,6 @@ interface RecordItemProps {
 const RecordItem = ({ record, loading }: RecordItemProps) => {
   const cpm = calcCPM(record?.duration, record?.correctChar)
 
-  if (!record) {
-    return <div>no record.</div>
-  }
-
   if (loading) {
     return (
       <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
@@ -64,6 +60,10 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
         </div>
       </div>
     )
+  }
+
+  if (!record) {
+    return <div>no record.</div>
   }
 
   return (
@@ -135,7 +135,9 @@ interface LoginAlertProps {
 const LoginAlert: VFC<LoginAlertProps> = () => {
   return (
     <div className="m-4 p-4 h-14 text-green-200 rounded-xl bg-green-900 bg-opacity-30 border-green-700 border">
-      <a onClick={login}>Sign in to track your progress!</a>
+      <a href="#" onClick={login}>
+        Sign in to save your progress!
+      </a>
     </div>
   )
 }
@@ -170,7 +172,9 @@ const ProfilePage = () => {
                 ></img>
                 <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">
                   {user?.displayName ??
-                    `${getAnimalByHash(user?.uid)}-${user?.uid?.slice(0, 5)}`}
+                    `${getAnimalByHash(user?.uid)}-${
+                      user?.uid?.slice(0, 5) ?? ''
+                    }`}
                 </p>
               </div>
             </div>
