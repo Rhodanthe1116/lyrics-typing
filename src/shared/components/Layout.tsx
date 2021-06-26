@@ -20,7 +20,7 @@ const Layout = ({
   const onClose = () => setSnackbar({ ...snackbar, open: false })
 
   return (
-    <div style={{ backgroundColor: 'black', color: 'white' }}>
+    <div>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
@@ -35,7 +35,8 @@ const Layout = ({
           content="lyrics language learn typing musix musixmatch spotify"
         ></meta>
       </Head>
-      <div className="min-h-screen overflow-hidden">
+
+      <div className="min-h-screen overflow-hidden bg-gray-1000 text-white">
         <header className="p-4 mb-4 flex justify-between items-center bg-gray-900">
           <div className="flex justify-start content-end">
             <Link href="/">
@@ -60,7 +61,8 @@ const Layout = ({
           </nav>
         </header>
 
-        {children}
+        <div className="">{children}</div>
+
         <footer>{/* <hr /> */}</footer>
       </div>
 

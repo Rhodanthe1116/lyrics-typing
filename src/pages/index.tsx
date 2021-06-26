@@ -87,6 +87,9 @@ const IndexPage = () => {
               <option className="py-1" value="TW">
                 TW
               </option>
+              <option className="py-1" value="KR">
+                KR
+              </option>
               <option className="py-1" value="US">
                 US
               </option>
