@@ -1,8 +1,7 @@
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
-import React, { useRef, useEffect } from 'react'
+import React, { useState } from "react";
 // Interface
-import { /*Album,*/ Lyrics, TypingResult } from '../interfaces'
-import { TypingPhase } from '../pages/tracks/[id]'
+import { Lyrics, TypingResult } from '../interfaces'
 
 // Components
 // import Link from 'next/link'
@@ -16,39 +15,32 @@ interface TrackTypingInputProps {
   track?: GetTrackWithLyrics_track
   lyrics?: Lyrics
   loading: boolean
-  //album?: Album
-  typingPhase: TypingPhase
   onTypingEnded?: (result: TypingResult) => void
 }
 
 export enum Status {
-  Stopped,
-  Running,
+  Stopped, Running
 }
+
 
 function TrackTypingInput({
   track,
   lyrics,
   loading,
-  //album,
-  typingPhase,
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
   const handle = useFullScreenHandle()
-  const inputRef = useRef<any>(null)
-  //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
-  //  variables: { id: trackId }
-  //});
-  useEffect(() => {
-    handle.enter()
-    inputRef.current.focus()
-  }, [])
-
-  useEffect(() => {
-    if (typingPhase === TypingPhase.End) {
-      handle.exit()
+  
+  const [status, setStatus] = useState(
+    Status.Stopped,
+  )
+  
+  const handleStartingClick = (): void => {
+    if (status !== Status.Running) {
+      setStatus(Status.Running)
     }
-  }, [typingPhase])
+    if(!handle.active) handle.enter()
+  }
 
   if (loading) {
     return (
@@ -73,8 +65,6 @@ function TrackTypingInput({
                   : ''
               }
               onTypingEnded={onTypingEnded}
-              typingPhase={typingPhase}
-              inputRef={inputRef}
             />
 
             <img
@@ -90,33 +80,50 @@ function TrackTypingInput({
 
   return (
     <>
-      <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
-        <div className="flex justify-between">
-          <h1 className="text-lg font-semibold">{track?.name}</h1>
-          <FullScreenButton
-            onClick={handle.active ? handle.exit : handle.enter}
+      {status === Status.Running ?
+      <>
+        <FullScreen className={`${handle.active && 'p-6'}`} handle={handle}>
+          <div className="flex justify-between">
+            <h1 className="text-lg font-semibold">{track?.name}</h1>
+            <FullScreenButton
+              onClick={handle.active ? handle.exit : handle.enter}
+            />
+          </div>
+
+          <p className="mb-2 text-gray-400">{track?.artistName}</p>
+
+          <TypingInput
+            text={
+              lyrics?.body
+                ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
+                : ''
+            }
+            onTypingEnded={onTypingEnded}
           />
-        </div>
 
-        <p className="mb-2 text-gray-400">{track?.artistName}</p>
-
-        <TypingInput
-          text={
-            lyrics?.body
-              ? lyrics.body.slice(0, lyrics.body.length - 73).slice(0, 150)
-              : ''
-          }
-          onTypingEnded={onTypingEnded}
-          typingPhase={typingPhase}
-          inputRef={inputRef}
-        />
-
-        <img
-          className="hidden"
-          src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
-        />
-      </FullScreen>
-      <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+          <img
+            className="hidden"
+            src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
+          />
+        </FullScreen>
+        <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+      </>
+      :
+      (<div>
+        <div className="justify-center items-center flex mt-24">
+          <div className="w-auto">  
+            <div className="box-border h-80 w-80">
+              <img className="h-full w-full object-cover" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.tQE8kIvKG0tXzMhQV1PmjkBL1rXBtAaoQzh4MpUhX8Q"  />
+            </div>
+            <h1 className="text-lg font-semibold mt-4">{track?.name}</h1>
+            <p className="mb-2 text-gray-400">{track?.artistName}</p>
+          </div>
+        </div>  
+          <div className="justify-center items-center flex mt-20">
+            <button className="bg-pink-400 text-white font-bold py-2 px-4 rounded w-36 h-12" onClick={handleStartingClick}>START</button>
+          </div>
+      </div>)
+    }
     </>
   )
 }

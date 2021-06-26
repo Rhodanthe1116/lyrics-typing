@@ -14,15 +14,12 @@ export interface SearchTracks_tracks {
   artistName: string;
   rating: number;
   numFavourite: number;
-  artistId: string;
-  albumId: string;
 }
 
 export interface SearchTracks {
-  tracks: SearchTracks_tracks[];
+  tracks: (SearchTracks_tracks | null)[] | null;
 }
 
 export interface SearchTracksVariables {
   query?: string | null;
-  artistId?: string | null;
 }

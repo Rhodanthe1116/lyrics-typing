@@ -14,8 +14,6 @@ export interface GetChartTracks_chartTracks {
   artistName: string;
   rating: number;
   numFavourite: number;
-  artistId: string;
-  albumId: string;
 }
 
 export interface GetChartTracks {

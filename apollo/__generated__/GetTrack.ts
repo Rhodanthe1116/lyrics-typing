@@ -14,8 +14,6 @@ export interface GetTrack_track {
   artistName: string;
   rating: number;
   numFavourite: number;
-  artistId: string;
-  albumId: string;
 }
 
 export interface GetTrack {

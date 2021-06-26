@@ -13,7 +13,6 @@ const MusixmatchAPI = require('../../apollo/datasources/musixmatch');
 const isEmail = require('isemail');
 
 const apolloServer = new ApolloServer({
-  introspection: true,
   typeDefs,
   resolvers,
   context: async ({ req }) => {

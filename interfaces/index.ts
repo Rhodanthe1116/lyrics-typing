@@ -39,8 +39,6 @@ export interface Track {
     artistName: string,
     rating: number,
     numFavourite: number,
-    artistId:string,
-    albumId: string,
 
     lyrics?: Lyrics
 }
@@ -57,12 +55,4 @@ export interface Lyrics {
     updatedTime: String
 
     track?: Track
-}
-
-export interface Album {
-    id: string
-    name: string
-    trackCount: number
-    artistId: string
-    coverart:string
 }

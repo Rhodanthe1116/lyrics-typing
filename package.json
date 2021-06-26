@@ -2,14 +2,14 @@
   "name": "with-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next -p 3001",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js|tsx)\"",
+    "lint": "eslint --ignore-path .gitignore \"components/**/*.+(ts|js|tsx)\"",
     "type-check": "tsc",
     "generate2": "apollo-codegen generate ./apollo/query.ts --schema=schema.json --target=typescript --output=./apollo/query-types.ts --tagName=gql --addTypename ",
     "introspect-schema2": "apollo-codegen introspect-schema http://localhost:3000/api/graphql --output schema.json",
-    "download-schema": "apollo client:download-schema graphql-schema.json --endpoint http://localhost:8080/v1/graphql --header 'X-Hasura-Admin-Secret: hasura'",
+    "download-schema": "apollo client:download-schema --endpoint=http://localhost:3000/api/graphql graphql-schema.json",
     "generate": "apollo client:codegen --includes=./apollo/**/*.ts --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
   },
   "dependencies": {
@@ -17,12 +17,10 @@
     "apollo-datasource": "^0.7.3",
     "apollo-datasource-rest": "^0.11.0",
     "apollo-server-micro": "^2.22.2",
-    "firebase": "^8.6.8",
-    "firebaseui": "^4.8.0",
+    "graphql": "^14.6.0",
     "isemail": "^3.2.0",
     "kuroshiro": "^1.1.2",
     "next": "latest",
-    "next-i18next": "^8.5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-full-screen": "^1.0.2",
@@ -53,7 +51,10 @@
     "postcss": "^8.2.8",
     "prettier": "^2.3.1",
     "tailwindcss": "^2.0.4",
-    "typescript": "^4.3.4"
+    "typescript": "4.0"
+  },
+  "resolutions": {
+    "graphql": "15.4.0"
   },
   "license": "MIT"
 }
