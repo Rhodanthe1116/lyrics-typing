@@ -8,8 +8,9 @@ const TypeInput: FC<{
   text: string
   typingPhase: TypingPhase
   inputRef: any
+  onInputFocus?: () => void
   onTypingEnded: (result: TypingResult) => void
-}> = ({ text, onTypingEnded, typingPhase, inputRef }) => {
+}> = ({ text, onTypingEnded, typingPhase, inputRef, onInputFocus }) => {
   const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
   const [duration, setDuration] = useState(0)
@@ -194,7 +195,7 @@ const TypeInput: FC<{
         </div>
       ) : null}
       <div
-        className={`text-xl select-none  `}
+        className={`text-xl select-none bg-black  `}
         onClick={() => {
           inputRef.current.focus()
         }}
@@ -239,6 +240,7 @@ const TypeInput: FC<{
           <input
             type="text"
             ref={inputRef}
+            onFocus={onInputFocus}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 e.preventDefault()

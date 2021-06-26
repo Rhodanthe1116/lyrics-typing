@@ -7,6 +7,18 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta charSet="utf-8" />
+
+          <meta
+            name="description"
+            content="A new way to learn Lyrics and Language with Typing!"
+          />
+          <meta
+            name="keywords"
+            content="lyrics language learn typing musix musixmatch spotify"
+          ></meta>
+          <link rel="manifest" href="/manifest.json" />
+
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script
             async
