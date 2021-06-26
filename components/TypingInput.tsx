@@ -2,17 +2,20 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import useTyping, { PhaseType } from 'react-typing-game-hook'
 import { TypingResult } from '../interfaces'
+import { TypingPhase } from '../pages/tracks/[id]'
 
 const TypeInput: FC<{
   text: string
+  typingPhase: TypingPhase
+  inputRef: any
   onTypingEnded: (result: TypingResult) => void
-}> = ({ text, onTypingEnded }) => {
+}> = ({ text, onTypingEnded, typingPhase, inputRef }) => {
   const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
   const [duration, setDuration] = useState(0)
   const [typingInput, setTypingInput] = useState('')
   const [typedWrong, setTypeWrong] = useState(false)
-  const inputRef = useRef<any>(null)
+  //const inputRef = useRef<any>(null)
 
   const {
     states: {
@@ -24,7 +27,7 @@ const TypeInput: FC<{
       startTime,
       endTime,
     },
-    actions: { insertTyping, resetTyping, getDuration },
+    actions: { insertTyping, resetTyping, getDuration, deleteTyping },
   } = useTyping(text, {
     skipCurrentWordOnSpace: false,
   })
@@ -92,8 +95,10 @@ const TypeInput: FC<{
   const reset = () => {
     resetTyping()
     setDuration(0)
-    // insertTyping();
     setTypingInput('')
+    inputRef.current.focus()
+    //insertTyping();
+    //deleteTyping()
   }
 
   // Submit inputted word
@@ -121,7 +126,7 @@ const TypeInput: FC<{
 
       // Save record.
       const newResult: TypingResult = {
-        wpm: Math.round(((60 / duration) * correctChar)),
+        wpm: Math.round((60 / duration) * correctChar),
         duration: duration,
         correctChar: correctChar,
         errorChar: errorChar,
@@ -144,8 +149,50 @@ const TypeInput: FC<{
     return () => clearInterval(timerId)
   }, [phase])
 
+  useEffect(() => {
+    insertTyping()
+    deleteTyping()
+  }, [])
+
   return (
     <div>
+      {phase === PhaseType.Ended && startTime && endTime ? (
+        <div className="text-base">
+          <p
+            className={`text-xl" ${
+              Math.round((60 / duration) * correctChar) >= 30
+                ? 'text-green-500'
+                : 'text-red-500'
+            }`}
+          >
+            {Math.round((60 / duration) * correctChar) >= 30
+              ? 'Passed'
+              : 'Failed'}
+          </p>
+          <div className="my-4 flex justify-center items-end">
+            <h2
+              className={`text-3xl text-center border-solid mx-4 ${
+                Math.round((60 / duration) * correctChar) >= 30
+                  ? 'text-green-500'
+                  : 'text-red-500'
+              }`}
+            >
+              {Math.round((60 / duration) * correctChar)}
+            </h2>
+            <div className="text-sm"> CPM</div>
+          </div>
+          <ul className="text-sm mb-4 text-gray-500">
+            {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
+            <li>Times: {Math.round(duration)}s</li>
+            <li>
+              {' '}
+              Correct / Wrong : {correctChar} / {errorChar}
+            </li>
+
+            <li>Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%</li>
+          </ul>
+        </div>
+      ) : null}
       <div
         className={`text-xl select-none  `}
         onClick={() => {
@@ -186,7 +233,9 @@ const TypeInput: FC<{
             )
           })}
         </div>
-        <div className="mb-2">
+        <div
+          className={`mb-2 ${typingPhase === TypingPhase.End ? 'hidden' : ''}`}
+        >
           <input
             type="text"
             ref={inputRef}
@@ -212,16 +261,21 @@ const TypeInput: FC<{
                 : typedWrong
                 ? 'border-red-500'
                 : 'border-green-500'
-            }`}
+            } `}
             placeholder={
               phase !== PhaseType.Started
                 ? 'Type here... (Press enter to submit)'
                 : ''
             }
+            disabled={typingPhase === TypingPhase.End}
           />
         </div>
       </div>
-      <div className="flex justify-between text-gray-500 mb-8">
+      <div
+        className={`flex justify-between text-gray-500 mb-8 ${
+          typingPhase === TypingPhase.End ? 'hidden' : ''
+        }`}
+      >
         <span>Time: {duration}s</span>
         <button onClick={() => reset()}>Reset</button>
       </div>
@@ -248,26 +302,6 @@ const TypeInput: FC<{
               4
             </div>
           </div>
-          <h2 className="text-xl">Result</h2>
-          <ul>
-            {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
-            <li className="text-lg border-solid">Duration: {duration}s</li>
-            <li className="text-green-500 mr-4 border-solid	">
-              {' '}
-              Correct Characters: {correctChar}
-            </li>
-            <li className="text-red-500 mr-4">
-              {' '}
-              Error Characters: {errorChar}
-            </li>
-
-            <li className="text-lg text-green-500 ">
-              Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%
-            </li>
-            <li className="text-lg  text-green-500">
-              WPM: {Math.round(((60 / duration) * correctChar) / 5)}
-            </li>
-          </ul>
         </div>
       ) : null}
 

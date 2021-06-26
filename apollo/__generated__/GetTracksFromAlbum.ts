@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: SearchTracks
+// GraphQL query operation: GetTracksFromAlbum
 // ====================================================
 
-export interface SearchTracks_tracks {
+export interface GetTracksFromAlbum_tracksByAlbum {
   __typename: "Track";
   id: string;
   name: string;
@@ -18,11 +18,10 @@ export interface SearchTracks_tracks {
   albumId: string;
 }
 
-export interface SearchTracks {
-  tracks: SearchTracks_tracks[];
+export interface GetTracksFromAlbum {
+  tracksByAlbum: GetTracksFromAlbum_tracksByAlbum[];
 }
 
-export interface SearchTracksVariables {
-  query?: string | null;
-  artistId?: string | null;
+export interface GetTracksFromAlbumVariables {
+  id: string;
 }
