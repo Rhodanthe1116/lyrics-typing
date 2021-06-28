@@ -34,7 +34,7 @@ const TypeInput: FC<{
   })
 
   const [currWordPos, setCurrWordPos] = useState([-1, -1])
-
+  const countEOL = (text.match(/\n/g) || []).length
   //checks whether the word is correct while the user is typing
   useEffect(() => {
     setTypeWrong((prev: boolean): boolean => {
@@ -130,9 +130,9 @@ const TypeInput: FC<{
         wpm: Math.round((60 / duration) * correctChar),
         duration: duration,
         correctChar: correctChar,
-        errorChar: errorChar,
-        accuracy: (correctChar / text.length) * 100,
-        textLength: text.length,
+        errorChar: errorChar-countEOL,
+        accuracy: (correctChar / (text.length-countEOL)) * 100,
+        textLength: text.length-countEOL,
       }
 
       onTypingEnded(newResult)
@@ -187,10 +187,10 @@ const TypeInput: FC<{
             <li>Times: {Math.round(duration)}s</li>
             <li>
               {' '}
-              Correct / Wrong : {correctChar} / {errorChar}
+              Correct / Wrong : {correctChar} / {errorChar-countEOL}
             </li>
 
-            <li>Accuracy: {((correctChar / text.length) * 100).toFixed(2)}%</li>
+            <li>Accuracy: {((correctChar / (text.length-countEOL)) * 100).toFixed(2)}%</li>
           </ul>
         </div>
       ) : null}

@@ -116,7 +116,10 @@ const TrackPage = () => {
             />
           )
         ) : (
-          <div>no data or Error: {trackRes.error?.toString()}</div>
+          trackRes.error ? (
+            <div> Error: {trackRes.error?.toString()} </div>
+          ) : (<div className='self-center'>Page Loading...</div>)
+          
         )}
         {typingPhase === TypingPhase.End ? (
           <>
