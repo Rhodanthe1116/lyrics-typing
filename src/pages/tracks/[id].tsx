@@ -116,7 +116,14 @@ const TrackPage = () => {
             />
           )
         ) : (
-          <div>no data or Error: {trackRes.error?.toString()}</div>
+          // <div>no data or Error: {trackRes.error?.toString()}</div>
+          <div className="justify-center items-center flex mt-24">
+            <div className="w-auto">
+              <div className="animate-pulse border-2 border-green-200 p-4 table box-border h-80 w-80">
+                <p className="table-cell text-center align-middle">Loaing</p>
+              </div>
+            </div>
+          </div>
         )}
         {typingPhase === TypingPhase.End ? (
           <>
