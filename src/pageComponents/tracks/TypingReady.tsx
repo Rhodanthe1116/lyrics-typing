@@ -7,7 +7,7 @@ interface TypingReadyProp {
 }
 
 function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
-  const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${process.env.NEXT_PUBLIC_LASTFM__PUBLIC_API_KEY}&artist=${track?.artistName}&album=${track?.name}&format=json`
+  const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${process.env.NEXT_PUBLIC_LASTFM_PUBLIC_API_KEY}&artist=${track?.artistName}&album=${track?.name}&format=json`
   const { data: album } = useSWR(url)
 
   if (!album) {
