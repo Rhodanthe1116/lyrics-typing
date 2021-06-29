@@ -23,9 +23,9 @@ function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
     <div>
       <div className="justify-center items-center flex mt-24">
         <div className="w-auto">
-          <div className="box-border h-80 w-80">
+          <div className="overflow-ellipsis box-border h-80 w-80">
             <img
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover justify-center items-center rounded-3xl"
               src={
                 album?.album
                   ? album?.album?.image[1]['#text']
@@ -33,7 +33,9 @@ function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
               }
             />
           </div>
-          <h1 className="text-lg font-semibold mt-4">{track?.name}</h1>
+          <h1 className="w-80 truncate text-lg font-semibold mt-4">
+            {track?.name}
+          </h1>
           <p className="mb-2 text-gray-400">{track?.artistName}</p>
         </div>
       </div>
