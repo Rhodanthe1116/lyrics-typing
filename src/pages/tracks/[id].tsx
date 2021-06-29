@@ -57,7 +57,9 @@ const TrackPage = () => {
   const tracksListOri = recommandTracksRes.loading
     ? []
     : recommandTracksRes?.data?.recommandTracks
-  const tracksList = tracksListOri?.filter(track => track.id !== trackId.toString())
+  const tracksList = tracksListOri?.filter(
+    (track) => track.id !== trackId.toString()
+  )
   // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
 
   const [insertTypingRecord] = useMutation<InsertTypingRecordOne>(
@@ -116,7 +118,14 @@ const TrackPage = () => {
             />
           )
         ) : (
-          <div>no data or Error: {trackRes.error?.toString()}</div>
+          // <div>no data or Error: {trackRes.error?.toString()}</div>
+          <div className="justify-center items-center flex mt-24">
+            <div className="w-auto">
+              <div className="animate-pulse border-2 border-green-200 p-4 table box-border h-80 w-80">
+                <p className="table-cell text-center align-middle">Loaing</p>
+              </div>
+            </div>
+          </div>
         )}
         {typingPhase === TypingPhase.End ? (
           <>
