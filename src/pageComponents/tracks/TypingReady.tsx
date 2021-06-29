@@ -26,7 +26,11 @@ function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
           <div className="box-border h-80 w-80">
             <img
               className="h-full w-full object-cover"
-              src={album.album.image[1]['#text']}
+              src={
+                album?.album
+                  ? album?.album?.image[1]['#text']
+                  : 'http://placehold.jp/150x150.png?text=No resource'
+              }
             />
           </div>
           <h1 className="text-lg font-semibold mt-4">{track?.name}</h1>
