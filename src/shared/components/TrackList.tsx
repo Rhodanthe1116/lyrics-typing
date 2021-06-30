@@ -70,6 +70,9 @@ const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
     return <div>no track</div>
   }
 
+  const imgOnError = (e) => {
+    e.target.src = 'https://placehold.jp/150x150.png?text=No resource'
+  }
   return (
     <Link href={`/tracks/${track.id}`}>
       <a
@@ -80,6 +83,7 @@ const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
         <img
           className="rounded w-12 h-12 mr-4 object-cover"
           src={albumImage}
+          onError={imgOnError}
         ></img>
 
         <div className="flex-1 flex justify-between truncate">
