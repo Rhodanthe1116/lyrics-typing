@@ -86,7 +86,7 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
           src={albumImage}
         ></img>
 
-        <div className="flex-grow flex justify-between">
+        <div className="flex-1 flex justify-between truncate">
           <div className="flex-1 truncate mr-2">
             <p className="truncate">{record.trackName}</p>
             <p className="truncate text-gray-400">{record.artistName}</p>
