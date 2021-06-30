@@ -16,6 +16,7 @@ export interface GetChartTracks_chartTracks {
   numFavourite: number;
   artistId: string;
   albumId: string;
+  albumName: string | null;
 }
 
 export interface GetChartTracks {

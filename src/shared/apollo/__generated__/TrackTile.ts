@@ -16,4 +16,5 @@ export interface TrackTile {
   numFavourite: number;
   artistId: string;
   albumId: string;
+  albumName: string | null;
 }

@@ -10,6 +10,7 @@ export interface MusixmatchTrack {
   track_id: number
   track_name: string
   artist_name: string
+  album_name: string
   track_rating: number
   num_favourite: number
   artist_id: number

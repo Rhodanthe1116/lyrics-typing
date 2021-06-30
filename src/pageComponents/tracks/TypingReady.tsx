@@ -1,5 +1,5 @@
 import { GetTrackWithLyrics_track } from 'shared/apollo/__generated__/GetTrackWithLyrics'
-import useSWR from 'swr'
+import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
 
 interface TypingReadyProp {
   track?: GetTrackWithLyrics_track
@@ -7,10 +7,15 @@ interface TypingReadyProp {
 }
 
 function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
-  const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${process.env.NEXT_PUBLIC_LASTFM_PUBLIC_API_KEY}&artist=${track?.artistName}&album=${track?.name}&format=json`
-  const { data: album } = useSWR(url)
+  const { image: albumImage, loading } = useAlbumCover(
+    {
+      artistName: track?.artistName,
+      albumName: track?.albumName,
+    },
+    'extralarge'
+  )
 
-  if (!album) {
+  if (loading) {
     return (
       <div className="justify-center items-center flex mt-24">
         <div className="w-auto">
@@ -26,11 +31,7 @@ function TypingReady({ track, handleStartingClick }: TypingReadyProp) {
           <div className="overflow-ellipsis box-border h-80 w-80">
             <img
               className="h-full w-full object-cover justify-center items-center rounded-3xl"
-              src={
-                album?.album
-                  ? album?.album?.image[1]['#text']
-                  : 'http://placehold.jp/150x150.png?text=No resource'
-              }
+              src={albumImage}
             />
           </div>
           <h1 className="w-80 truncate text-lg font-semibold mt-4">
