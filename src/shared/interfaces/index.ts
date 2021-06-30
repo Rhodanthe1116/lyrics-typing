@@ -41,6 +41,7 @@ export interface Track {
   numFavourite: number
   artistId: string
   albumId: string
+  albumName?: string | null
 
   lyrics?: Lyrics
 }

@@ -24,6 +24,7 @@ export interface GetTrackWithLyrics_track {
   numFavourite: number;
   artistId: string;
   albumId: string;
+  albumName: string | null;
   lyrics: GetTrackWithLyrics_track_lyrics | null;
 }
 

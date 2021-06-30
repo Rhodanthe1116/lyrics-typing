@@ -10,6 +10,7 @@ export const TRACK_TILE_DATA = gql`
     numFavourite
     artistId
     albumId
+    albumName
   }
 `
 

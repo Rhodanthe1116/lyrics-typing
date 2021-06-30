@@ -16,6 +16,7 @@ export interface GetRecommandTracks_recommandTracks {
   numFavourite: number;
   artistId: string;
   albumId: string;
+  albumName: string | null;
 }
 
 export interface GetRecommandTracks {

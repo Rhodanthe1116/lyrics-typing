@@ -41,6 +41,7 @@ const typeDefs = gql`
     artistName: String!
     artistId: String!
     albumId: String!
+    albumName: String
 
     album: Album
     artist: Artist

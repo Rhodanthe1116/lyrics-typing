@@ -53,6 +53,7 @@ class MusixmatchAPI extends RESTDataSource {
       numFavourite: track.num_favourite,
       artistId: track.artist_id.toString(),
       albumId: track.album_id.toString(),
+      albumName: track.album_name,
     } as Track
   }
   lyricsReducer(lyrics: MusixmatchLyrics) {
@@ -133,19 +134,24 @@ class MusixmatchAPI extends RESTDataSource {
     return this.lyricsReducer(body.lyrics)
   }
 
-  async getTracksByAlbumId({ albumId, size }: { albumId: number, size: number }) {
-    if (size){
+  async getTracksByAlbumId({
+    albumId,
+    size,
+  }: {
+    albumId: number
+    size: number
+  }) {
+    if (size) {
       const body = await this.get('album.tracks.get', {
-      page_size: size,
-      album_id: albumId,
-      f_has_lyrics: true,
-    })
+        page_size: size,
+        album_id: albumId,
+        f_has_lyrics: true,
+      })
       const trackList: MusixmatchTrackWrapperObject[] = body.track_list
       return Array.isArray(trackList)
         ? trackList.map((track) => this.trackReducer(track.track))
         : []
-    }
-    else{
+    } else {
       const body = await this.get('album.tracks.get', {
         album_id: albumId,
         f_has_lyrics: true,
@@ -154,7 +160,7 @@ class MusixmatchAPI extends RESTDataSource {
       return Array.isArray(trackList)
         ? trackList.map((track) => this.trackReducer(track.track))
         : []
-    }  
+    }
   }
 
   async getAlbumById({ albumId }: { albumId: number }) {
@@ -165,16 +171,16 @@ class MusixmatchAPI extends RESTDataSource {
     return this.albumReducer(body.album)
   }
 
-  async getAlbumsByArtistId({ artistId } : {artistId : number}){
-    const body = await this.get('artist.albums.get',{
+  async getAlbumsByArtistId({ artistId }: { artistId: number }) {
+    const body = await this.get('artist.albums.get', {
       artist_id: artistId,
       s_release_date: 'desc',
     })
 
     const albumList: MusixmatchAlbumWrapperObject[] = body.album_list
-      return Array.isArray(albumList)
-        ? albumList.map((track) => this.albumReducer(track.album))
-        : []
+    return Array.isArray(albumList)
+      ? albumList.map((track) => this.albumReducer(track.album))
+      : []
   }
 }
 

@@ -14,7 +14,7 @@ import { GET_CHART_TRACKS, SEARCH_TRACKS } from 'shared/apollo/query'
 const IndexPage = () => {
   const router = useRouter()
 
-  const [queryInput, setQueryInput] = useState(router.query.q?.toString() || '')
+  const [queryInput, setQueryInput] = useState(router.query.q?.toString() ?? '')
   const query: string = router.query.q?.toString() || ''
   const [country, setCountry] = useState('JP')
 
@@ -24,6 +24,7 @@ const IndexPage = () => {
 
   const tracksRes = useQuery(SEARCH_TRACKS, {
     variables: { query: query },
+    skip: query === '',
   })
 
   const trackList: Array<Track> = queryInput

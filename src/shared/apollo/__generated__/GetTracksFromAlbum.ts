@@ -16,6 +16,7 @@ export interface GetTracksFromAlbum_tracksByAlbum {
   numFavourite: number;
   artistId: string;
   albumId: string;
+  albumName: string | null;
 }
 
 export interface GetTracksFromAlbum {
