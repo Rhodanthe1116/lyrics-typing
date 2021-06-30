@@ -16,6 +16,7 @@ import { getAnimalByHash } from 'shared/utils/animals'
 
 // custom ui
 import Layout from 'shared/components/Layout'
+import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
 
 const timeStampConverter = (stamp: any) => {
   const date = new Date(stamp)
@@ -49,6 +50,11 @@ interface RecordItemProps {
 }
 
 const RecordItem = ({ record, loading }: RecordItemProps) => {
+  const { image: albumImage } = useAlbumCover({
+    artistName: record?.artistName,
+    albumName: record?.albumName,
+  })
+
   const cpm = calcCPM(record?.duration, record?.correctChar)
 
   if (loading) {
@@ -66,29 +72,31 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
     return <div>no record.</div>
   }
 
+  const completed = cpm >= 30
+  const cpmColor = completed ? 'text-green-500' : 'text-red-500'
   return (
     <Link href={`/tracks/${record.trackId}`}>
       <a
-        className={`border-0 border-green-200 md:py-3 md:px-6 py-1 px-3 hover:bg-pink-900 flex justify-between bg-gray-900`}
+        className={`border-0 border-green-200 p-4 hover:bg-pink-600 ${
+          completed ? 'bg-green-900' : 'bg-gray-900'
+        } flex`}
       >
-        <div>
-          <img
-            className="md:w-22 md:h-22 w-16 h-16 object-cover object-fill"
-            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7af26ce5-5288-4db3-a0f9-bd833b0c6c35/dc1yn5d-6a203811-236c-4ce9-a609-cf4d507de21d.png/v1/fill/w_952,h_839,q_70,strp/great_days_album_cover_by_orochismith_dc1yn5d-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwNiIsInBhdGgiOiJcL2ZcLzdhZjI2Y2U1LTUyODgtNGRiMy1hMGY5LWJkODMzYjBjNmMzNVwvZGMxeW41ZC02YTIwMzgxMS0yMzZjLTRjZTktYTYwOS1jZjRkNTA3ZGUyMWQucG5nIiwid2lkdGgiOiI8PTExNDEifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.QJ7sn-riqwsCp_38xmJI1gwNfVlJ_j8iOJ2aKo-Mtak"
-          ></img>
-        </div>
+        <img
+          className="rounded mr-4 object-cover w-12 h-12"
+          src={albumImage}
+        ></img>
 
-        <div className="flex-1 truncate ml-4 md:ml-8">
-          <p className="truncate font-bold">{record.trackName}</p>
-          <p className="truncate font-bold text-gray-400 mt-4 md:mt-4` ">
-            {record.artistName}
-          </p>
-        </div>
-        <div className="flex-none w-auto overflow-hidden text-right">
-          <p className="truncate text-red-500">{cpm} CPM</p>
-          <p className="truncate text-gray-400 mt-4 md:mt-4">
-            {timeStampConverter(record.createdAt).toLocaleString()}
-          </p>
+        <div className="flex-grow flex justify-between">
+          <div className="flex-1 truncate mr-2">
+            <p className="truncate">{record.trackName}</p>
+            <p className="truncate text-gray-400">{record.artistName}</p>
+          </div>
+          <div className="flex-none w-auto overflow-hidden text-right ">
+            <p className={`truncate ${cpmColor}`}>{cpm} CPM</p>
+            <p className="truncate text-gray-400">
+              {timeStampConverter(record.createdAt).toLocaleString()}
+            </p>
+          </div>
         </div>
       </a>
     </Link>
@@ -114,7 +122,13 @@ const RecordList = ({ recordList, loading }: RecordListPorps) => {
 
   // no result
   if (recordList.length === 0) {
-    return <div>not found...</div>
+    return (
+      <div>
+        <Link href="/">
+          <a className="text-green-200">No record now. Go to play</a>
+        </Link>
+      </div>
+    )
   }
 
   return (
@@ -225,7 +239,7 @@ const ProfilePage = () => {
           </div>
         )}
 
-        <RecordList recordList={typingRecords} loading={!user} />
+        <RecordList recordList={[...typingRecords].reverse()} loading={!user} />
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       </div>
     </Layout>

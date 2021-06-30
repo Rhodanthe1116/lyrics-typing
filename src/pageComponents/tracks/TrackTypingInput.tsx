@@ -9,10 +9,11 @@ import TypingInput from './TypingInput'
 
 // Data
 import { GetTrackWithLyrics_track } from 'shared/apollo/__generated__/GetTrackWithLyrics'
+import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
 
 interface TrackTypingInputProps {
-  track?: GetTrackWithLyrics_track
-  lyrics?: Lyrics
+  track?: GetTrackWithLyrics_track | null
+  lyrics?: Lyrics | null
   loading: boolean
   //album?: Album
   typingPhase: TypingPhase
@@ -32,6 +33,11 @@ function TrackTypingInput({
   typingPhase,
   onTypingEnded = () => null,
 }: TrackTypingInputProps) {
+  const { image: albumImage } = useAlbumCover({
+    artistName: track?.artistName,
+    albumName: track?.albumName,
+  })
+
   const inputRef = useRef<any>(null)
   //const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
   //  variables: { id: trackId }
@@ -75,11 +81,16 @@ function TrackTypingInput({
 
   return (
     <>
-      <div className="flex justify-between">
-        <h1 className="text-lg font-semibold">{track?.name}</h1>
+      <div className="flex">
+        <img
+          className="rounded w-12 h-12 mr-4 object-cover"
+          src={albumImage}
+        ></img>
+        <div className="flex flex-col">
+          <h1 className="text-lg font-semibold">{track?.name}</h1>
+          <p className="mb-2 text-gray-400">{track?.artistName}</p>
+        </div>
       </div>
-
-      <p className="mb-2 text-gray-400">{track?.artistName}</p>
 
       <TypingInput
         text={

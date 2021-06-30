@@ -1,15 +1,16 @@
 import Link from 'next/link'
+import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
 
 // interface
 import { Track } from 'shared/interfaces'
 
 interface TrackListPorps {
-  trackList: Track[]
+  trackList?: Track[]
   loading: boolean
   completedIds: string[]
 }
 const TrackList = ({ trackList, loading, completedIds }: TrackListPorps) => {
-  if (loading) {
+  if (trackList === undefined || loading) {
     return (
       <div>
         {[1, 2, 3, 4].map((v) => (
@@ -22,12 +23,12 @@ const TrackList = ({ trackList, loading, completedIds }: TrackListPorps) => {
   }
 
   // no result
-  if (!trackList || trackList.length === 0) {
+  if (trackList !== undefined && trackList.length === 0) {
     return <div>not found...</div>
   }
 
   return (
-    <div>
+    <div className="max-w-full">
       {trackList.map((track: Track, index) => (
         <div key={index} className="mb-2">
           <TrackItem
@@ -49,6 +50,11 @@ interface TrackItemProps {
 }
 
 const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
+  const { image: albumImage } = useAlbumCover({
+    artistName: track?.artistName,
+    albumName: track?.albumName,
+  })
+
   if (loading) {
     return (
       <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
@@ -67,17 +73,24 @@ const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
   return (
     <Link href={`/tracks/${track.id}`}>
       <a
-        className={`border-0 border-green-200 p-4 hover:bg-pink-900 ${
+        className={`flex max-w-full border-0 border-green-200 p-4 hover:bg-pink-600 ${
           completed ? 'bg-green-900' : 'bg-gray-900'
-        } flex justify-between`}
+        }`}
       >
-        <div className="flex-1 truncate mr-2">
-          <p className="truncate">{track.name}</p>
-          <p className="truncate text-gray-400">{track.artistName}</p>
-        </div>
-        <div className="flex-none w-12 overflow-hidden">
-          <p className="truncate">⭐{track.rating}</p>
-          <p className="truncate">❤{track.numFavourite}</p>
+        <img
+          className="rounded w-12 h-12 mr-4 object-cover"
+          src={albumImage}
+        ></img>
+
+        <div className="flex-1 flex justify-between truncate">
+          <div className="flex-1 min-w-0 truncate mr-2">
+            <p className="truncate">{track.name}</p>
+            <p className="truncate text-gray-400">{track.artistName}</p>
+          </div>
+          <div className="flex-none w-12 overflow-hidden">
+            <p className="truncate">⭐{track.rating}</p>
+            <p className="truncate">❤{track.numFavourite}</p>
+          </div>
         </div>
       </a>
     </Link>

@@ -13,7 +13,11 @@ function isValidHttpUrl(string) {
   return url.protocol === 'http:' || url.protocol === 'https:'
 }
 
-export const useAlbumInfo = ({ artistName, albumName }) => {
+interface AlbumInfoArgs {
+  artistName?: string | null
+  albumName?: string | null
+}
+export const useAlbumInfo = ({ artistName, albumName }: AlbumInfoArgs) => {
   const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${API_KEY}&artist=${artistName}&album=${albumName}&format=json`
   return useSWR(url)
 }
@@ -35,11 +39,13 @@ type AlbumCoverSize =
   | 'unknown'
 
 export const useAlbumCover = (
-  { artistName, albumName },
+  { artistName, albumName }: AlbumInfoArgs,
   size: AlbumCoverSize = 'medium'
 ) => {
+  const isUndefinedArgs = !artistName && !albumName
+
   const url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${API_KEY}&artist=${artistName}&album=${albumName}&format=json`
-  const { data: albumQuery, ...others } = useSWR(url)
+  const { data: albumQuery, ...others } = useSWR(!isUndefinedArgs ? url : null)
 
   const imageUrl = albumQuery?.album?.image[sizeToIndex[size]]['#text']
 

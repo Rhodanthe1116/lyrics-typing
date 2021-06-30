@@ -44,15 +44,23 @@ const TrackPage = () => {
   }, [trackId])
 
   // const artistRes = useSWR(`https://api.musixmatch.com/ws/1.1/track.get?format=jsonp&callback=callback&track_id=${trackId}&apikey=${apiKey}`, fetcher)
-  const trackRes = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
+  const {
+    data: trackQueryData,
+    loading: trackLoading,
+    error: trackError,
+  } = useQuery<GetTrackWithLyrics>(GET_TRACK_WITH_LYRICS, {
     variables: { id: trackId },
   })
 
-  const track = trackRes.data?.track
-  const lyrics = trackRes.data?.track?.lyrics
+  const track = trackQueryData?.track
+  const lyrics = trackQueryData?.track?.lyrics
 
-  const [getRecommand, recommandTracksRes] =
-    useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
+  const [getRecommand, recommandTracksRes] = useLazyQuery<GetRecommandTracks>(
+    GET_RECOMMAND_TRACKS,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  )
 
   const tracksListOri = recommandTracksRes.loading
     ? []
@@ -75,7 +83,10 @@ const TrackPage = () => {
             userId: user?.uid,
             trackId: track?.id,
             trackName: track?.name,
+            artistId: track?.artistId,
             artistName: track?.artistName,
+            albumId: track?.albumId,
+            albumName: track?.albumName,
             duration: result.duration,
             correctChar: result.correctChar,
             errorChar: result.errorChar,
@@ -98,36 +109,47 @@ const TrackPage = () => {
   }
 
   // if (!data) return <div>loading...</div>
+  if (trackError) {
+    return (
+      <Layout>
+        <div className="px-4 container mx-auto flex flex-col ">
+          error: {trackError.toString()}
+        </div>
+      </Layout>
+    )
+  }
+
+  if (!trackLoading && (!track || !lyrics)) {
+    return (
+      <Layout>
+        <div className="px-4 container mx-auto flex flex-col ">
+          Sorry, lyrics not found
+        </div>
+      </Layout>
+    )
+  }
 
   return (
     <Layout>
       <div className="px-4 container mx-auto flex flex-col ">
-        {!trackRes.error && track && lyrics ? (
-          typingPhase === TypingPhase.Ready ? (
-            <TypingReady
-              track={track}
-              handleStartingClick={handleStartingClick}
-            />
-          ) : (
-            <TrackTypingInput
-              track={track}
-              lyrics={lyrics}
-              loading={trackRes.loading}
-              onTypingEnded={handleTypingEnded}
-              typingPhase={typingPhase}
-            />
-          )
-        ) : (
-          // <div>no data or Error: {trackRes.error?.toString()}</div>
-          <div className="justify-center items-center flex mt-24">
-            <div className="w-auto">
-              <div className="animate-pulse border-2 border-green-200 p-4 table box-border h-80 w-80">
-                <p className="table-cell text-center align-middle">Loaing</p>
-              </div>
-            </div>
-          </div>
+        {typingPhase === TypingPhase.Ready && (
+          <TypingReady
+            track={track}
+            handleStartingClick={handleStartingClick}
+            loading={trackLoading}
+          />
         )}
-        {typingPhase === TypingPhase.End ? (
+        {(typingPhase === TypingPhase.Typing ||
+          typingPhase === TypingPhase.End) && (
+          <TrackTypingInput
+            track={track}
+            lyrics={lyrics}
+            loading={trackLoading}
+            onTypingEnded={handleTypingEnded}
+            typingPhase={typingPhase}
+          />
+        )}
+        {typingPhase === TypingPhase.End && (
           <>
             <h2 className="text-xl my-2">Same Albums / Artists</h2>
             <TrackList
@@ -136,7 +158,7 @@ const TrackPage = () => {
               completedIds={[]}
             />
           </>
-        ) : null}
+        )}
       </div>
     </Layout>
   )
