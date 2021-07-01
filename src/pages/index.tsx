@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 
 import Layout from 'shared/components/Layout'
 import TrackList from 'shared/components/TrackList'
+import { SearchIcon } from 'shared/components/Icons'
 
 // interface
 
@@ -116,21 +117,31 @@ const IndexPage = () => {
   return (
     <Layout displayHeader={true}>
       <div className="m-2">
-        <div className="mb-6 mx-2">
-          <input
-            className="px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
-            value={queryInput}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setQueryInput(e.target.value)
-            }
-            placeholder="Search song or artist here."
-          />
+        <div className="mx-2">
+          <div className="relative text-gray-600 focus-within:text-gray-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+              <button
+                type="submit"
+                className="p-1 focus:outline-none focus:shadow-outline"
+              >
+                <SearchIcon />
+              </button>
+            </span>
+            <input
+              className="text-sm text-white rounded-md pl-10 px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
+              value={queryInput}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setQueryInput(e.target.value)
+              }
+              placeholder="Search song or artist here."
+            />
+            {/* <input type="search" name="q" class="" placeholder="Search..." autocomplete="off"> */}
+          </div>
         </div>
-        <div className="mb-6 flex flex-col items-center">
+        <div className="my-12 flex flex-col items-center">
           <h1 className="text-3xl text-center">
-            Learn <span className="text-green-200">Lyrics</span> and{' '}
-            <span className="text-green-200">Language</span> with{' '}
-            <span className="text-green-200">Typing</span>!
+            Learn <span className="text-green-200">language</span> by{' '}
+            <span className="text-green-200">typing lyrics</span>!
           </h1>
         </div>
 
