@@ -47,6 +47,7 @@ const RecordItem = ({ record, loading }: RecordItemProps) => {
       albumName={record?.albumName}
       cpm={cpm.toString()}
       createdAt={record?.createdAt}
+      completed={cpm >= 30}
     />
   )
 }
@@ -135,26 +136,24 @@ const Statistics: VFC<StatisticsProps> = ({ typingRecords = [] }) => {
     .slice(0, 3)
 
   return (
-    <div className="text-sm flex mb-12">
-      <div className=" flex-1 ml-2 md:ml-10">
-        <p className="truncate font-semibold">Average CPM</p>
-        <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
-          <p>Now</p>
-          <p className="pl-8 md:pl-28">{avgCPM.toFixed(1)}</p>
-          <p> </p>
-          <p className="pl-8 md:pl-28"> </p>
-          <p> </p>
-          <p className="pl-8 md:pl-28"> </p>
+    <div className="text-sm flex mx-2 mb-12 space-x-4">
+      <div className="flex-1 md:ml-10">
+        <p className="truncate font-bold">Average CPM</p>
+        <div className="md:max-w-lg truncate md:pt-4 md:ml-4 pt-1">
+          <div className="flex">
+            <p className="flex-1">All</p>
+            <p className="pl-8 md:pl-28">{avgCPM.toFixed(1)}</p>
+          </div>
         </div>
       </div>
       <div className="flex-1 md:pl-12">
-        <p className="truncate font-semibold">Top Artists</p>
-        <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+        <p className="truncate font-bold">Top Artists</p>
+        <div className="md:max-w-lg truncate md:pt-4 md:ml-4 pt-1">
           {sortedArtist.map(({ artistName, count }) => (
-            <>
-              <p>{artistName}</p>
+            <div key={`${artistName}-${count}`} className="flex">
+              <p className="flex-1">{artistName}</p>
               <p className="pl-8 md:pl-28">{count}</p>
-            </>
+            </div>
           ))}
         </div>
       </div>
@@ -197,12 +196,19 @@ const ProfilePage = () => {
                   width="384"
                   height="512"
                 ></img>
-                <p className="whitespace-nowrap md:text-2xl text-base font-bold p-2">
-                  {user?.displayName ??
-                    `${getAnimalByHash(user?.uid)}-${
-                      user?.uid?.slice(0, 5) ?? ''
-                    }`}
-                </p>
+                <div className="p-2">
+                  <p className="whitespace-nowrap md:text-2xl text-base font-bold ">
+                    {user?.displayName ??
+                      `${getAnimalByHash(user?.uid)}-${
+                        user?.uid?.slice(0, 5) ?? ''
+                      }`}
+                  </p>
+                  {!user?.isAnonymous && (
+                    <button onClick={logout} className="text-gray-700">
+                      <a>Logout</a>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
             <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
@@ -220,14 +226,6 @@ const ProfilePage = () => {
       <div className="m-4 md:mb-24 mb-16">
         {/* <p>{user.id}</p> */}
         <Statistics typingRecords={typingRecords} />
-
-        {!user?.isAnonymous && (
-          <div className="flex justify-end text-gray-700">
-            <button onClick={logout} className="">
-              <a>Logout</a>
-            </button>
-          </div>
-        )}
 
         <RecordList recordList={[...typingRecords].reverse()} loading={!user} />
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}

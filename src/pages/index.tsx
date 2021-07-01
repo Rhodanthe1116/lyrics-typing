@@ -18,6 +18,8 @@ import { GetTypingRecords } from 'shared/apollo/__generated__/GetTypingRecords'
 import { SearchTracks } from 'shared/apollo/__generated__/SearchTracks'
 import { GetChartTracks } from 'shared/apollo/__generated__/GetChartTracks'
 import { GetRecommandTracks } from 'shared/apollo/__generated__/GetRecommandTracks'
+import { hashString } from 'shared/utils/hashString'
+import { useAuth } from 'shared/auth/context/authUser'
 
 function CountrySelect({ value = 'JP', onChange }) {
   return (
@@ -43,6 +45,9 @@ function CountrySelect({ value = 'JP', onChange }) {
 }
 const IndexPage = () => {
   const router = useRouter()
+
+  const { authState } = useAuth()
+  const { user } = authState
 
   // QEURY START
   const [queryInput, setQueryInput] = useState(router.query.q?.toString() ?? '')
@@ -80,12 +85,22 @@ const IndexPage = () => {
 
   const [getRecommand, recommandTracksRes] =
     useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
-  const recommandTracks =
-    recommandTracksRes?.data?.recommandTracks?.slice(0, 10) ?? []
+  const recommandTracks = recommandTracksRes?.data?.recommandTracks?.slice(
+    0,
+    10
+  )
 
   const typingRecordsRes = useQuery<GetTypingRecords>(GET_TYPING_RECORDS, {
+    ssr: false,
+    skip: !user?.uid,
     onCompleted: () => {
-      const randomIndex = Math.floor(Math.random() * typingRecords.length)
+      console.log('onCompleted')
+      if (recommandTracks && recommandTracks.length !== 0) {
+        return
+      }
+      const lastRecord = JSON.stringify(typingRecords[typingRecords.length - 1])
+
+      const randomIndex = hashString(lastRecord) % typingRecords.length
       getRecommand({
         variables: {
           artistId: typingRecords[randomIndex]?.artistId,
@@ -134,15 +149,16 @@ const IndexPage = () => {
           </>
         ) : (
           <>
-            {typingRecords.length !== 0 && (
-              <>
-                <h2 className="text-xl mx-2 my-2">Favorite Albums / Artists</h2>
-                <TrackList
-                  trackList={recommandTracks}
-                  loading={recommandTracksRes.loading}
-                  typingRecords={typingRecords}
-                />
-              </>
+            <h2 className="text-xl mx-2 my-2">Favorite Albums / Artists</h2>
+            {typingRecordsRes.called &&
+            typingRecordsRes.data?.typing_record.length === 0 ? (
+              <p>Nothing to recommand you. Start your first typing now!</p>
+            ) : (
+              <TrackList
+                trackList={recommandTracks}
+                loading={recommandTracksRes.loading}
+                typingRecords={typingRecords}
+              />
             )}
 
             <h2 className="text-xl my-2 mx-2 ">
