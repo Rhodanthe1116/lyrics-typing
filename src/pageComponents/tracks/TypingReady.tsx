@@ -34,6 +34,10 @@ function TypingReady({ track, handleStartingClick, loading }: TypingReadyProp) {
     'extralarge'
   )
 
+  const imgOnError = (e) => {
+    e.target.src = 'https://placehold.jp/150x150.png?text=No resource'
+  }
+
   return (
     <div>
       <div className="justify-center items-center flex mt-24">
@@ -44,6 +48,7 @@ function TypingReady({ track, handleStartingClick, loading }: TypingReadyProp) {
             <img
               className="h-80 w-80 object-cover rounded-3xl"
               src={albumImage}
+              onError={imgOnError}
             />
           )}
 

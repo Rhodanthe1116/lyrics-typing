@@ -85,6 +85,9 @@ function TrackTypingInput({
         <img
           className="rounded w-12 h-12 mr-4 object-cover"
           src={albumImage}
+          onError={(e: any) => {
+            e.target.src = 'https://placehold.jp/150x150.png?text=No resource'
+          }}
         ></img>
         <div className="flex flex-col">
           <h1 className="text-lg font-semibold">{track?.name}</h1>
