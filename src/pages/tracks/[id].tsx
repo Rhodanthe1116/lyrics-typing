@@ -141,7 +141,7 @@ const TrackPage = () => {
 
   return (
     <Layout>
-      <div className="px-4 container mx-auto flex flex-col ">
+      <div className="h-full px-4 container mx-auto flex flex-col ">
         {typingPhase === TypingPhase.Ready && (
           <TypingReady
             track={track}
