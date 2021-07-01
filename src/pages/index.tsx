@@ -80,9 +80,8 @@ const IndexPage = () => {
 
   const [getRecommand, recommandTracksRes] =
     useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
-  const recommandTracks = recommandTracksRes.loading
-    ? []
-    : recommandTracksRes?.data?.recommandTracks.slice(0, 10)
+  const recommandTracks =
+    recommandTracksRes?.data?.recommandTracks?.slice(0, 10) ?? []
 
   const typingRecordsRes = useQuery<GetTypingRecords>(GET_TYPING_RECORDS, {
     onCompleted: () => {
