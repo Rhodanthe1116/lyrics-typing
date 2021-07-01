@@ -85,7 +85,6 @@ const IndexPage = () => {
     : recommandTracksRes?.data?.recommandTracks.slice(0, 10)
 
   const typingRecordsRes = useQuery<GetTypingRecords>(GET_TYPING_RECORDS, {
-    fetchPolicy: 'cache-and-network',
     onCompleted: () => {
       const randomIndex = Math.floor(Math.random() * typingRecords.length)
       getRecommand({
