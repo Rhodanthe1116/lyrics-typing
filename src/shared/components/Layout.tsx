@@ -31,7 +31,7 @@ const Layout = ({
       </Head>
 
       <div className="overflow-hidden bg-trueGray-900 text-white">
-        {displayHeader && (
+        {displayHeader ? (
           <header className="p-4 flex justify-between items-center bg-gray-900">
             <div className="flex justify-start content-end">
               <Link href="/">
@@ -39,25 +39,9 @@ const Layout = ({
                   kanatype
                 </a>
               </Link>
-              {/* <Link href="/about">
-                <a className="mx-2 font-bold flex items-end">About</a>
-              </Link> */}
             </div>
-            <nav className="flex justify-end content-center">
-              {/* <Link href="/profile">
-                <a>
-                  <img
-                    className="w-7 h-7 rounded-full"
-                    src={authState.user?.photoURL ?? colorImageUrl}
-                    alt="avatar"
-                    width="28"
-                    height="28"
-                  ></img>
-                </a>
-              </Link> */}
-            </nav>
           </header>
-        )}
+        ) : undefined}
 
         <div className="pt-4 pb-16">{children}</div>
 

@@ -138,7 +138,7 @@ const IndexPage = () => {
             {/* <input type="search" name="q" class="" placeholder="Search..." autocomplete="off"> */}
           </div>
         </div>
-        <div className="my-12 flex flex-col items-center">
+        <div className="my-12 mx-4 flex flex-col items-center">
           <h1 className="text-3xl text-center">
             Learn <span className="text-green-200">language</span> by{' '}
             <span className="text-green-200">typing lyrics</span>!

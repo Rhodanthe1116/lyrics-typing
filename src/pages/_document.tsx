@@ -5,7 +5,7 @@ const GA_TRACKING_ID = 'G-7D7X1QFDHX'
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html className="bg-trueGray-900">
         <Head>
           <meta charSet="utf-8" />
 
@@ -37,7 +37,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="bg-trueGray-900">
+        <body>
           <Main />
           <NextScript />
         </body>

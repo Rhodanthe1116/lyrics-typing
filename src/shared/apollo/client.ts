@@ -30,7 +30,7 @@ const authMiddleware = setContext(async () => {
   // await requestAccessToken()
   const idToken = await firebase.auth().currentUser?.getIdToken()
   if (!idToken) {
-    return
+    return {}
   }
 
   return {
@@ -52,7 +52,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       switch (extensions?.code) {
         case 'invalid-jwt':
           console.log('not authenticated')
-          logout()
+          // logout()
           break
         default:
           // component-level error.

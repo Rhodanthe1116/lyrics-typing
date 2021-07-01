@@ -76,20 +76,15 @@ class MusixmatchAPI extends RESTDataSource {
   }
 
   async getChartTracks({ country }: { country: string }) {
-    try {
-      const body = await this.get('chart.tracks.get', {
-        page_size: 10,
-        country: country,
-        f_has_lyrics: true,
-      })
-      const trackList: MusixmatchTrackWrapperObject[] = body.track_list
-      return Array.isArray(trackList)
-        ? trackList.map((track) => this.trackReducer(track.track))
-        : []
-    } catch (err) {
-      console.log(err)
-      return []
-    }
+    const body = await this.get('chart.tracks.get', {
+      page_size: 10,
+      country: country,
+      f_has_lyrics: true,
+    })
+    const trackList: MusixmatchTrackWrapperObject[] = body.track_list
+    return Array.isArray(trackList)
+      ? trackList.map((track) => this.trackReducer(track.track))
+      : []
   }
 
   async searchTracks({ query, artistId }: { query: string; artistId: number }) {
