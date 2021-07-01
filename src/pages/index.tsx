@@ -5,50 +5,55 @@ import Layout from 'shared/components/Layout'
 import TrackList from 'shared/components/TrackList'
 
 // interface
-import { Track } from 'shared/interfaces'
 
 // data
-import { useQuery } from '@apollo/client'
-import { GET_CHART_TRACKS, SEARCH_TRACKS } from 'shared/apollo/query'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import {
+  GET_CHART_TRACKS,
+  SEARCH_TRACKS,
+  GET_RECOMMAND_TRACKS,
+} from 'shared/apollo/query'
 import { GET_TYPING_RECORDS } from 'shared/apollo/query'
 import { GetTypingRecords } from 'shared/apollo/__generated__/GetTypingRecords'
+import { SearchTracks } from 'shared/apollo/__generated__/SearchTracks'
+import { GetChartTracks } from 'shared/apollo/__generated__/GetChartTracks'
+import { GetRecommandTracks } from 'shared/apollo/__generated__/GetRecommandTracks'
 
+function CountrySelect({ value = 'JP', onChange }) {
+  return (
+    <select
+      className="mb-2 bg-black border-green-200"
+      value={value}
+      onChange={onChange}
+    >
+      <option className="py-1" value="JP">
+        JP
+      </option>
+      <option className="py-1" value="TW">
+        TW
+      </option>
+      <option className="py-1" value="KR">
+        KR
+      </option>
+      <option className="py-1" value="US">
+        US
+      </option>
+    </select>
+  )
+}
 const IndexPage = () => {
   const router = useRouter()
 
+  // QEURY START
   const [queryInput, setQueryInput] = useState(router.query.q?.toString() ?? '')
   const query: string = router.query.q?.toString() || ''
   const [country, setCountry] = useState('JP')
-
-  const chartTracksRes = useQuery(GET_CHART_TRACKS, {
-    variables: { country: country },
-  })
-
-  const tracksRes = useQuery(SEARCH_TRACKS, {
-    variables: { query: query },
-    skip: query === '',
-  })
-
-  const trackList: Array<Track> = queryInput
-    ? tracksRes?.data?.tracks
-    : chartTracksRes?.data?.chartTracks
-
-  const { data: typingRecordsQueryData } = useQuery<GetTypingRecords>(
-    GET_TYPING_RECORDS,
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  )
-  const typingRecords = typingRecordsQueryData?.typing_record ?? []
-
   function handleQueryChange(queryInput: string) {
     // setQuery(queryInput)
-    if (queryInput) {
-      router.push({
-        pathname: '',
-        query: { q: queryInput },
-      })
-    }
+    router.push({
+      pathname: '',
+      query: { q: queryInput },
+    })
   }
 
   useEffect(() => {
@@ -59,66 +64,110 @@ const IndexPage = () => {
     const timeOutId = setTimeout(() => handleQueryChange(queryInput), 500)
     return () => clearTimeout(timeOutId)
   }, [queryInput])
+  // QEURY END
+
+  const chartTracksRes = useQuery<GetChartTracks>(GET_CHART_TRACKS, {
+    variables: { country: country },
+  })
+  const chartTracks = chartTracksRes?.data?.chartTracks ?? []
+
+  const searchTracksRes = useQuery<SearchTracks>(SEARCH_TRACKS, {
+    variables: { query: query },
+    skip: query === '',
+  })
+
+  const searchedTracks = searchTracksRes?.data?.tracks ?? []
+
+  const [getRecommand, recommandTracksRes] =
+    useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
+  const recommandTracks = recommandTracksRes.loading
+    ? []
+    : recommandTracksRes?.data?.recommandTracks.slice(0, 10)
+
+  const typingRecordsRes = useQuery<GetTypingRecords>(GET_TYPING_RECORDS, {
+    fetchPolicy: 'cache-and-network',
+    onCompleted: () => {
+      const randomIndex = Math.floor(Math.random() * typingRecords.length)
+      getRecommand({
+        variables: {
+          artistId: typingRecords[randomIndex]?.artistId,
+          albumId: typingRecords[randomIndex]?.albumId,
+        },
+      })
+    },
+  })
+  const typingRecords = typingRecordsRes.data?.typing_record ?? []
 
   // if (!data || !tracksRes.data) return <div>loading...</div>
 
   return (
     <Layout>
       <div className="m-2">
-        <div className="mt-16 mb-6 flex flex-col items-center">
-          <h1 className="text-3xl text-center mb-8">
-            Learn <span className="text-green-200">Lyrics</span> and{' '}
-            <span className="text-green-200">Language</span> with{' '}
-            <span className="text-green-200">Typing</span>!
-          </h1>
-
+        <div className="mx-2">
           <input
-            className="mb-6 p-1 w-80 text-lg bg-black border-2 border-green-200 focus:outline-none "
+            className="mb-6 px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
             value={queryInput}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setQueryInput(e.target.value)
             }
             placeholder="Search song or artist here."
           />
-
-          <div className={`${queryInput && 'invisible'}`}>
-            <p className="inline mr-1 text-gray-400">
-              ...or see what&apos;s popular in your country
-            </p>
-            <select
-              className="mb-2 bg-black border-green-200"
-              value={country}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setCountry(e.target.value)
-              }
-            >
-              <option className="py-1" value="JP">
-                JP
-              </option>
-              <option className="py-1" value="TW">
-                TW
-              </option>
-              <option className="py-1" value="KR">
-                KR
-              </option>
-              <option className="py-1" value="US">
-                US
-              </option>
-            </select>
-          </div>
+        </div>
+        <div className="mb-6 flex flex-col items-center">
+          <h1 className="text-3xl text-center mb-8">
+            Learn <span className="text-green-200">Lyrics</span> and{' '}
+            <span className="text-green-200">Language</span> with{' '}
+            <span className="text-green-200">Typing</span>!
+          </h1>
         </div>
 
-        {chartTracksRes.error || tracksRes.error ? (
-          <div>
-            failed to load{' '}
-            {(chartTracksRes.error || tracksRes.error)?.toString()}
-          </div>
+        {query !== '' ? (
+          <>
+            <h2 className="text-xl mx-2 my-2">Search Results</h2>
+            {searchTracksRes.error ? (
+              <div>failed to load {searchTracksRes.error?.toString()}</div>
+            ) : (
+              <TrackList
+                trackList={searchedTracks}
+                loading={searchTracksRes.loading}
+                typingRecords={typingRecords}
+              />
+            )}
+          </>
         ) : (
-          <TrackList
-            trackList={trackList}
-            loading={tracksRes.loading}
-            typingRecords={typingRecords}
-          />
+          <>
+            {typingRecords.length !== 0 && (
+              <>
+                <h2 className="text-xl mx-2 my-2">Favorite Albums / Artists</h2>
+                <TrackList
+                  trackList={recommandTracks}
+                  loading={recommandTracksRes.loading}
+                  typingRecords={typingRecords}
+                />
+              </>
+            )}
+
+            <h2 className="text-xl my-2 mx-2 ">
+              Popular in{' '}
+              <span className="text-base">
+                <CountrySelect
+                  value={country}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setCountry(e.target.value)
+                  }
+                />
+              </span>
+            </h2>
+            {chartTracksRes.error ? (
+              <div>failed to load {chartTracksRes.error?.toString()}</div>
+            ) : (
+              <TrackList
+                trackList={chartTracks as any}
+                loading={chartTracksRes.loading}
+                typingRecords={typingRecords}
+              />
+            )}
+          </>
         )}
       </div>
     </Layout>

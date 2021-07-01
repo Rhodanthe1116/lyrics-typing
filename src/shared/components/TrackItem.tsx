@@ -39,10 +39,13 @@ const TrackItem = ({
   loading = true,
   completed = false,
 }: TrackItemProps) => {
-  const { image: albumImage } = useAlbumCover({
-    artistName: artistName,
-    albumName: albumName,
-  })
+  const { image: albumImage } = useAlbumCover(
+    {
+      artistName: artistName,
+      albumName: albumName,
+    },
+    'extralarge'
+  )
 
   if (loading) {
     return (
