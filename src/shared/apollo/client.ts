@@ -52,7 +52,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       switch (extensions?.code) {
         case 'invalid-jwt':
           console.log('not authenticated')
-          // logout()
+          logout()
           break
         default:
           // component-level error.
