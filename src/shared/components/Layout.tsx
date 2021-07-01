@@ -11,11 +11,13 @@ type Props = {
   children?: ReactNode
   title?: string
   displayHeader?: boolean
+  displayBottomNav?: boolean
 }
 
 const Layout = ({
   children,
   displayHeader = false,
+  displayBottomNav = true,
   title = 'kanatype - a new way to learn language',
 }: Props) => {
   const { authState } = useAuth()
@@ -45,32 +47,34 @@ const Layout = ({
 
         <div className="pt-4 pb-16">{children}</div>
 
-        <footer className="fixed inset-x-0 bottom-0 z-1 shadow px-4 py-2 flex justify-evenly items-center bg-gray-900">
-          <Link href="/">
-            <a className="flex-1 flex flex-col items-center">
-              <HomeIcon />
-              <p className="text-xs text-gray-500 pt-1">Home</p>
-            </a>
-          </Link>
-          <Link href="/about">
-            <a className="flex-1 flex flex-col items-center">
-              <InfoIcon />
-              <p className="text-xs text-gray-500 pt-1">About</p>
-            </a>
-          </Link>
-          <Link href="/profile">
-            <a className="flex-1 flex flex-col items-center">
-              <img
-                className="w-6 h-6 rounded-full"
-                src={authState.user?.photoURL ?? colorImageUrl}
-                alt="avatar"
-                width="24"
-                height="24"
-              ></img>
-              <p className="text-xs text-gray-500 pt-1">Profile</p>
-            </a>
-          </Link>
-        </footer>
+        {displayBottomNav ? (
+          <footer className="fixed inset-x-0 bottom-0 z-1 shadow px-4 py-2 flex justify-evenly items-center bg-gray-900">
+            <Link href="/">
+              <a className="flex-1 flex flex-col items-center">
+                <HomeIcon />
+                <p className="text-xs text-gray-500 pt-1">Home</p>
+              </a>
+            </Link>
+            <Link href="/about">
+              <a className="flex-1 flex flex-col items-center">
+                <InfoIcon />
+                <p className="text-xs text-gray-500 pt-1">About</p>
+              </a>
+            </Link>
+            <Link href="/profile">
+              <a className="flex-1 flex flex-col items-center">
+                <img
+                  className="w-6 h-6 rounded-full"
+                  src={authState.user?.photoURL ?? colorImageUrl}
+                  alt="avatar"
+                  width="24"
+                  height="24"
+                ></img>
+                <p className="text-xs text-gray-500 pt-1">Profile</p>
+              </a>
+            </Link>
+          </footer>
+        ) : undefined}
       </div>
 
       <Snackbar

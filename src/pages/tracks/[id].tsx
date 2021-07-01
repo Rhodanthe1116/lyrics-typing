@@ -140,7 +140,7 @@ const TrackPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout displayBottomNav={typingPhase !== TypingPhase.Typing}>
       <div className="h-full px-4 container mx-auto flex flex-col ">
         {typingPhase === TypingPhase.Ready && (
           <TypingReady
