@@ -1,21 +1,28 @@
-import Link from 'next/link'
-import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
+import TrackItem from './TrackItem'
 
 // interface
 import { Track } from 'shared/interfaces'
+import { calcCPM } from 'shared/utils/typing'
+
+interface typingRecord {
+  trackId: string
+  duration: number
+  correctChar: number
+}
 
 interface TrackListPorps {
   trackList?: Track[]
   loading: boolean
-  completedIds: string[]
+  completedIds?: string[]
+  typingRecords?: typingRecord[]
 }
-const TrackList = ({ trackList, loading, completedIds }: TrackListPorps) => {
+const TrackList = ({ trackList, loading, typingRecords }: TrackListPorps) => {
   if (trackList === undefined || loading) {
     return (
       <div>
         {[1, 2, 3, 4].map((v) => (
           <div key={v} className="mb-2">
-            <TrackItem loading={true} completed={false} />
+            <TrackItem loading={true} />
           </div>
         ))}
       </div>
@@ -29,71 +36,27 @@ const TrackList = ({ trackList, loading, completedIds }: TrackListPorps) => {
 
   return (
     <div className="max-w-full">
-      {trackList.map((track: Track, index) => (
-        <div key={index} className="mb-2">
-          <TrackItem
-            track={track}
-            loading={false}
-            completed={completedIds?.includes(track?.id)}
-          />
-        </div>
-      ))}
+      {trackList.map((track: Track, index) => {
+        const records = typingRecords?.filter((r) => r.trackId === track.id)
+        const cpms =
+          records?.map((r) => calcCPM(r?.duration, r?.correctChar) ?? 0) ?? []
+        const bestCPM = Math.max(0, ...cpms)
+        return (
+          <div key={index} className="mb-2">
+            <TrackItem
+              loading={false}
+              trackId={track.id}
+              trackName={track.name}
+              artistName={track.artistName}
+              albumName={track.albumName}
+              cpm={bestCPM > 0 ? bestCPM.toString() : undefined}
+              completed={bestCPM >= 30}
+              // createdAt={undefined}
+            />
+          </div>
+        )
+      })}
     </div>
-  )
-}
-
-interface TrackItemProps {
-  className?: string
-  track?: Track
-  loading: boolean
-  completed: boolean
-}
-
-const TrackItem = ({ track, loading, completed }: TrackItemProps) => {
-  const { image: albumImage } = useAlbumCover({
-    artistName: track?.artistName,
-    albumName: track?.albumName,
-  })
-
-  if (loading) {
-    return (
-      <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
-        <div className="flex-1 truncate mr-2">
-          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4"> </div>
-          <div className="h-4 my-1 bg-gray-900 rounded w-1/4"> </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!track) {
-    return <div>no track</div>
-  }
-
-  return (
-    <Link href={`/tracks/${track.id}`}>
-      <a
-        className={`flex max-w-full border-0 border-green-200 p-4 hover:bg-pink-600 ${
-          completed ? 'bg-green-900' : 'bg-gray-900'
-        }`}
-      >
-        <img
-          className="rounded w-12 h-12 mr-4 object-cover"
-          src={albumImage}
-        ></img>
-
-        <div className="flex-1 flex justify-between truncate">
-          <div className="flex-1 min-w-0 truncate mr-2">
-            <p className="truncate">{track.name}</p>
-            <p className="truncate text-gray-400">{track.artistName}</p>
-          </div>
-          <div className="flex-none w-12 overflow-hidden">
-            <p className="truncate">⭐{track.rating}</p>
-            <p className="truncate">❤{track.numFavourite}</p>
-          </div>
-        </div>
-      </a>
-    </Link>
   )
 }
 

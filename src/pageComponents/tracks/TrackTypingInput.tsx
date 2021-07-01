@@ -107,7 +107,7 @@ function TrackTypingInput({
         className="hidden"
         src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
       />
-      <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+      <p className="text-sm text-gray-800">{lyrics?.copyright}</p>
     </>
   )
 }
