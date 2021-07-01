@@ -85,6 +85,9 @@ function TrackTypingInput({
         <img
           className="rounded w-12 h-12 mr-4 object-cover"
           src={albumImage}
+          onError={(e: any) => {
+            e.target.src = 'https://placehold.jp/150x150.png?text=No resource'
+          }}
         ></img>
         <div className="flex flex-col">
           <h1 className="text-lg font-semibold">{track?.name}</h1>
@@ -107,7 +110,7 @@ function TrackTypingInput({
         className="hidden"
         src="https://tracking.musixmatch.com/t1.0/AMa6hJCIEzn1v8RuXW"
       />
-      <p className="text-sm text-gray-500">{lyrics?.copyright}</p>
+      <p className="text-sm text-gray-800">{lyrics?.copyright}</p>
     </>
   )
 }

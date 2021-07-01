@@ -10,6 +10,8 @@ import { Track } from 'shared/interfaces'
 // data
 import { useQuery } from '@apollo/client'
 import { GET_CHART_TRACKS, SEARCH_TRACKS } from 'shared/apollo/query'
+import { GET_TYPING_RECORDS } from 'shared/apollo/query'
+import { GetTypingRecords } from 'shared/apollo/__generated__/GetTypingRecords'
 
 const IndexPage = () => {
   const router = useRouter()
@@ -30,6 +32,14 @@ const IndexPage = () => {
   const trackList: Array<Track> = queryInput
     ? tracksRes?.data?.tracks
     : chartTracksRes?.data?.chartTracks
+
+  const { data: typingRecordsQueryData } = useQuery<GetTypingRecords>(
+    GET_TYPING_RECORDS,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+  const typingRecords = typingRecordsQueryData?.typing_record ?? []
 
   function handleQueryChange(queryInput: string) {
     // setQuery(queryInput)
@@ -95,12 +105,6 @@ const IndexPage = () => {
                 US
               </option>
             </select>
-            {/* <input className="mb-2 bg-black border-2 border-purple-500" type="text" list="country_code_list" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}/>
-                    <datalist id="country_code_list">
-                        <option className="py-1" value="JP">JP</option>
-                        <option className="py-1" value="TW">TW</option>
-                        <option className="py-1" value="US">US</option>
-                    </datalist> */}
           </div>
         </div>
 
@@ -113,7 +117,7 @@ const IndexPage = () => {
           <TrackList
             trackList={trackList}
             loading={tracksRes.loading}
-            completedIds={[]}
+            typingRecords={typingRecords}
           />
         )}
       </div>

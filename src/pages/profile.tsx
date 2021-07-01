@@ -16,21 +16,7 @@ import { getAnimalByHash } from 'shared/utils/animals'
 
 // custom ui
 import Layout from 'shared/components/Layout'
-import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
-
-const timeStampConverter = (stamp: any) => {
-  const date = new Date(stamp)
-  const output =
-    date.getMonth() +
-    1 +
-    '/' +
-    date.getDate() +
-    ' ' +
-    date.getHours() +
-    ':' +
-    date.getMinutes()
-  return output
-}
+import TrackItem from 'shared/components/TrackItem'
 
 // const findTrackById = (id: String) =>{
 //   const track = useQuery(GET_TRACK, {
@@ -50,56 +36,18 @@ interface RecordItemProps {
 }
 
 const RecordItem = ({ record, loading }: RecordItemProps) => {
-  const { image: albumImage } = useAlbumCover({
-    artistName: record?.artistName,
-    albumName: record?.albumName,
-  })
-
   const cpm = calcCPM(record?.duration, record?.correctChar)
 
-  if (loading) {
-    return (
-      <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
-        <div className="flex-1 truncate mr-2">
-          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4"> </div>
-          <div className="h-4 my-1 bg-gray-900 rounded w-1/4"> </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!record) {
-    return <div>no record.</div>
-  }
-
-  const completed = cpm >= 30
-  const cpmColor = completed ? 'text-green-500' : 'text-red-500'
   return (
-    <Link href={`/tracks/${record.trackId}`}>
-      <a
-        className={`border-0 border-green-200 p-4 hover:bg-pink-600 ${
-          completed ? 'bg-green-900' : 'bg-gray-900'
-        } flex`}
-      >
-        <img
-          className="rounded mr-4 object-cover w-12 h-12"
-          src={albumImage}
-        ></img>
-
-        <div className="flex-1 flex justify-between truncate">
-          <div className="flex-1 truncate mr-2">
-            <p className="truncate">{record.trackName}</p>
-            <p className="truncate text-gray-400">{record.artistName}</p>
-          </div>
-          <div className="flex-none w-auto overflow-hidden text-right ">
-            <p className={`truncate ${cpmColor}`}>{cpm} CPM</p>
-            <p className="truncate text-gray-400">
-              {timeStampConverter(record.createdAt).toLocaleString()}
-            </p>
-          </div>
-        </div>
-      </a>
-    </Link>
+    <TrackItem
+      loading={loading}
+      trackId={record?.trackId}
+      trackName={record?.trackName}
+      artistName={record?.artistName}
+      albumName={record?.albumName}
+      cpm={cpm.toString()}
+      createdAt={record?.createdAt}
+    />
   )
 }
 
@@ -156,6 +104,63 @@ const LoginAlert: VFC<LoginAlertProps> = () => {
   )
 }
 
+interface StatisticsProps {
+  typingRecords?: GetTypingRecords_typing_record[]
+}
+
+const Statistics: VFC<StatisticsProps> = ({ typingRecords = [] }) => {
+  const sumCPM = typingRecords?.reduce(
+    (sum, record) => sum + calcCPM(record.duration, record.correctChar),
+    0
+  )
+  const avgCPM = typingRecords?.length > 0 ? sumCPM / typingRecords.length : 0
+
+  const artistCountMap: Record<string, number> = {}
+  typingRecords.forEach((record) => {
+    if (!record.artistName) {
+      return
+    }
+    if (artistCountMap[record.artistName] === undefined) {
+      artistCountMap[record.artistName] = 0
+    } else {
+      artistCountMap[record.artistName] += 1
+    }
+  })
+
+  const sortedArtist: { artistName: string; count: number }[] = Object.entries(
+    artistCountMap
+  )
+    .map(([key, value]) => ({ artistName: key, count: value }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+
+  return (
+    <div className="text-sm flex mb-12">
+      <div className=" flex-1 ml-2 md:ml-10">
+        <p className="truncate font-semibold">Average CPM</p>
+        <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+          <p>Now</p>
+          <p className="pl-8 md:pl-28">{avgCPM.toFixed(1)}</p>
+          <p> </p>
+          <p className="pl-8 md:pl-28"> </p>
+          <p> </p>
+          <p className="pl-8 md:pl-28"> </p>
+        </div>
+      </div>
+      <div className="flex-1 md:pl-12">
+        <p className="truncate font-semibold">Top Artists</p>
+        <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
+          {sortedArtist.map(({ artistName, count }) => (
+            <>
+              <p>{artistName}</p>
+              <p className="pl-8 md:pl-28">{count}</p>
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 const ProfilePage = () => {
   const { authState, logout } = useAuth()
   const user = authState.user
@@ -167,6 +172,14 @@ const ProfilePage = () => {
     }
   )
   const typingRecords = typingRecordsQueryData?.typing_record ?? []
+  const typingRecordsWithCPM = typingRecords.map((r) => ({
+    ...r,
+    cpm: calcCPM(r.duration, r.correctChar),
+  }))
+
+  const passedRecordCount = new Set(
+    typingRecordsWithCPM.filter((r) => r.cpm >= 30).map((r) => r.trackId)
+  ).size
 
   return (
     <Layout>
@@ -195,7 +208,7 @@ const ProfilePage = () => {
             <div className="truncate flex-1 transform translate-y-1 ml-20 mt-2">
               <p className="text-green-200 font-bold md:text-8xl text-4xl text-center">
                 {' '}
-                {typingRecords?.length || 0}
+                {passedRecordCount || 0}
               </p>
               <p className="font-bold text-center md:pt-4"> Songs Passed</p>
             </div>
@@ -206,30 +219,7 @@ const ProfilePage = () => {
       {/* bg-gray-900 p-3 */}
       <div className="m-4 md:mb-24 mb-16">
         {/* <p>{user.id}</p> */}
-        <div className="text-sm flex mb-12">
-          <div className=" flex-1 ml-2 md:ml-10">
-            <p className="truncate font-semibold">Average CMP</p>
-            <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
-              <p>JP</p>
-              <p className="pl-8 md:pl-28">32</p>
-              <p>TW</p>
-              <p className="pl-8 md:pl-28">40</p>
-              <p>KR</p>
-              <p className="pl-8 md:pl-28">3</p>
-            </div>
-          </div>
-          <div className="flex-1 md:pl-12">
-            <p className="truncate font-semibold">Top Artists</p>
-            <div className="md:max-w-lg truncate pl-4 md:pt-4 md:ml-4 pt-1 grid grid-flow-row grid-cols-2 grid-rows-3">
-              <p>A</p>
-              <p className="pl-8 md:pl-28">32</p>
-              <p>B</p>
-              <p className="pl-8 md:pl-28">12</p>
-              <p>C</p>
-              <p className="pl-8 md:pl-28">3</p>
-            </div>
-          </div>
-        </div>
+        <Statistics typingRecords={typingRecords} />
 
         {!user?.isAnonymous && (
           <div className="flex justify-end text-gray-700">

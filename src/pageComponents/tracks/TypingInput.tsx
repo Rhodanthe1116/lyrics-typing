@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import useTyping, { PhaseType } from 'react-typing-game-hook'
 import { TypingResult } from 'shared/interfaces'
 import { TypingPhase } from 'pages/tracks/[id]'
+import { calcCPM } from 'shared/utils/typing'
 
 const TypeInput: FC<{
   text: string
@@ -128,12 +129,14 @@ const TypeInput: FC<{
 
       // Save record.
       const newResult: TypingResult = {
-        wpm: Math.round((60 / duration) * correctChar),
+        wpm: cpm,
         duration: duration,
-        correctChar: correctChar-countSpace,
-        errorChar: errorChar-countEOL,
-        accuracy: ((correctChar-countSpace) / (text.length-countEOL-countSpace)) * 100,
-        textLength: text.length-countEOL-countSpace,
+        correctChar: correctChar - countSpace,
+        errorChar: errorChar - countEOL,
+        accuracy:
+          ((correctChar - countSpace) / (text.length - countEOL - countSpace)) *
+          100,
+        textLength: text.length - countEOL - countSpace,
       }
 
       onTypingEnded(newResult)
@@ -156,42 +159,45 @@ const TypeInput: FC<{
     deleteTyping()
   }, [])
 
+  const cpm = calcCPM(duration, correctChar - countSpace)
+  const passed = cpm >= 30
   return (
     <div>
       {phase === PhaseType.Ended && startTime && endTime ? (
         <div className="text-base">
           <p
-            className={`text-xl" ${
-              Math.round((60 / duration) * correctChar) >= 30
-                ? 'text-green-500'
-                : 'text-red-500'
-            }`}
+            className={`text-xl" ${passed ? 'text-green-200' : 'text-red-500'}`}
           >
-            {Math.round((60 / duration) * correctChar) >= 30
-              ? 'Passed'
-              : 'Failed'}
+            {passed ? 'Passed' : 'Failed'}
           </p>
           <div className="my-4 flex justify-center items-end">
             <h2
               className={`text-3xl text-center border-solid mx-4 ${
-                Math.round((60 / duration) * correctChar) >= 30
-                  ? 'text-green-500'
-                  : 'text-red-500'
+                passed ? 'text-green-200' : 'text-red-500'
               }`}
             >
-              {Math.round((60 / duration) * correctChar)}
+              {cpm}
             </h2>
-            <div className="text-sm"> CPM</div>
+            <div className="text-sm text-gray-500"> CPM</div>
           </div>
           <ul className="text-sm mb-4 text-gray-500">
             {/* <li className="text-lg mr-4">Time: {duration}s</li> */}
             <li>Times: {Math.round(duration)}s</li>
             <li>
               {' '}
-              Correct / Wrong : {correctChar-countSpace} / {errorChar-countEOL}
+              Correct / Wrong : {correctChar - countSpace} /{' '}
+              {errorChar - countEOL}
             </li>
 
-            <li>Accuracy: {(((correctChar-countSpace) / (text.length-countEOL-countSpace)) * 100).toFixed(2)}%</li>
+            <li>
+              Accuracy:{' '}
+              {(
+                ((correctChar - countSpace) /
+                  (text.length - countEOL - countSpace)) *
+                100
+              ).toFixed(2)}
+              %
+            </li>
           </ul>
         </div>
       ) : null}

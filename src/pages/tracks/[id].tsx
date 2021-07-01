@@ -20,6 +20,8 @@ import {
 import { GetTrackWithLyrics } from 'shared/apollo/__generated__/GetTrackWithLyrics'
 import { GetRecommandTracks } from 'shared/apollo/__generated__/GetRecommandTracks'
 import { InsertTypingRecordOne } from 'shared/apollo/__generated__/InsertTypingRecordOne'
+import { GET_TYPING_RECORDS } from 'shared/apollo/query'
+import { GetTypingRecords } from 'shared/apollo/__generated__/GetTypingRecords'
 
 import { useAuth } from 'shared/auth/context/authUser'
 
@@ -69,6 +71,14 @@ const TrackPage = () => {
     (track) => track.id !== trackId.toString()
   )
   // const album_name: string = trackRes?.data?.message?.body?.track?.album_name || ''
+
+  const { data: typingRecordsQueryData } = useQuery<GetTypingRecords>(
+    GET_TYPING_RECORDS,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  )
+  const typingRecords = typingRecordsQueryData?.typing_record ?? []
 
   const [insertTypingRecord] = useMutation<InsertTypingRecordOne>(
     INSERT_TYPING_RECORD_ONE
@@ -155,7 +165,7 @@ const TrackPage = () => {
             <TrackList
               trackList={tracksList ?? []}
               loading={recommandTracksRes.loading}
-              completedIds={[]}
+              typingRecords={typingRecords}
             />
           </>
         )}
