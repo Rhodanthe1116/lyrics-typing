@@ -114,7 +114,7 @@ const IndexPage = () => {
   // if (!data || !tracksRes.data) return <div>loading...</div>
 
   return (
-    <Layout>
+    <Layout displayHeader={true}>
       <div className="m-2">
         <div className="mb-6 mx-2">
           <input

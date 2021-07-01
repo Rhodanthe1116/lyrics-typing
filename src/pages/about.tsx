@@ -2,7 +2,7 @@
 import Layout from 'shared/components/Layout'
 
 const AboutPage = () => (
-  <Layout>
+  <Layout displayHeader>
     <div className="p-4">
       <p className="mb-2">
         This is a typing game where you can learn lyrics and language!

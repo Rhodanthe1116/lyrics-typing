@@ -39,42 +39,36 @@ function TypingReady({ track, handleStartingClick, loading }: TypingReadyProp) {
   }
 
   return (
-    <div>
-      <div className="justify-center items-center flex mt-24">
-        <div className="w-auto">
-          {imageLoading ? (
-            <LoadingCover />
-          ) : (
-            <img
-              className="h-80 w-80 object-cover rounded-3xl"
-              src={albumImage}
-              onError={imgOnError}
-            />
-          )}
+    <div className="h-full flex flex-col justify-center items-center">
+      <div className="mt-10 w-auto md:mt-56">
+        {imageLoading ? (
+          <LoadingCover />
+        ) : (
+          <img
+            className="h-80 w-80 object-cover rounded-3xl"
+            src={albumImage}
+            onError={imgOnError}
+          />
+        )}
 
-          <div className="w-80 h-14 mt-4 mb-2">
-            {loading ? (
-              <LoadingText />
-            ) : (
-              <>
-                <h1 className="truncate text-lg font-semibold">
-                  {track?.name}
-                </h1>
-                <p className="text-gray-400">{track?.artistName}</p>
-              </>
-            )}
-          </div>
+        <div className="w-80 h-14 mt-4 mb-2">
+          {loading ? (
+            <LoadingText />
+          ) : (
+            <>
+              <h1 className="truncate text-lg font-semibold">{track?.name}</h1>
+              <p className="text-gray-400">{track?.artistName}</p>
+            </>
+          )}
         </div>
       </div>
-      <div className="justify-center items-center flex mt-20">
-        <button
-          className="bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded w-36 h-12"
-          onClick={handleStartingClick}
-          disabled={loading}
-        >
-          START
-        </button>
-      </div>
+      <button
+        className="mt-8 bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded w-36 h-12"
+        onClick={handleStartingClick}
+        disabled={loading}
+      >
+        START
+      </button>
     </div>
   )
 }
