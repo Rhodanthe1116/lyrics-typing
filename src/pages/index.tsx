@@ -80,12 +80,10 @@ const IndexPage = () => {
 
   const [getRecommand, recommandTracksRes] =
     useLazyQuery<GetRecommandTracks>(GET_RECOMMAND_TRACKS)
-  const recommandTracks = recommandTracksRes.loading
-    ? []
-    : recommandTracksRes?.data?.recommandTracks.slice(0, 10)
+  const recommandTracks =
+    recommandTracksRes?.data?.recommandTracks?.slice(0, 10) ?? []
 
   const typingRecordsRes = useQuery<GetTypingRecords>(GET_TYPING_RECORDS, {
-    fetchPolicy: 'cache-and-network',
     onCompleted: () => {
       const randomIndex = Math.floor(Math.random() * typingRecords.length)
       getRecommand({
@@ -103,9 +101,9 @@ const IndexPage = () => {
   return (
     <Layout>
       <div className="m-2">
-        <div className="mx-2">
+        <div className="mb-6 mx-2">
           <input
-            className="mb-6 px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
+            className="px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
             value={queryInput}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setQueryInput(e.target.value)
@@ -114,7 +112,7 @@ const IndexPage = () => {
           />
         </div>
         <div className="mb-6 flex flex-col items-center">
-          <h1 className="text-3xl text-center mb-8">
+          <h1 className="text-3xl text-center">
             Learn <span className="text-green-200">Lyrics</span> and{' '}
             <span className="text-green-200">Language</span> with{' '}
             <span className="text-green-200">Typing</span>!
