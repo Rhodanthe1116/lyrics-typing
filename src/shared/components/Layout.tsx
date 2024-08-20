@@ -34,35 +34,41 @@ const Layout = ({
 
       <div className="overflow-hidden bg-trueGray-900 text-white">
         {displayHeader ? (
-          <header className="p-4 flex justify-between items-center bg-gray-900">
+          <header className="p-4 flex justify-between items-center bg-slate-800">
             <div className="flex justify-start content-end">
               <Link href="/">
-                <a className="text-xl font-bold pr-2 flex items-end">
+                <span className="text-xl font-bold pr-2 flex items-end">
                   kanatype
-                </a>
+                </span>
               </Link>
             </div>
           </header>
         ) : undefined}
 
-        <div className="pt-4 pb-16">{children}</div>
+        <div className="pt-4 pb-16 bg-slate-900">{children}</div>
 
         {displayBottomNav ? (
           <footer className="fixed inset-x-0 bottom-0 z-1 shadow px-4 py-2 flex justify-evenly items-center bg-gray-900">
             <Link href="/">
-              <a className="flex-1 flex flex-col items-center">
+              <span className="flex-1 flex flex-col items-center">
                 <HomeIcon />
                 <p className="text-xs text-gray-500 pt-1">Home</p>
-              </a>
+              </span>
+            </Link>
+            <Link href="/lyrics">
+              <span className="flex-1 flex flex-col items-center">
+                <InfoIcon />
+                <p className="text-xs text-gray-500 pt-1">Lyrics</p>
+              </span>
             </Link>
             <Link href="/about">
-              <a className="flex-1 flex flex-col items-center">
+              <span className="flex-1 flex flex-col items-center">
                 <InfoIcon />
                 <p className="text-xs text-gray-500 pt-1">About</p>
-              </a>
+              </span>
             </Link>
             <Link href="/profile">
-              <a className="flex-1 flex flex-col items-center">
+              <span className="flex-1 flex flex-col items-center">
                 <img
                   className="w-6 h-6 rounded-full"
                   src={authState.user?.photoURL ?? colorImageUrl}
@@ -71,7 +77,7 @@ const Layout = ({
                   height="24"
                 ></img>
                 <p className="text-xs text-gray-500 pt-1">Profile</p>
-              </a>
+              </span>
             </Link>
           </footer>
         ) : undefined}

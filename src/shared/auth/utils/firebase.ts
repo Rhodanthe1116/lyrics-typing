@@ -1,17 +1,22 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app'
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { getDatabase } from 'firebase/database'
 
-const HASURA_TOKEN_KEY = 'https://hasura.io/jwt/claims'
-
-if (!firebase.apps.length) {
-  firebase.initializeApp({
+let app: FirebaseApp
+if (!getApps().length) {
+  app = initializeApp({
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
     databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   })
+} else {
+  app = getApp()
 }
+
+export const auth = getAuth(app)
+export const database = getDatabase(app)
 
 export const getCurrentUserIdToken = () => {
   // return new Promise((resolve) => {
@@ -25,25 +30,20 @@ export const getCurrentUserIdToken = () => {
   //     resolve(null)
   //   })
   // })
-  return firebase.auth().currentUser?.getIdToken()
+  return auth.currentUser?.getIdToken()
 }
 
 export const logout = () => {
-  firebase
-    .auth()
-    .signOut()
-    .catch((error) => {
-      console.error(error)
-    })
+  auth.signOut().catch((error) => {
+    console.error(error)
+  })
 }
 
-const provider = new firebase.auth.GoogleAuthProvider()
+const provider = new GoogleAuthProvider()
 // You can add additional scopes to the provider:
 provider.addScope('email')
 export const login = async () => {
-  return await firebase
-    .auth()
-    .signInWithPopup(provider)
+  return await signInWithPopup(auth, provider)
     .then((data) => {
       return { user: data.user, error: false }
     })
@@ -52,41 +52,39 @@ export const login = async () => {
     })
 }
 
-export const changePassword = async (email) => {
-  return await firebase
-    .auth()
-    .sendPasswordResetEmail(email)
-    .then(() => {
-      return { error: false }
-    })
-    .catch(() => {
-      return { error: true }
-    })
-}
+// export const changePassword = async (email) => {
+//   return await auth.sendPasswordResetEmail(email)
+//     .then(() => {
+//       return { error: false }
+//     })
+//     .catch(() => {
+//       return { error: true }
+//     })
+// }
 
-export const isRegisteredUser = async (email) => {
-  return await firebase
-    .auth()
-    .fetchSignInMethodsForEmail(email)
-    .then((result) => {
-      if (result.length === 0) {
-        return false
-      }
-      return true
-    })
-    .catch(() => false)
-}
-export const getHasuraClaims = async (firebaseUser) => {
-  if (!firebaseUser || !firebaseUser.email) return undefined
+// export const isRegisteredUser = async (email) => {
+//   return await firebase
+//     .auth()
+//     .fetchSignInMethodsForEmail(email)
+//     .then((result) => {
+//       if (result.length === 0) {
+//         return false
+//       }
+//       return true
+//     })
+//     .catch(() => false)
+// }
+// export const getHasuraClaims = async (firebaseUser) => {
+//   if (!firebaseUser || !firebaseUser.email) return undefined
 
-  try {
-    const idTokenResult = await firebaseUser.getIdTokenResult()
-    const hasuraClaims = Object.keys(idTokenResult.claims).length
-      ? idTokenResult.claims[HASURA_TOKEN_KEY]
-      : undefined
-    return hasuraClaims
-  } catch (error) {
-    console.log('getHasuraClaims error', error)
-    throw error
-  }
-}
+//   try {
+//     const idTokenResult = await firebaseUser.getIdTokenResult()
+//     const hasuraClaims = Object.keys(idTokenResult.claims).length
+//       ? idTokenResult.claims[HASURA_TOKEN_KEY]
+//       : undefined
+//     return hasuraClaims
+//   } catch (error) {
+//     console.log('getHasuraClaims error', error)
+//     throw error
+//   }
+// }

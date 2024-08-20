@@ -51,8 +51,8 @@ const TrackItem = ({
     return (
       <div className="animate-pulse border-2 border-green-200 p-4 flex justify-between">
         <div className="flex-1 truncate mr-2">
-          <div className="h-4 my-1 mb-2 bg-gray-900 rounded w-3/4"> </div>
-          <div className="h-4 my-1 bg-gray-900 rounded w-1/4"> </div>
+          <div className="h-4 my-1 mb-2 bg-slate-800 rounded w-3/4"> </div>
+          <div className="h-4 my-1 bg-slate-800 rounded w-1/4"> </div>
         </div>
       </div>
     )
@@ -69,9 +69,9 @@ const TrackItem = ({
   const cpmColor = completed ? 'text-green-500' : 'text-red-500'
   return (
     <Link href={`/tracks/${trackId}`}>
-      <a
+      <span
         className={`flex max-w-full border-0 border-green-200 p-4 hover:bg-pink-600 ${
-          completed ? 'bg-green-900' : 'bg-gray-900'
+          completed ? 'bg-green-900' : 'bg-gray-800'
         }`}
       >
         <img
@@ -92,7 +92,7 @@ const TrackItem = ({
             </p>
           </div>
         </div>
-      </a>
+      </span>
     </Link>
   )
 }

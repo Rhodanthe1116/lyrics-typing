@@ -1,8 +1,9 @@
 import { VFC, useEffect } from 'react'
-import firebase from 'firebase'
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { useSnackbar } from 'shared/context/snackbar'
+import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth'
+import { auth } from 'shared/auth/utils/firebase'
 
 const Component: VFC = () => {
   return (
@@ -20,7 +21,7 @@ const LoginPage: VFC = () => {
       autoUpgradeAnonymousUsers: true,
       signInSuccessUrl: '/',
       signInFlow: 'popup',
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
       callbacks: {
         // signInFailure callback must be provided to handle merge conflicts which
         // occur when an existing credential is linked to an anonymous user.
@@ -37,13 +38,12 @@ const LoginPage: VFC = () => {
           // user.
           // ...
           // Finish sign-in after data is copied.
-          firebase.auth().signInWithCredential(cred)
+          signInWithCredential(auth, cred)
         },
       },
     }
     const ui =
-      firebaseui.auth.AuthUI.getInstance() ||
-      new firebaseui.auth.AuthUI(firebase.auth())
+      firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
     ui.start('#firebaseui-auth-container', uiConfig)
   })
 

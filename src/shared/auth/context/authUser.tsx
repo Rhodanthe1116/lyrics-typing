@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 // import { withAuthUser, AuthAction } from 'next-firebase-auth'
-import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
-import { getHasuraClaims } from 'shared/auth/utils/firebase'
+import { auth, database } from 'shared/auth/utils/firebase'
 import { logout } from 'shared/auth/utils/firebase'
+import { signInAnonymously, User } from 'firebase/auth'
+import { getDatabase, ref, onValue } from 'firebase/database'
 
 export interface AuthContextProps {
   authState: AuthState
@@ -13,7 +14,7 @@ export interface AuthContextProps {
 
 export interface AuthState {
   status: 'in' | 'out' | 'loading'
-  user: firebase.User | undefined
+  user: User | undefined
   token: string | undefined
 }
 
@@ -36,11 +37,9 @@ export const AuthProvider = (props) => {
   })
 
   useEffect(() => {
-    return firebase.auth().onAuthStateChanged(async (user) => {
+    return auth.onAuthStateChanged(async (user) => {
       if (!user) {
-        firebase
-          .auth()
-          .signInAnonymously()
+        signInAnonymously(auth)
           .then(() => {
             // Signed in..
           })
@@ -58,16 +57,18 @@ export const AuthProvider = (props) => {
       }
 
       const token = await user.getIdToken()
-      const hasuraClaims = await getHasuraClaims(user)
+      // const hasuraClaims = await getHasuraClaims(user)
+      const hasuraClaims = undefined
       if (hasuraClaims) {
         setAuthState({ status: 'in', user, token })
       } else {
         // Check if refresh is required.
-        const metadataRef = firebase
-          .database()
-          .ref('metadata/' + user.uid + '/refreshTime')
+        const metadataRef = ref(
+          database,
+          'metadata/' + user.uid + '/refreshTime'
+        )
 
-        metadataRef.on('value', async (data) => {
+        onValue(metadataRef, async (data) => {
           if (!data.exists) return
           // Force refresh to pick up the latest custom claims changes.
           const token = await user.getIdToken(true)

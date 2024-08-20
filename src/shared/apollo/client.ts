@@ -5,10 +5,9 @@ import {
   gql,
   from,
 } from '@apollo/client'
-import firebase from 'firebase/app'
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
-import { logout } from 'shared/auth/utils/firebase'
+import { auth, logout } from 'shared/auth/utils/firebase'
 import { cache } from './cache'
 
 // let idToken
@@ -28,7 +27,7 @@ export const typeDefs = gql`
 
 const authMiddleware = setContext(async () => {
   // await requestAccessToken()
-  const idToken = await firebase.auth().currentUser?.getIdToken()
+  const idToken = await auth.currentUser?.getIdToken()
   if (!idToken) {
     return {}
   }
@@ -36,7 +35,6 @@ const authMiddleware = setContext(async () => {
   return {
     headers: {
       Authorization: `Bearer ${idToken}`,
-      'x-hasura-role': 'user',
     },
   }
 })

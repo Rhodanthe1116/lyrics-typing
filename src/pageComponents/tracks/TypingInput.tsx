@@ -4,6 +4,7 @@ import useTyping, { PhaseType } from 'react-typing-game-hook'
 import { TypingResult } from 'shared/interfaces'
 import { TypingPhase } from 'pages/tracks/[id]'
 import { calcCPM } from 'shared/utils/typing'
+import { Input } from 'pageComponents/form/inputs'
 
 const TypeInput: FC<{
   text: string
@@ -244,7 +245,7 @@ const TypeInput: FC<{
         <div
           className={`mb-2 ${typingPhase === TypingPhase.End ? 'hidden' : ''}`}
         >
-          <input
+          <Input
             type="text"
             ref={inputRef}
             onFocus={onInputFocus}
@@ -268,8 +269,8 @@ const TypeInput: FC<{
               !typingInput.length
                 ? 'border-gray-500'
                 : typedWrong
-                ? 'border-red-500'
-                : 'border-green-500'
+                  ? 'border-red-500'
+                  : 'border-green-500'
             } `}
             placeholder={
               phase !== PhaseType.Started

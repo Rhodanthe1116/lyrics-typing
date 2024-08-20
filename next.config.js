@@ -3,13 +3,6 @@ const nextConfig = {
     process.env.NODE_ENV !== 'production'
       ? 'server'
       : 'experimental-serverless-trace',
-  dontAutoRegisterSw: true,
-  generateSw: false,
-  devSwSrc: './public/sw.js',
-  workboxOpts: {
-    swSrc: './public/sw.js',
-    swDest: './public/service-worker.js',
-  },
   env: {
     NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
     NEXT_PUBLIC_GRAPHQL_REMOTE_SCHEMA_URL:

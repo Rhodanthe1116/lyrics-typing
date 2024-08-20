@@ -74,7 +74,7 @@ const RecordList = ({ recordList, loading }: RecordListPorps) => {
     return (
       <div>
         <Link href="/">
-          <a className="text-green-200">No record now. Go to play</a>
+          <span className="text-green-200">No record now. Go to play</span>
         </Link>
       </div>
     )

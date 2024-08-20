@@ -21,7 +21,7 @@ import { GetChartTracks } from 'shared/apollo/__generated__/GetChartTracks'
 import { GetRecommandTracks } from 'shared/apollo/__generated__/GetRecommandTracks'
 import { hashString } from 'shared/utils/hashString'
 import { useAuth } from 'shared/auth/context/authUser'
-import Link from 'next/link'
+import { CountrySelect } from 'pageComponents/index/components'
 
 const IndexPage = () => {
   const router = useRouter()
@@ -96,43 +96,89 @@ const IndexPage = () => {
   return (
     <Layout displayHeader={true}>
       <div className="m-2">
+        <div className="mx-2">
+          <div className="relative text-gray-600 focus-within:text-gray-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+              <button
+                type="submit"
+                className="p-1 focus:outline-none focus:shadow-outline"
+              >
+                <SearchIcon />
+              </button>
+            </span>
+            <input
+              className="text-sm text-white rounded-md pl-10 px-2 py-1 w-full max-w-full bg-black  focus:outline-none "
+              value={queryInput}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setQueryInput(e.target.value)
+              }
+              placeholder="Search song or artist here."
+            />
+            {/* <input type="search" name="q" class="" placeholder="Search..." autocomplete="off"> */}
+          </div>
+        </div>
         <div className="my-12 mx-4 flex flex-col items-center">
           <h1 className="text-2xl font-bold text-center">
-            Learn <span className="text-green-200">Language</span> by{' '}
-            <span className="text-green-200">Typing</span>!
+            Learn <span className="text-green-200">language</span> by{' '}
+            <span className="text-green-200">typing lyrics</span>!
           </h1>
         </div>
 
-        <div className="max-w-screen-lg m-auto ">
-          <div className=" w-full flex gap-4 flex-wrap justify-center ">
-            <LanguageButton href="/">
-              <p>🇹🇼</p>
-            </LanguageButton>
-            <LanguageButton href="/learn/jp">
-              <p>🇯🇵</p>
-            </LanguageButton>
-            <LanguageButton href="/learn/ko">
-              <p>🇰🇷</p>
-            </LanguageButton>
-          </div>
-        </div>
+        {query !== '' ? (
+          <>
+            <h2 className="text-xl mx-2 my-2">Search Results</h2>
+            {searchTracksRes.error ? (
+              <div>failed to load {searchTracksRes.error?.toString()}</div>
+            ) : (
+              <TrackList
+                trackList={searchedTracks}
+                loading={searchTracksRes.loading}
+                typingRecords={typingRecords}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold mx-2 my-2">
+              Favorite Albums / Artists
+            </h2>
+            {typingRecordsRes.error ? (
+              <div>failed to load {typingRecordsRes.error?.toString()}</div>
+            ) : typingRecordsRes.called &&
+              typingRecordsRes.data?.typing_record.length === 0 ? (
+              <p>Nothing to recommand you. Start your first typing now!</p>
+            ) : (
+              <TrackList
+                trackList={recommandTracks}
+                loading={recommandTracksRes.loading}
+                typingRecords={typingRecords}
+              />
+            )}
+
+            <h2 className="text-xl font-bold my-2 mx-2 ">
+              Popular in{' '}
+              <span className="text-base">
+                <CountrySelect
+                  value={country}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setCountry(e.target.value)
+                  }
+                />
+              </span>
+            </h2>
+            {chartTracksRes.error ? (
+              <div>failed to load {chartTracksRes.error?.toString()}</div>
+            ) : (
+              <TrackList
+                trackList={chartTracks as any}
+                loading={chartTracksRes.loading}
+                typingRecords={typingRecords}
+              />
+            )}
+          </>
+        )}
       </div>
     </Layout>
-  )
-}
-function LanguageButton({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <Link href={href}>
-      <button className="bg-slate-800 rounded-lg w-full min-w-60 max-w-64 min-h-48">
-        <div>{children}</div>
-      </button>
-    </Link>
   )
 }
 

@@ -8,8 +8,6 @@ import {
   MusixmatchAlbum,
 } from './interfaces'
 
-const apiKey = process?.env?.MUSIXMATCH_APIKEY || ''
-
 // interface MusixmatchResponse {
 //   message: {
 //     header: {
@@ -20,14 +18,20 @@ const apiKey = process?.env?.MUSIXMATCH_APIKEY || ''
 // }
 
 class MusixmatchAPI extends RESTDataSource {
-  constructor() {
+  apiKey: string
+  constructor(apiKey?: string) {
     super()
+    if (!apiKey) {
+      throw new Error('No Musixmatch API key provided')
+    }
+    this.apiKey = apiKey
+    console.log('MusixmatchAPI', apiKey)
     this.baseURL = 'https://api.musixmatch.com/ws/1.1/'
   }
 
   willSendRequest(request: RequestOptions) {
     request.params.set('format', 'json')
-    request.params.set('apikey', apiKey)
+    request.params.set('apikey', this.apiKey)
   }
 
   async didReceiveResponse(response: any) {
@@ -179,4 +183,4 @@ class MusixmatchAPI extends RESTDataSource {
   }
 }
 
-module.exports = MusixmatchAPI
+export default MusixmatchAPI
