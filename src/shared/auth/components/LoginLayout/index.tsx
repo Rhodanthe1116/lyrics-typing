@@ -1,5 +1,4 @@
 import { VFC, useEffect } from 'react'
-import firebase from 'firebase'
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth'

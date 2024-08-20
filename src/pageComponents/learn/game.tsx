@@ -1,10 +1,5 @@
-import { useRouter } from 'next/router'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 
-import Layout from 'shared/components/Layout'
-
-import { useAuth } from 'shared/auth/context/authUser'
-import dict from 'src/data/ko/dict.json'
 import { Input } from 'pageComponents/form/inputs'
 
 export enum TypingPhase {
@@ -39,10 +34,10 @@ const Game = ({ questions: questionsFromProps }: { questions: Question[] }) => {
     // set currentQuestionIndex
     setCurrentQuestionIndex((prev) => Math.min(prev + 1, questions.length - 1))
   }
-  function previouseQuestion() {
-    // set currentQuestionIndex
-    setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
-  }
+  // function previouseQuestion() {
+  //   // set currentQuestionIndex
+  //   setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
+  // }
   function checkAnswer(answer: string) {
     const currentQuestion = getCurrentQuestion()
     if (currentQuestion === undefined) {
@@ -86,7 +81,7 @@ const Game = ({ questions: questionsFromProps }: { questions: Question[] }) => {
       // }
     }
   }
-  const [status, setStatus] = useState('init')
+  const [status, setStatus] = useState<'init' | 'wrong'>('init')
 
   return (
     <>

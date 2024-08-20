@@ -1,10 +1,11 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 
 interface Props {
   open: boolean
   severity: string
   onClose: () => void
   timeout: number
+  children: React.ReactNode
 }
 
 const Snackbar: FC<Props> = ({ open, onClose, children }) => {

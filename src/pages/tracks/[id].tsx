@@ -38,7 +38,7 @@ const TrackPage = () => {
 
   const trackId: number = Array.isArray(router.query.id)
     ? parseInt(router.query.id[0])
-    : parseInt(router.query.id)
+    : parseInt(router?.query?.id ?? '')
   const [typingPhase, setTypingPhase] = useState(TypingPhase.Ready)
 
   useEffect(() => {
