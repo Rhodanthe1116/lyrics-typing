@@ -25,7 +25,6 @@ class MusixmatchAPI extends RESTDataSource {
       throw new Error('No Musixmatch API key provided')
     }
     this.apiKey = apiKey
-    console.log('MusixmatchAPI', apiKey)
     this.baseURL = 'https://api.musixmatch.com/ws/1.1/'
   }
 

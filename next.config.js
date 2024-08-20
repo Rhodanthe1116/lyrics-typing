@@ -1,8 +1,4 @@
 const nextConfig = {
-  target:
-    process.env.NODE_ENV !== 'production'
-      ? 'server'
-      : 'experimental-serverless-trace',
   env: {
     NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
     NEXT_PUBLIC_GRAPHQL_REMOTE_SCHEMA_URL:
