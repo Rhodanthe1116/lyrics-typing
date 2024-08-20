@@ -97,7 +97,8 @@ module.exports = {
         const selectAlbum =
           allAlbums[Math.floor(Math.random() * allAlbums.length)]
         const otherTracks = await dataSources.musixmatchAPI.getTracksByAlbumId({
-          size: needSize,
+          size: undefined,
+          // size: needSize,
           albumId: selectAlbum.id,
         })
         return otherTracks

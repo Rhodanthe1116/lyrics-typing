@@ -6,23 +6,27 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "prettier"
+    "prettier",
   ],
   "env": {
     "node": true,
-    "commonjs": true
+    "commonjs": true,
   },
-  "plugins": [
-    "react-hooks"
-  ],
+  "plugins": ["react-hooks"],
   "parserOptions": {
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
     },
     "ecmaVersion": 2019,
-    "sourceType": "module"
+    "sourceType": "module",
   },
   "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-require-imports": "warn",
+    "react/no-unescaped-entities": "warn",
+    
     "react/prop-types": 0,
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react-hooks/rules-of-hooks": "error",
@@ -32,19 +36,14 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
-      }
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+      },
     ],
-    "react/display-name": "off"
+    "react/display-name": "off",
   },
   "settings": {
     "react": {
-      "version": "detect"
-    }
-  }
+      "version": "detect",
+    },
+  },
 }
