@@ -8,7 +8,7 @@ const AboutPage = () => (
         This is a typing game where you can learn lyrics and language!
       </p>
       <p className="mb-2">
-        It's mobile-first so you can learn anywhere, anytime.
+        It&apos;s mobile-first so you can learn anywhere, anytime.
       </p>
 
       <p>
