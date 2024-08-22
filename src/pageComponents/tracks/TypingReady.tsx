@@ -1,3 +1,4 @@
+import { Button } from 'pageComponents/buttons'
 import { GetTrackWithLyrics_track } from 'shared/apollo/__generated__/GetTrackWithLyrics'
 import { useAlbumCover } from 'shared/hooks/useAlbumInfo'
 
@@ -62,13 +63,13 @@ function TypingReady({ track, handleStartingClick, loading }: TypingReadyProp) {
           )}
         </div>
       </div>
-      <button
+      <Button
         className="mt-8 bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded w-36 h-12"
         onClick={handleStartingClick}
         disabled={loading}
       >
         START
-      </button>
+      </Button>
     </div>
   )
 }

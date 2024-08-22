@@ -6,8 +6,17 @@ const Learn = () => {
     <Layout displayBottomNav>
       <div className="max-w-screen-lg m-auto ">
         <div className=" w-full flex gap-4 flex-wrap justify-center ">
-          <UnitButton href="./ko/level1">
+          <UnitButton href="./ko/常用句-平語">
+            <p className="font-bold">常用句 - 平語</p>
+          </UnitButton>
+          <UnitButton href="./ko/常用句">
+            <p className="font-bold">常用句</p>
+          </UnitButton>
+          <UnitButton href="./ko/人物">
             <p className="font-bold">People</p>
+          </UnitButton>
+          <UnitButton href="./ko/地點">
+            <p className="font-bold">Places</p>
           </UnitButton>
         </div>
       </div>
