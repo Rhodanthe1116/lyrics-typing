@@ -6,7 +6,7 @@ import Game from 'pageComponents/learn/game'
 const Learn = () => {
   return (
     <Layout displayBottomNav>
-      <Game questions={jp} />
+      <Game lang="jp" questions={jp} />
     </Layout>
   )
 }
